@@ -1,0 +1,31 @@
+# Phụ thuộc và kết quả build có thể tạo lại
+node_modules/
+dist/
+build/
+coverage/
+*.log
+
+# Cấu hình riêng và khóa bí mật
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dữ liệu chạy trên máy cá nhân
+backend/uploads/
+backend/backups/
+*.dump
+*.archive
+
+# Tệp tạm của hệ điều hành và trình soạn thảo
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.tmp
+.gitnexus/
+
+# Bản đóng gói trùng với tài liệu nguồn trong prompt/Soopi_Forms
+prompt/Soopi_Forms.zip

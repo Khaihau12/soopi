@@ -1,0 +1,1 @@
+.avatar { display: inline-grid; place-items: center; width: var(--chieuCaoCham); height: var(--chieuCaoCham); flex: none; border-radius: var(--boGocTron); background: var(--mauChinhNhat); color: var(--mauChinhDam); font-weight: 700; }

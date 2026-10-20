@@ -1,0 +1,17 @@
+.khuyenMaiForm { max-width: 900px; display: grid; gap: var(--kc5); }
+.khuyenMaiForm h2 { font-size: 1.25rem; margin: 0 0 var(--kc4); }
+.khuyenMaiFormFields { display: grid; gap: var(--kc4); }
+.khuyenMaiFormHeading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--kc3); }
+.khuyenMaiFormRows { display: grid; gap: var(--kc3); }
+.khuyenMaiFormRow { border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocNho); padding: var(--kc4); display: grid; gap: var(--kc3); }
+.khuyenMaiFormRow > div:first-child span, .khuyenMaiPickerList small { display: block; color: var(--chuPhu); }
+.khuyenMaiFormPreview { color: var(--chuPhu); }
+.khuyenMaiFormPreview strong { color: var(--mauGia); }
+.khuyenMaiFormLoi { color: var(--loi); background: var(--loiNen); border-radius: var(--boGocNho); padding: var(--kc3); margin: 0; }
+.khuyenMaiFormActions { display: flex; justify-content: flex-end; gap: var(--kc3); background: var(--beMat); }
+.khuyenMaiPicker { display: grid; gap: var(--kc4); }
+.khuyenMaiPickerList { display: grid; gap: var(--kc2); max-height: 50vh; overflow: auto; }
+.khuyenMaiPickerList > div { display: flex; align-items: center; gap: var(--kc3); border-bottom: var(--doDayVien) solid var(--vien); padding: var(--kc2) 0; }
+.khuyenMaiPickerList img { width: 48px; height: 48px; object-fit: cover; border-radius: var(--boGocNho); }
+.khuyenMaiPickerList span { flex: 1; }
+@media (max-width: 639px) { .khuyenMaiFormActions { position: sticky; bottom: 0; z-index: var(--tangNoiDungNoi); border-top: var(--doDayVien) solid var(--vien); padding: var(--kc3); } .khuyenMaiFormActions .button { flex: 1; } }

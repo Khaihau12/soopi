@@ -1,0 +1,4 @@
+.danhGiaForm { display: grid; gap: var(--kc4); }
+.danhGiaFormLoi { margin: 0; color: var(--loi); }
+.danhGiaFormHanhDong { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--kc2); }
+@media (max-width: 639px) { .danhGiaFormHanhDong .button { flex: 1; } }

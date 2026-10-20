@@ -1,0 +1,13 @@
+.taiAnhLen { display: grid; gap: var(--kc3); }
+.taiAnhLenDrop { border: 2px dashed var(--vienDam); border-radius: var(--boGocVua); padding: var(--kc5); text-align: center; background: var(--nen); }
+.taiAnhLenDropActive { border-color: var(--mauChinh); background: var(--mauChinhNhat); }
+.taiAnhLenDrop label { display: inline-block; color: var(--mauChinh); font-weight: 600; cursor: pointer; padding: var(--kc3); }
+.taiAnhLenDrop p { color: var(--chuPhu); font-size: .875rem; margin: var(--kc2) 0 0; }
+.taiAnhLenInput { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.taiAnhLenInput:focus-visible + label { outline: 2px solid var(--mauChinh); outline-offset: 2px; }
+.taiAnhLenLoi { color: var(--loi); margin: 0; }
+.taiAnhLenList { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--kc3); padding: 0; margin: 0; list-style: none; }
+.taiAnhLenList li { border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocNho); padding: var(--kc2); display: grid; gap: var(--kc2); }
+.taiAnhLenList img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--boGocNho); }
+.taiAnhLenList span { font-size: .875rem; font-weight: 600; }
+.taiAnhLenActions { display: flex; flex-wrap: wrap; gap: var(--kc1); }

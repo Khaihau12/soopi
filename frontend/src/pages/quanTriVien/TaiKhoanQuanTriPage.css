@@ -1,0 +1,26 @@
+.quanTriTaiKhoanPage { display: grid; gap: var(--kc5); min-width: 0; }
+.quanTriTaiKhoanBoLoc { display: flex; align-items: end; flex-wrap: wrap; gap: var(--kc3); }
+.quanTriTaiKhoanBoLoc .field:first-child { flex: 2 1 240px; }
+.quanTriTaiKhoanBoLoc .field { flex: 1 1 150px; }
+.quanTriTaiKhoanBoLoc .button { margin-bottom: 0; }
+.quanTriTaiKhoanNguoi { display: flex; align-items: center; gap: var(--kc2); min-width: 0; }
+.quanTriTaiKhoanNguoi span:not(.avatar), .quanTriTaiKhoanTen { display: grid; gap: var(--kc1); min-width: 0; }
+.quanTriTaiKhoanNguoi small, .quanTriTaiKhoanTen small { color: var(--chuPhu); overflow-wrap: anywhere; }
+.quanTriTaiKhoanVaiTro { display: flex; gap: var(--kc1); flex-wrap: wrap; }
+.quanTriTaiKhoanSoLuong { margin: 0; color: var(--chuPhu); }
+.quanTriTaiKhoanChiTiet { display: grid; gap: var(--kc4); }
+.quanTriTaiKhoanChiTiet dl { display: grid; gap: var(--kc2); margin: 0; }
+.quanTriTaiKhoanDong { display: grid; grid-template-columns: minmax(110px, 38%) minmax(0, 1fr); gap: var(--kc3); }
+.quanTriTaiKhoanDong dt { color: var(--chuPhu); }
+.quanTriTaiKhoanDong dd { margin: 0; overflow-wrap: anywhere; white-space: pre-line; }
+.quanTriTaiKhoanCuaHang { padding: var(--kc3); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); }
+.quanTriTaiKhoanCuaHang h3, .quanTriTaiKhoanCuaHang p { margin: 0 0 var(--kc2); }
+.quanTriTaiKhoanHanhDong { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--kc2); }
+.quanTriTaiKhoanFormMatKhau { display: grid; gap: var(--kc4); }
+.quanTriTaiKhoanFormMatKhau > p { margin: 0; color: var(--chuPhu); }
+.quanTriTaiKhoanHienMatKhau { display: flex; align-items: center; gap: var(--kc2); min-height: var(--chieuCaoCham); }
+@media (max-width: 639px) {
+  .quanTriTaiKhoanBoLoc { display: grid; }
+  .quanTriTaiKhoanDong { grid-template-columns: 1fr; gap: 0; }
+  .quanTriTaiKhoanHanhDong { display: grid; }
+}

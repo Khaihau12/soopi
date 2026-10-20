@@ -1,0 +1,33 @@
+.chonVoucherDong { width: 100%; min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: var(--kc3); padding: var(--kc2) 0; border: 0; background: transparent; color: var(--chu); text-align: left; cursor: pointer; }
+.chonVoucherDong > span:first-child { display: grid; gap: var(--kc1); min-width: 0; }
+.chonVoucherDong small { color: var(--chuPhu); overflow-wrap: anywhere; }
+.chonVoucherDongPhai { display: flex; align-items: center; gap: var(--kc2); color: var(--mauChinhDam); white-space: nowrap; }
+.chonVoucherDongPhai > span { font-size: 1.5rem; line-height: 1; }
+.chonVoucherDong:disabled { opacity: .6; cursor: wait; }
+.thanhToanDongSanPham + .chonVoucherDong { border-bottom: 1px solid var(--vien); margin-bottom: var(--kc3); }
+.chonVoucherDong:focus-visible, .chonVoucherThe button:focus-visible, .chonVoucherNhap button:focus-visible, .chonVoucherChan button:focus-visible { outline: 3px solid var(--mauChinh); outline-offset: 2px; }
+.chonVoucherNhap { display: flex; gap: var(--kc2); }
+.chonVoucherNhap input { min-width: 0; flex: 1; height: 44px; padding: var(--kc2); border: 1px solid var(--vienDam); border-radius: var(--boGocNho); background: var(--beMat); color: var(--chu); }
+.chonVoucherNhap button, .chonVoucherChan button { min-height: 44px; padding: 0 var(--kc4); border: 0; border-radius: var(--boGocNho); background: var(--mauChinh); color: white; font-weight: 700; cursor: pointer; }
+.chonVoucherNhap button:disabled { opacity: .5; cursor: not-allowed; }
+.chonVoucherHuongDan, .chonVoucherTrong { color: var(--chuPhu); font-size: .875rem; }
+.chonVoucherLoi { color: var(--canhBao); }
+.chonVoucherNhom { margin-top: var(--kc4); }
+.chonVoucherNhom h3 { margin: 0 0 var(--kc2); font-size: 1rem; }
+.chonVoucherThe { border: 1px solid var(--vien); border-radius: var(--boGocNho); margin-bottom: var(--kc2); overflow: hidden; }
+.chonVoucherLuaChon { width: 100%; display: flex; align-items: stretch; gap: var(--kc3); min-height: 94px; padding: 0; border: 0; background: var(--beMat); color: var(--chu); text-align: left; cursor: pointer; }
+.chonVoucherLuaChon[aria-pressed="true"] { background: var(--mauChinhNhat); }
+.chonVoucherLuaChon:disabled { cursor: not-allowed; }
+.chonVoucherDau { display: grid; place-items: center; width: 88px; flex-shrink: 0; padding: var(--kc2); background: var(--mauChinhNhat); color: var(--mauChinhDam); font-size: .8rem; font-weight: 700; text-align: center; }
+.chonVoucherNoiDung { display: grid; align-content: center; gap: 2px; min-width: 0; padding: var(--kc2) 0; }
+.chonVoucherNoiDung strong, .chonVoucherNoiDung span { overflow-wrap: anywhere; }
+.chonVoucherNoiDung small { color: var(--chuPhu); }
+.chonVoucherKhongDu .chonVoucherNoiDung small { color: var(--canhBao); }
+.chonVoucherRadio { align-self: center; display: grid; place-items: center; flex-shrink: 0; width: 24px; height: 24px; margin-right: var(--kc3); border: 2px solid var(--mauChinh); border-radius: 50%; color: var(--mauChinhDam); font-weight: 700; }
+.chonVoucherKhongDu .chonVoucherRadio { border-color: var(--vienDam); }
+.chonVoucherDieuKien { min-height: 36px; margin-left: 88px; padding: 0 var(--kc3); border: 0; background: transparent; color: var(--mauChinhDam); text-decoration: underline; cursor: pointer; }
+.chonVoucherChan { position: sticky; bottom: calc(-1 * var(--kc5)); display: flex; align-items: center; justify-content: space-between; gap: var(--kc3); margin: var(--kc4) calc(-1 * var(--kc5)) calc(-1 * var(--kc5)); padding: var(--kc3) var(--kc5); border-top: 1px solid var(--vien); background: var(--beMat); }
+.chonVoucherChiTiet p { margin: var(--kc2) 0; line-height: 1.5; }
+.chonVoucherChiTiet h3 { margin: var(--kc4) 0; }
+.chonVoucherQuayLai { min-height: 44px; padding: 0; border: 0; background: transparent; color: var(--mauChinhDam); cursor: pointer; }
+@media (max-width: 600px) { .chonVoucherDau { width: 68px; } .chonVoucherDieuKien { margin-left: 68px; } .chonVoucherLuaChon { gap: var(--kc2); } .chonVoucherNhap button { padding: 0 var(--kc2); } }

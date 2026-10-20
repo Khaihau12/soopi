@@ -1,0 +1,6 @@
+.luoiSanPham { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kc3); }
+.luoiSanPhamSkeleton { min-height: 13rem; padding: var(--kc3); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+@media (max-width: 359px) { .luoiSanPham { grid-template-columns: 1fr; } }
+@media (min-width: 640px) { .luoiSanPham { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kc4); } }
+@media (min-width: 1024px) { .luoiSanPham { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kc5); } }
+@media (min-width: 1280px) { .luoiSanPham { grid-template-columns: repeat(5, minmax(0, 1fr)); } }

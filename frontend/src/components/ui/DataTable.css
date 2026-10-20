@@ -1,0 +1,17 @@
+.dataTableWrap { width: 100%; min-width: 0; }
+.dataTable { width: 100%; border-collapse: separate; border-spacing: 0; }
+.dataTable th, .dataTable td { padding: var(--kc3) var(--kc4); text-align: left; overflow-wrap: anywhere; }
+.dataTable thead { display: none; }
+.dataTable tbody { display: grid; gap: var(--kc3); }
+.dataTable tr { display: grid; gap: var(--kc2); padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.dataTable td { display: flex; justify-content: space-between; gap: var(--kc4); padding: 0; }
+.dataTable td::before { content: attr(data-label); flex: 0 0 40%; color: var(--chuPhu); font-weight: 600; }
+@media (min-width: 48em) {
+  .dataTable { border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+  .dataTable thead { display: table-header-group; }
+  .dataTable tbody { display: table-row-group; }
+  .dataTable tr { display: table-row; padding: 0; border: 0; border-radius: 0; }
+  .dataTable th { position: sticky; top: 0; background: var(--nen); color: var(--chuPhu); font-weight: 600; }
+  .dataTable td { display: table-cell; padding: var(--kc3) var(--kc4); border-top: var(--doDayVien) solid var(--vien); }
+  .dataTable td::before { display: none; }
+}

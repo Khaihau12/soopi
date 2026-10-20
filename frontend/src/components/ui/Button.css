@@ -1,0 +1,13 @@
+.button { display: inline-flex; align-items: center; justify-content: center; gap: var(--kc2); min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc4); border: var(--doDayVien) solid transparent; border-radius: var(--boGocNho); font-weight: 600; text-align: center; text-decoration: none; transition: background-color var(--thoiGianNhanh), border-color var(--thoiGianNhanh); }
+.buttonPrimary { color: var(--beMat); background: var(--mauChinh); }
+.buttonPrimary:hover:not(:disabled) { background: var(--mauChinhDam); }
+.buttonSecondary { color: var(--mauChinh); background: var(--beMat); border-color: var(--mauChinh); }
+.buttonSecondary:hover:not(:disabled) { background: var(--mauChinhNhat); }
+.buttonGhost { color: var(--mauChinh); background: transparent; }
+.buttonGhost:hover:not(:disabled) { background: var(--mauChinhNhat); }
+.buttonDanger { color: var(--beMat); background: var(--loi); }
+.buttonDanger:hover:not(:disabled) { background: var(--chu); }
+.buttonSM { padding-inline: var(--kc3); }
+.buttonLG { padding-inline: var(--kc5); }
+.buttonFullWidth { width: 100%; }
+.button:disabled, .button[aria-disabled="true"] { opacity: .55; cursor: not-allowed; }

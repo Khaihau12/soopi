@@ -1,0 +1,11 @@
+const express = require('express');
+const controller = require('../controllers/khuyenMai.controller');
+const { batBuocNguoiBan } = require('../middlewares/role.middleware');
+const router = express.Router();
+router.use(...batBuocNguoiBan);
+router.get('/', controller.nguoiBanLayDanhSachKhuyenMai);
+router.post('/', controller.nguoiBanTaoKhuyenMai);
+router.get('/:id', controller.nguoiBanLayChiTietKhuyenMai);
+router.patch('/:id', controller.nguoiBanCapNhatKhuyenMai);
+router.delete('/:id', controller.nguoiBanXoaKhuyenMai);
+module.exports = router;

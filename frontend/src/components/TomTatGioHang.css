@@ -1,0 +1,6 @@
+.tomTatGioHang { display: grid; gap: var(--kc3); padding: var(--kc5); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.tomTatGioHangGia { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: var(--kc2); }
+.tomTatGioHangGia strong { color: var(--mauGia); font-size: 1.35rem; }
+.tomTatGioHang p { margin: 0; color: var(--chuPhu); font-size: .875rem; }
+@media (max-width: 1023px) { .tomTatGioHang { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--tangNoiDungNoi); padding: var(--kc3) max(var(--kc4), calc((100vw - var(--chieuRongToiDa)) / 2)); border-radius: 0; box-shadow: var(--bongNoi); } .tomTatGioHang p { display: none; } }
+@media (min-width: 1024px) { .tomTatGioHang { position: sticky; top: calc(var(--chieuCaoHeader) + var(--kc5)); align-self: start; } }

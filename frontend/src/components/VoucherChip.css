@@ -1,0 +1,4 @@
+.voucherChip { flex: 0 0 250px; display: grid; align-content: start; gap: var(--kc2); padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.voucherChipMa { color: var(--mauChinh); font-family: ui-monospace, monospace; font-size: 1.125rem; overflow-wrap: anywhere; }
+.voucherChip small { color: var(--chuPhu); }
+.voucherChip .button { justify-self: start; }

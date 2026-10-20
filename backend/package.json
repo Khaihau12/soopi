@@ -1,0 +1,50 @@
+{
+  "name": "soopi-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nền tảng API cho dự án Soopi",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed:admin": "node scripts/taoQuanTriVien.js",
+    "seed:demo-accounts": "node scripts/taoTaiKhoanMau.js",
+    "seed:demo": "node scripts/taoDuLieuMau.js",
+    "test:f12": "node scripts/kiemTraF12.js",
+    "test:f13": "node scripts/kiemTraF13.js",
+    "test:f14": "node scripts/kiemTraF14.js",
+    "test:f15": "node scripts/kiemTraF15.js",
+    "test:f16": "node scripts/kiemTraF16.js",
+    "test:f17": "node scripts/kiemTraF17.js",
+    "test:f18": "node scripts/kiemTraF18.js",
+    "test:f19": "node scripts/kiemTraF19.js",
+    "test:f20": "node scripts/kiemTraF20.js",
+    "test:f21": "node scripts/kiemTraF21.js",
+    "test:f22": "node scripts/kiemTraF22.js",
+    "test:f23": "node scripts/kiemTraF23.js",
+    "test:f24": "node scripts/kiemTraF24.js",
+    "test:f25": "node scripts/kiemTraF25.js",
+    "test:f26": "node scripts/kiemTraF26.js",
+    "test:f27": "node scripts/kiemTraF27.js",
+    "test:f28": "node scripts/kiemTraF28.js",
+    "test:f29": "node scripts/kiemTraF29.js",
+    "test:f30": "node scripts/kiemTraF30.js",
+    "test:realtime": "node scripts/kiemTraRealtime.js",
+    "test:cloudinary": "node scripts/kiemTraCloudinary.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.11.0",
+    "cookie": "^2.0.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.11.2",
+    "multer": "^2.4.0",
+    "socket.io": "^4.8.4"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.4"
+  }
+}

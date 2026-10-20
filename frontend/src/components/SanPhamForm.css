@@ -1,0 +1,8 @@
+.sanPhamForm { max-width: 800px; display: grid; gap: var(--kc5); }
+.sanPhamForm h2 { font-size: 1.25rem; margin: 0 0 var(--kc4); }
+.sanPhamFormFields { display: grid; gap: var(--kc4); }
+.sanPhamFormFields p { color: var(--chuPhu); margin: var(--kc2) 0; }
+.sanPhamFormKhuyenMai { background: var(--mauChinhNhat); border-radius: var(--boGocNho); padding: var(--kc4); }
+.sanPhamFormLoi { color: var(--loi); background: var(--loiNen); padding: var(--kc3); border-radius: var(--boGocNho); margin: 0; }
+.sanPhamFormActions { display: flex; justify-content: flex-end; gap: var(--kc3); background: var(--beMat); }
+@media (max-width: 639px) { .sanPhamFormActions { position: sticky; bottom: 0; z-index: var(--tangNoiDungNoi); padding: var(--kc3); border-top: var(--doDayVien) solid var(--vien); } .sanPhamFormActions .button { flex: 1; } }

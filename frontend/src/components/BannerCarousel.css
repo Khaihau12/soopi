@@ -1,0 +1,17 @@
+.bannerCarousel { overflow: hidden; border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.bannerSlide { display: grid; }
+.bannerImage { aspect-ratio: 16 / 9; background: var(--nen); }
+.bannerImage img { width: 100%; height: 100%; object-fit: cover; }
+.bannerImageTrong { display: grid; place-content: center; justify-items: center; gap: var(--kc2); width: 100%; height: 100%; color: var(--chuMo); }
+.bannerContent { display: grid; align-content: center; gap: var(--kc3); padding: var(--kc5); background: var(--mauChinhNhat); }
+.bannerContent h2, .bannerContent p { margin: 0; }
+.bannerContent h2 { color: var(--mauChinhDam); }
+.bannerContent p { color: var(--chuPhu); }
+.bannerControls { display: flex; align-items: center; justify-content: space-between; padding: var(--kc2); }
+.bannerControls > button { display: grid; place-items: center; min-width: var(--chieuCaoCham); min-height: var(--chieuCaoCham); border: 0; border-radius: var(--boGocNho); background: transparent; color: var(--mauChinhDam); }
+.bannerControls > button:hover { background: var(--mauChinhNhat); }
+.bannerDots { display: flex; align-items: center; gap: var(--kc2); }
+.bannerDots button { width: var(--chieuCaoCham); height: var(--chieuCaoCham); border: 0; background: transparent; }
+.bannerDots button::before { content: ''; display: block; width: var(--kc2); height: var(--kc2); margin: auto; border-radius: var(--boGocTron); background: var(--vienDam); }
+.bannerDots .bannerDotActive::before { background: var(--mauChinh); }
+@media (min-width: 768px) { .bannerSlide { grid-template-columns: 1fr 1fr; } }

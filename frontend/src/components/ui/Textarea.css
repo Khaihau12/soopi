@@ -1,0 +1,3 @@
+.textarea { width: 100%; min-height: calc(var(--chieuCaoCham) * 2); padding: var(--kc3); border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); background: var(--beMat); color: var(--chu); resize: vertical; }
+.textarea:focus { border-color: var(--mauChinh); }
+.textarea[aria-invalid="true"] { border-color: var(--loi); }

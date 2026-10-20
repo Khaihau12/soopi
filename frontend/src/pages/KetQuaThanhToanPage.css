@@ -1,0 +1,21 @@
+.ketQuaThanhToanPage { width: min(100%, 760px); margin: var(--kc7) auto; padding: 0 var(--kc4); }
+.ketQuaThanhToanCard { background: var(--beMat); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); padding: var(--kc5); text-align: center; }
+.ketQuaThanhToanCard h1 { margin: var(--kc4) 0 var(--kc3); }
+.ketQuaThanhToanCard h2 { font-size: 1.125rem; text-align: left; margin: var(--kc5) 0 var(--kc3); }
+.ketQuaThanhToanCard p { color: var(--chuPhu); }
+.ketQuaThanhToanCard .ketQuaThanhToanSoTien { font-size: 1.5rem; font-weight: 700; color: var(--chu); }
+.ketQuaThanhToanBieuTu { display: grid; place-items: center; width: 56px; height: 56px; margin: 0 auto; border-radius: 50%; font-size: 1.75rem; font-weight: 700; }
+.ketQuaThanhToanThanhCong { color: var(--thanhCong); background: var(--thanhCongNen); }
+.ketQuaThanhToanLoi { color: var(--loi); background: var(--loiNen); }
+.ketQuaThanhToanCho { color: var(--canhBao); background: var(--canhBaoNen); }
+.ketQuaThanhToanDonHang { list-style: none; margin: 0 0 var(--kc5); padding: 0; text-align: left; }
+.ketQuaThanhToanDonHang li { display: flex; justify-content: space-between; gap: var(--kc3); padding: var(--kc3) 0; border-top: var(--doDayVien) solid var(--vien); }
+.ketQuaThanhToanDonHang li span:last-child { text-align: right; color: var(--chuPhu); }
+.ketQuaThanhToanGhiChu { font-size: .875rem; }
+.ketQuaThanhToanLienKet { display: block; width: fit-content; margin: var(--kc4) auto 0; color: var(--mauChinh); }
+@media (max-width: 639px) {
+  .ketQuaThanhToanPage { margin: var(--kc5) auto; }
+  .ketQuaThanhToanCard { padding: var(--kc4); }
+  .ketQuaThanhToanDonHang li { display: grid; }
+  .ketQuaThanhToanDonHang li span:last-child { text-align: left; }
+}

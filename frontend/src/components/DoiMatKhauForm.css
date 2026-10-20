@@ -1,0 +1,8 @@
+.doiMatKhauMoTa { margin-bottom: var(--kc5); color: var(--chuPhu); }
+.doiMatKhauForm { display: grid; gap: var(--kc4); }
+.doiMatKhauInput { display: flex; gap: var(--kc2); }
+.doiMatKhauInput .input { flex: 1; min-width: 0; }
+.doiMatKhauInput button { min-width: var(--chieuCaoCham); padding-inline: var(--kc2); border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); background: var(--beMat); color: var(--mauChinhDam); }
+.doiMatKhauLoi { padding: var(--kc3); border-radius: var(--boGocNho); background: var(--loiNen); color: var(--loi); }
+.doiMatKhauActions { display: flex; justify-content: flex-end; gap: var(--kc3); }
+@media (max-width: 639px) { .doiMatKhauActions { flex-direction: column-reverse; } .doiMatKhauActions .button { width: 100%; } }

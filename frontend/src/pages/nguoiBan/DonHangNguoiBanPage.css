@@ -1,0 +1,17 @@
+.donHangBanPage { display: grid; gap: var(--kc4); min-width: 0; }
+.donHangBanPage .tabs { min-width: 0; overflow-x: auto; }
+.donHangBanPhu { display: block; margin-top: var(--kc1); color: var(--chuPhu); }
+.donHangBanThaoTac { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc2); }
+.donHangBanThaoTac small { color: var(--chuPhu); }
+.donHangBanLoi { width: 100%; margin: 0; color: var(--loi); }
+.donHangBanHanhDong { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc3); padding: var(--kc4); background: var(--beMat); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); }
+.donHangBanHanhDong p { margin: 0; }
+.donHangBanPage .dataTable td { vertical-align: top; }
+@media (min-width: 48em) {
+  .donHangBanPage .dataTableWrap { overflow-x: auto; }
+  .donHangBanPage .dataTable { min-width: 1050px; }
+}
+@media (max-width: 639px) {
+  .donHangBanThaoTac { display: grid; }
+  .donHangBanHanhDong { align-items: stretch; }
+}

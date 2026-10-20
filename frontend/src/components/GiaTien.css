@@ -1,0 +1,7 @@
+.giaTien { display: flex; align-items: baseline; gap: var(--kc2); flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.giaTien strong { font-size: 1.25rem; }
+.giaTienNho strong { font-size: 1rem; }
+.giaTienLon strong { font-size: 1.5rem; }
+.giaTienGiam { color: var(--mauGia); }
+.giaTien del { color: var(--chuMo); font-size: .875rem; }
+.giaTienNhan { padding: var(--kc1) var(--kc2); border-radius: var(--boGocTron); background: var(--mauGiaNhat); color: var(--mauGia); font-size: .8125rem; font-weight: 600; }

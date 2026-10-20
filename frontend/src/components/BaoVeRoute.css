@@ -1,0 +1,3 @@
+.baoVeDangTai { display: grid; gap: var(--kc4); width: min(100%, 32rem); margin: var(--kc7) auto; padding: var(--kc4); }
+.baoVeSkeleton { height: 3.5rem; border-radius: var(--boGocNho); background: var(--vien); }
+.baoVeSkeleton:last-child { width: 70%; }

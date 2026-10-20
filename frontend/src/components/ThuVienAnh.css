@@ -1,0 +1,7 @@
+.thuVienAnhChinh { aspect-ratio: 1; overflow: hidden; border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--nen); }
+.thuVienAnhChinh img { width: 100%; height: 100%; object-fit: cover; }
+.thuVienAnhTrong { display: grid; place-content: center; justify-items: center; gap: var(--kc3); width: 100%; height: 100%; color: var(--chuMo); }
+.thuVienAnhNho { display: flex; gap: var(--kc2); margin-top: var(--kc3); overflow-x: auto; padding-bottom: var(--kc2); }
+.thuVienAnhNho button { flex: 0 0 4.5rem; width: 4.5rem; height: 4.5rem; padding: 0; overflow: hidden; border: 2px solid var(--vien); border-radius: var(--boGocNho); background: var(--beMat); }
+.thuVienAnhNho button:hover, .thuVienAnhNho .thuVienAnhDangChon { border-color: var(--mauChinh); }
+.thuVienAnhNho img { width: 100%; height: 100%; object-fit: cover; }

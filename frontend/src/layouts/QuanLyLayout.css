@@ -1,0 +1,24 @@
+.quanLyLayout { min-height: 100vh; }
+.quanLySidebar { position: fixed; inset: 0 auto 0 0; z-index: var(--tangDrawer); width: min(var(--chieuRongSidebar), 85vw); overflow-y: auto; transform: translateX(-100%); visibility: hidden; border-right: var(--doDayVien) solid var(--vien); background: var(--beMat); transition: transform var(--thoiGianVua); }
+.quanLySidebarOpen { transform: translateX(0); visibility: visible; }
+.quanLyBackdrop { position: fixed; inset: 0; z-index: calc(var(--tangDrawer) - 1); width: 100%; border: 0; background: var(--lopPhu); }
+.quanLyBrand { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--kc1); padding: var(--kc4); border-bottom: var(--doDayVien) solid var(--vien); }
+.quanLyBrand a { display: inline-flex; align-items: center; }
+.quanLyBrand a img { display: block; width: 7.5rem; height: auto; }
+.quanLyBrand span { grid-column: 1; color: var(--chuPhu); font-size: .8125rem; }
+.quanLyClose { grid-column: 2; grid-row: 1 / 3; display: grid; place-items: center; min-width: var(--chieuCaoCham); min-height: var(--chieuCaoCham); border: 0; background: transparent; }
+.quanLySidebar nav { display: grid; gap: var(--kc1); padding: var(--kc3); }
+.quanLyLink { display: flex; align-items: center; gap: var(--kc3); min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc3); border-radius: var(--boGocNho); color: var(--chuPhu); text-decoration: none; }
+.quanLyLink:hover, .quanLyLinkActive { background: var(--mauChinhNhat); color: var(--mauChinhDam); }
+.quanLyVeMuaSam { display: block; margin: var(--kc4); padding: var(--kc2); }
+.quanLyMain { min-width: 0; }
+.quanLyTopbar { position: sticky; top: 0; z-index: var(--tangHeader); display: flex; align-items: center; gap: var(--kc3); min-height: var(--chieuCaoHeader); padding-inline: var(--kc4); border-bottom: var(--doDayVien) solid var(--vien); background: var(--beMat); font-weight: 600; }
+.quanLyMenuButton { display: grid; place-items: center; min-width: var(--chieuCaoCham); min-height: var(--chieuCaoCham); border: 0; background: transparent; }
+.quanLyTopbarAccount { display: flex; align-items: center; gap: var(--kc2); margin-left: auto; font-size: .875rem; font-weight: 400; }
+.quanLyContent { width: 100%; max-width: 90rem; margin-inline: auto; padding: var(--kc5) var(--kc4); }
+@media (min-width: 64em) {
+  .quanLySidebar { transform: none; visibility: visible; width: var(--chieuRongSidebar); }
+  .quanLyBackdrop, .quanLyClose, .quanLyMenuButton { display: none; }
+  .quanLyMain { margin-left: var(--chieuRongSidebar); }
+  .quanLyContent { padding: var(--kc6); }
+}

@@ -1,0 +1,8 @@
+.dangKyNguoiBanPage { display: grid; gap: var(--kc5); width: 100%; max-width: 35rem; margin-inline: auto; }
+.dangKyNguoiBanPage h1, .dangKyNguoiBanCard h2, .dangKyNguoiBanCard p { margin: 0; }
+.dangKyNguoiBanCard { display: grid; justify-items: start; gap: var(--kc4); padding: var(--kc5); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.dangKyNguoiBanForm { display: grid; gap: var(--kc4); width: 100%; }
+.dangKyNguoiBanCanhBao { width: 100%; padding: var(--kc4); border-radius: var(--boGocNho); background: var(--canhBaoNen); color: var(--canhBao); }
+.dangKyNguoiBanCanhBao p { margin-top: var(--kc2); }
+.dangKyNguoiBanLoi { margin: 0; color: var(--loi); }
+@media (max-width: 639px) { .dangKyNguoiBanCard { padding: var(--kc4); } .dangKyNguoiBanForm .button { width: 100%; } }

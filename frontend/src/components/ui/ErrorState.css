@@ -1,0 +1,2 @@
+.errorState { display: grid; justify-items: center; gap: var(--kc3); padding: var(--kc6); border: var(--doDayVien) solid var(--loi); border-radius: var(--boGocVua); background: var(--loiNen); text-align: center; }
+.errorState p { margin: 0; }

@@ -1,0 +1,10 @@
+.sanPhamCard { display: block; min-width: 0; overflow: hidden; border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); color: var(--chu); text-decoration: none; }
+.sanPhamCard:hover, .sanPhamCard:focus-visible { border-color: var(--mauChinh); }
+.sanPhamCardImage { position: relative; aspect-ratio: 1; background: var(--nen); }
+.sanPhamCardImage img { width: 100%; height: 100%; object-fit: cover; }
+.sanPhamCardHetHang img { opacity: .55; }
+.sanPhamCardPlaceholder { display: grid; place-content: center; justify-items: center; gap: var(--kc2); width: 100%; height: 100%; color: var(--chuMo); font-size: .8125rem; }
+.sanPhamCardStock { position: absolute; top: var(--kc2); left: var(--kc2); padding: var(--kc1) var(--kc2); border-radius: var(--boGocNho); background: var(--loiNen); color: var(--loi); font-size: .8125rem; font-weight: 600; }
+.sanPhamCardBody { display: grid; gap: var(--kc2); padding: var(--kc3); }
+.sanPhamCardBody h3 { display: -webkit-box; margin: 0; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: .9375rem; font-weight: 600; }
+.sanPhamCardShop { overflow: hidden; color: var(--chuPhu); font-size: .8125rem; text-overflow: ellipsis; white-space: nowrap; }

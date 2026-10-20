@@ -1,0 +1,5 @@
+.field { display: grid; gap: var(--kc1); min-width: 0; }
+.fieldLabel { font-weight: 600; }
+.fieldRequired, .fieldError { color: var(--loi); }
+.fieldHint, .fieldError { margin: 0; font-size: .875rem; }
+.fieldHint { color: var(--chuPhu); }

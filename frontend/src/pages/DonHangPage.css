@@ -1,0 +1,72 @@
+.donHangPage { display: grid; gap: var(--kc5); min-width: 0; }
+.donHangPage .skeletonGroup { margin-top: var(--kc4); }
+.donHangDanhSach { display: grid; gap: var(--kc4); }
+.donHangCard, .donHangKhung { min-width: 0; padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.donHangCardDau, .donHangCardChan, .donHangChiTietDau { display: flex; justify-content: space-between; gap: var(--kc4); flex-wrap: wrap; }
+.donHangCardDau strong, .donHangCardDau small { display: block; }
+.donHangCardDau small, .donHangCardChan small { color: var(--chuPhu); }
+.donHangCardSanPham { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: var(--kc3); margin: var(--kc4) 0; padding: var(--kc4) 0; border-block: var(--doDayVien) solid var(--vien); }
+.donHangCardSanPham img, .donHangAnhTrong, .donHangChiTietDong img { width: 72px; height: 72px; object-fit: cover; border-radius: var(--boGocNho); background: var(--nen); }
+.donHangAnhTrong { display: grid; place-items: center; color: var(--chuMo); }
+.donHangCardSanPham strong, .donHangCardSanPham span, .donHangCardSanPham small { display: block; overflow-wrap: anywhere; }
+.donHangCardSanPham span, .donHangCardSanPham small { color: var(--chuPhu); }
+.donHangCardChan { align-items: end; }
+.donHangCardChan p { margin: 0; }
+.donHangCardChan p strong { color: var(--mauGia); font-size: 1.25rem; white-space: nowrap; }
+.donHangCardHanhDong { display: flex; gap: var(--kc2); flex-wrap: wrap; }
+.donHangNutHuy.button { color: var(--loi); border-color: var(--loi); background: var(--beMat); }
+.donHangNutHuy.button:hover:not(:disabled) { background: var(--loiNen); }
+.donHangCardLyDo { width: 100%; }
+.donHangLoiThanhToan { margin: 0; padding: var(--kc3); border-radius: var(--boGocNho); color: var(--loi); background: var(--loiNen); }
+.donHangLopPhu { position: fixed; z-index: var(--tangModal); inset: 0; display: grid; place-items: center; padding: var(--kc4); color: white; background: var(--lopPhu); font-weight: 700; text-align: center; }
+.donHangQuayLai { width: fit-content; }
+.donHangChiTietDau h1 { margin-bottom: var(--kc1); }
+.donHangChiTietDau p { margin: 0; color: var(--chuPhu); }
+.donHangChiTietBadge { display: flex; align-items: flex-start; gap: var(--kc2); flex-wrap: wrap; }
+.tienTrinhDonHang { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kc2); list-style: none; margin: 0; padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.tienTrinhDonHang li { display: grid; gap: var(--kc2); justify-items: center; text-align: center; color: var(--chuPhu); font-size: .875rem; }
+.tienTrinhDonHang li span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--nen); color: var(--chuPhu); font-weight: 700; }
+.tienTrinhDonHang li.daQua span { background: var(--thanhCongNen); color: var(--thanhCong); }
+.tienTrinhDonHang li.hienTai { color: var(--mauChinhDam); font-weight: 700; }
+.tienTrinhDonHang li.hienTai span { background: var(--mauChinh); color: white; }
+.donHangDaHuy { padding: var(--kc4); border-radius: var(--boGocVua); background: var(--loiNen); color: var(--loi); }
+.donHangDaHuy p { margin: var(--kc2) 0 0; }
+.donHangNutHuyChiTiet { justify-self: start; }
+.donHangCanThanhToan { display: flex; justify-content: space-between; align-items: center; gap: var(--kc4); flex-wrap: wrap; padding: var(--kc4); border-radius: var(--boGocVua); background: var(--canhBaoNen); }
+.donHangCanThanhToan p { margin: var(--kc1) 0 0; }
+.donHangChiTietLuoi, .donHangChiTietChinh { display: grid; gap: var(--kc4); min-width: 0; align-content: start; }
+.donHangKhung h2 { font-size: 1.125rem; margin-bottom: var(--kc4); }
+.donHangChiTietDong { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: var(--kc3); padding: var(--kc3) 0; border-top: var(--doDayVien) solid var(--vien); }
+.donHangChiTietMoTa { display: grid; align-content: start; gap: var(--kc1); min-width: 0; }
+.donHangChiTietMoTa a, .donHangChiTietMoTa strong { font-weight: 600; overflow-wrap: anywhere; }
+.donHangChiTietMoTa > span, .donHangChiTietMoTa small, .donHangGiaDong del { color: var(--chuPhu); }
+.donHangNutDanhGia { width: fit-content; }
+.donHangGiaDong { display: flex; gap: var(--kc2); flex-wrap: wrap; }
+.donHangThanhTien { grid-column: 2; justify-self: end; }
+.donHangThongTin { display: grid; gap: var(--kc3); margin: 0; }
+.donHangThongTin div { display: flex; justify-content: space-between; gap: var(--kc3); border-bottom: var(--doDayVien) solid var(--vien); padding-bottom: var(--kc2); }
+.donHangThongTin dt { color: var(--chuPhu); }
+.donHangThongTin dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+.donHangTongKet { align-self: start; }
+.donHangTongKet > div { display: flex; justify-content: space-between; gap: var(--kc3); margin-top: var(--kc3); }
+.donHangTongKet > div strong { text-align: right; }
+.donHangTongKet ul { padding-left: var(--kc5); color: var(--chuPhu); font-size: .875rem; }
+.donHangTongKet .donHangTongCuoi { padding-top: var(--kc3); border-top: var(--doDayVien) solid var(--vien); }
+.donHangTongCuoi strong { color: var(--mauGia); font-size: 1.25rem; }
+@media (max-width: 639px) {
+  .donHangCardChan { display: grid; }
+  .donHangCardHanhDong { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .donHangCardHanhDong .button { width: 100%; }
+  .donHangCardHanhDong .button:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .tienTrinhDonHang { grid-template-columns: 1fr; }
+  .tienTrinhDonHang li { grid-template-columns: 32px 1fr; justify-items: start; align-items: center; text-align: left; }
+  .donHangThongTin div { display: grid; }
+  .donHangThongTin dd { text-align: left; }
+}
+@media (min-width: 768px) {
+  .donHangChiTietDong { grid-template-columns: 72px minmax(0, 1fr) auto; }
+  .donHangThanhTien { grid-column: 3; }
+}
+@media (min-width: 1024px) {
+  .donHangChiTietLuoi { grid-template-columns: minmax(0, 1fr) minmax(270px, 320px); }
+}

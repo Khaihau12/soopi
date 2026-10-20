@@ -1,0 +1,11 @@
+const express = require('express');
+const controller = require('../controllers/bannerQuangCao.controller');
+const { batBuocQuanTriVien } = require('../middlewares/role.middleware');
+const router = express.Router();
+router.use(...batBuocQuanTriVien);
+router.get('/', controller.quanTriLayDanhSachBanner);
+router.post('/', controller.quanTriTaoBanner);
+router.patch('/:id', controller.quanTriCapNhatBanner);
+router.patch('/:id/trang-thai', controller.quanTriCapNhatTrangThaiBanner);
+router.delete('/:id', controller.quanTriXoaBanner);
+module.exports = router;

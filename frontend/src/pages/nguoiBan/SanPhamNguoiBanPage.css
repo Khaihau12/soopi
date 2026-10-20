@@ -1,0 +1,11 @@
+.sanPhamBanPage { display: grid; gap: var(--kc5); min-width: 0; }
+.sanPhamBanFilters { display: flex; flex-wrap: wrap; align-items: end; gap: var(--kc3); background: var(--beMat); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); padding: var(--kc4); }
+.sanPhamBanFilters .field { min-width: 150px; flex: 1; }
+.sanPhamBanTen { display: flex; gap: var(--kc3); align-items: center; min-width: 180px; }
+.sanPhamBanTen img, .sanPhamBanAnhTrong { width: 48px; height: 48px; flex: 0 0 48px; border-radius: var(--boGocNho); object-fit: cover; background: var(--nen); }
+.sanPhamBanAnhTrong { display: grid; place-items: center; text-align: center; font-size: .65rem; color: var(--chuMo); }
+.sanPhamBanTen small, .sanPhamBanKho small { display: block; color: var(--chuPhu); }
+.sanPhamBanKho, .sanPhamBanActions { display: flex; align-items: center; gap: var(--kc2); flex-wrap: wrap; }
+.sanPhamBanModal { display: grid; gap: var(--kc4); }
+.sanPhamBanModal > div:last-child { display: flex; justify-content: flex-end; gap: var(--kc2); }
+@media (max-width: 639px) { .sanPhamBanFilters { display: grid; } .sanPhamBanFilters .field { min-width: 0; } }

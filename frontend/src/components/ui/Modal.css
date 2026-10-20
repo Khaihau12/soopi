@@ -1,0 +1,7 @@
+.modalOverlay { position: fixed; inset: 0; z-index: var(--tangModal); display: grid; place-items: center; padding: var(--kc4); background: var(--lopPhu); }
+.modal { width: min(100%, 40rem); max-height: calc(100vh - var(--kc6)); overflow: auto; border-radius: var(--boGocVua); background: var(--beMat); box-shadow: var(--bongNoi); }
+.modalHeader { display: flex; align-items: center; justify-content: space-between; gap: var(--kc4); padding: var(--kc5); border-bottom: var(--doDayVien) solid var(--vien); }
+.modalHeader h2 { margin: 0; }
+.modalClose { display: grid; place-items: center; min-width: var(--chieuCaoCham); min-height: var(--chieuCaoCham); border: 0; border-radius: var(--boGocNho); background: transparent; color: var(--chu); }
+.modalClose:hover { background: var(--nen); }
+.modalBody { padding: var(--kc5); }

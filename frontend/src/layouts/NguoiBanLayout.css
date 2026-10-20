@@ -1,0 +1,4 @@
+.nguoiBanTenCuaHang { padding: var(--kc3) var(--kc4); border-bottom: var(--doDayVien) solid var(--vien); color: var(--chuPhu); overflow-wrap: anywhere; }
+.nguoiBanTenCuaHang strong { color: var(--chu); }
+.nguoiBanCanhBao { margin: var(--kc4) var(--kc4) 0; padding: var(--kc3) var(--kc4); border-radius: var(--boGocNho); background: var(--canhBaoNen); color: var(--canhBao); }
+@media (min-width: 64em) { .nguoiBanCanhBao { margin: var(--kc5) var(--kc6) 0; } }

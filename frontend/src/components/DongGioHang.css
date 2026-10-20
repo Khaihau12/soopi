@@ -1,0 +1,15 @@
+.dongGioHang { display: grid; grid-template-columns: 44px 72px minmax(0, 1fr) 44px; gap: var(--kc3); align-items: start; padding: var(--kc4) 0; border-top: var(--doDayVien) solid var(--vien); }
+.dongGioHangChon, .dongGioHangXoa { display: grid; place-items: center; width: 44px; height: 44px; }
+.dongGioHangChon input { width: 20px; height: 20px; accent-color: var(--mauChinh); cursor: pointer; }
+.dongGioHangAnh { display: grid; place-items: center; width: 72px; height: 72px; border-radius: var(--boGocNho); background: var(--nen); color: var(--chuPhu); overflow: hidden; }
+.dongGioHangAnh img { width: 100%; height: 100%; object-fit: cover; }
+.dongGioHangNoiDung { display: grid; gap: var(--kc2); min-width: 0; }
+.dongGioHangTen { color: var(--chu); font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
+.dongGioHangTen:hover { color: var(--mauChinh); }
+.dongGioHangLyDo { margin: 0; color: var(--canhBao); }
+.dongGioHangCuoi { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--kc3); }
+.dongGioHangCuoi strong { color: var(--mauGia); white-space: nowrap; }
+.dongGioHangXoa { border: 0; border-radius: var(--boGocNho); background: transparent; color: var(--chuPhu); cursor: pointer; }
+.dongGioHangXoa:hover { color: var(--loi); background: var(--loiNen); }
+.dongGioHangKhongMua .dongGioHangAnh, .dongGioHangKhongMua .dongGioHangTen { opacity: .6; }
+@media (max-width: 420px) { .dongGioHang { grid-template-columns: 32px 56px minmax(0, 1fr) 36px; gap: var(--kc2); } .dongGioHangAnh { width: 56px; height: 56px; } .dongGioHangChon, .dongGioHangXoa { width: 36px; } }

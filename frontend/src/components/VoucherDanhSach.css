@@ -1,0 +1,10 @@
+.voucherListPage { display: grid; gap: var(--kc5); min-width: 0; }
+.voucherListFilters { display: flex; flex-wrap: wrap; align-items: end; gap: var(--kc3); padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.voucherListFilters .field { flex: 1; min-width: 160px; }
+.voucherListMa, .voucherListActions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kc2); }
+.voucherListMa strong { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+.voucherListCopy { margin: 0; color: var(--thanhCong); }
+.voucherSwitch { min-height: 44px; border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); padding: var(--kc2) var(--kc3); background: var(--beMat); color: var(--chu); font: inherit; cursor: pointer; }
+.voucherSwitch[aria-checked="true"] { border-color: var(--mauChinh); background: var(--mauChinhNhat); color: var(--mauChinhDam); }
+.voucherSwitch:focus-visible { outline: 2px solid var(--mauChinh); outline-offset: 2px; }
+@media (max-width: 639px) { .voucherListFilters { display: grid; } .voucherListFilters .field { min-width: 0; } }

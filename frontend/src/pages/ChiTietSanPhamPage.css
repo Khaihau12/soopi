@@ -1,0 +1,22 @@
+.chiTietSanPhamPage { display: grid; gap: var(--kc6); }
+.chiTietSanPhamChinh { display: grid; gap: var(--kc6); }
+.chiTietSanPhamThongTin { display: grid; align-content: start; gap: var(--kc4); min-width: 0; }
+.chiTietSanPhamThongTin h1, .chiTietSanPhamThongTin p, .chiTietSanPhamCuaHang h2, .chiTietSanPhamMoTa h2 { margin: 0; }
+.chiTietSanPhamDanhMuc { color: var(--chuPhu); }
+.chiTietSanPhamDanhGia { display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--kc2); width: fit-content; color: var(--mauChinh); }
+.chiTietSanPhamKhuyenMai { width: fit-content; padding: var(--kc2) var(--kc3); border-radius: var(--boGocNho); background: var(--mauGiaNhat); color: var(--mauGia); }
+.chiTietSanPhamVoucher { min-width: 0; display: grid; gap: var(--kc3); }
+.chiTietSanPhamVoucher h2 { margin: 0; font-size: 1rem; }
+.chiTietSanPhamVoucherScroll { min-width: 0; display: flex; gap: var(--kc3); overflow-x: auto; padding-bottom: var(--kc2); scroll-snap-type: x proximity; }
+.chiTietSanPhamVoucherScroll > * { scroll-snap-align: start; }
+.chiTietSanPhamVoucherLoi { color: var(--loi); }
+.chiTietSanPhamVoucherLoi button { border: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; }
+.chiTietSanPhamConHang { color: var(--thanhCong); }
+.chiTietSanPhamMua { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc3); }
+.chiTietSanPhamMua a { color: var(--mauChinh); font-weight: 600; }
+.chiTietSanPhamHetHang { color: var(--loi); }
+.chiTietSanPhamCuaHang, .chiTietSanPhamMoTa { display: grid; gap: var(--kc3); padding: var(--kc5); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.chiTietSanPhamCuaHang p { color: var(--chuPhu); }
+.chiTietSanPhamMoTa p { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+.chiTietSanPhamLoi { display: grid; justify-items: start; gap: var(--kc4); }
+@media (min-width: 1024px) { .chiTietSanPhamChinh { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }

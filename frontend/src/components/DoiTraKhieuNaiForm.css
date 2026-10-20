@@ -1,0 +1,11 @@
+.doiTraForm { display: grid; gap: var(--kc4); }
+.doiTraFormSanPham { display: grid; gap: var(--kc1); margin: 0; }
+.doiTraFormSanPham span { color: var(--chuPhu); font-size: .875rem; }
+.doiTraFormLuuY { margin: 0; padding: var(--kc3); border-radius: var(--boGocNho); background: var(--canhBaoNen); color: var(--chu); }
+.doiTraFormLoai { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kc2); padding: 0; border: 0; margin: 0; }
+.doiTraFormLoai legend { margin-bottom: var(--kc2); font-weight: 600; }
+.doiTraFormLoai label { display: flex; align-items: center; gap: var(--kc2); min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc3); border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); cursor: pointer; }
+.doiTraFormLoai label.dangChon { border-color: var(--mauChinh); background: var(--mauChinhNhat); }
+.doiTraFormLoi { color: var(--loi); margin: 0; }
+.doiTraFormHanhDong { display: flex; justify-content: flex-end; align-items: center; gap: var(--kc2); flex-wrap: wrap; }
+@media (max-width: 420px) { .doiTraFormLoai { grid-template-columns: 1fr; } }

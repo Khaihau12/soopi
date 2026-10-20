@@ -1,0 +1,12 @@
+const express = require('express');
+const controller = require('../controllers/voucher.controller');
+const { batBuocQuanTriVien } = require('../middlewares/role.middleware');
+const router = express.Router();
+router.use(...batBuocQuanTriVien);
+router.get('/', controller.quanTriLayDanhSachVoucher);
+router.post('/', controller.quanTriTaoVoucher);
+router.get('/:id', controller.quanTriLayChiTietVoucher);
+router.patch('/:id', controller.quanTriCapNhatVoucher);
+router.patch('/:id/trang-thai', controller.quanTriCapNhatTrangThaiVoucher);
+router.delete('/:id', controller.quanTriXoaVoucher);
+module.exports = router;

@@ -1,0 +1,3 @@
+.select { width: 100%; min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc3); border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); background: var(--beMat); color: var(--chu); }
+.select:focus { border-color: var(--mauChinh); }
+.select[aria-invalid="true"] { border-color: var(--loi); }

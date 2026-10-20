@@ -1,0 +1,7 @@
+.toastList { position: fixed; z-index: var(--tangToast); right: var(--kc4); bottom: var(--kc4); display: grid; gap: var(--kc2); width: min(25rem, calc(100vw - var(--kc6))); }
+.toast { display: flex; align-items: flex-start; gap: var(--kc3); padding: var(--kc3) var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); box-shadow: var(--bongNoi); }
+.toastSuccess { border-color: var(--thanhCong); }
+.toastDanger { border-color: var(--loi); }
+.toastInfo { border-color: var(--thongTin); }
+.toast span { flex: 1; }
+.toast button { display: grid; place-items: center; min-width: var(--chieuCaoCham); min-height: var(--chieuCaoCham); border: 0; background: transparent; }

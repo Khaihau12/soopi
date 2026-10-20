@@ -1,0 +1,11 @@
+.cuaHangNguoiBanPage { width: min(100%, 48rem); }
+.cuaHangNguoiBanCard { padding: var(--kc5); }
+.cuaHangNguoiBanTrangThai { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc3); padding-bottom: var(--kc4); border-bottom: var(--doDayVien) solid var(--vien); color: var(--chuPhu); }
+.cuaHangNguoiBanChiTiet { margin: var(--kc4) 0 var(--kc5); }
+.cuaHangNguoiBanChiTiet > div { display: grid; gap: var(--kc1); padding-block: var(--kc3); border-bottom: var(--doDayVien) solid var(--vien); }
+.cuaHangNguoiBanChiTiet dt { color: var(--chuPhu); }
+.cuaHangNguoiBanChiTiet dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cuaHangNguoiBanForm { display: grid; gap: var(--kc4); padding-top: var(--kc4); }
+.cuaHangNguoiBanActions { display: flex; justify-content: flex-end; gap: var(--kc3); }
+.cuaHangNguoiBanLoi { padding: var(--kc3); border-radius: var(--boGocNho); background: var(--loiNen); color: var(--loi); }
+@media (max-width: 639px) { .cuaHangNguoiBanCard { padding: var(--kc4); } .cuaHangNguoiBanActions { flex-direction: column-reverse; } .cuaHangNguoiBanActions .button { width: 100%; } }

@@ -1,0 +1,23 @@
+.hoSoPage { width: min(100%, 45rem); margin-inline: auto; padding-block: var(--kc5) var(--kc7); }
+.hoSoHeading { margin-bottom: var(--kc5); }
+.hoSoHeading p { color: var(--chuPhu); }
+.hoSoCard { padding: var(--kc5); margin-bottom: var(--kc5); }
+.hoSoIdentity { display: flex; align-items: center; gap: var(--kc4); padding-bottom: var(--kc5); border-bottom: var(--doDayVien) solid var(--vien); }
+.hoSoAvatar .avatar { width: 4rem; height: 4rem; font-size: 1.5rem; }
+.hoSoIdentityText { min-width: 0; }
+.hoSoIdentityText h2 { margin-bottom: var(--kc1); overflow-wrap: anywhere; }
+.hoSoIdentityText p { margin-bottom: var(--kc2); color: var(--chuPhu); overflow-wrap: anywhere; }
+.hoSoRoles { display: flex; flex-wrap: wrap; gap: var(--kc2); }
+.hoSoDetails { margin: var(--kc5) 0; }
+.hoSoDetails > div { display: grid; gap: var(--kc1); padding-block: var(--kc3); border-bottom: var(--doDayVien) solid var(--vien); }
+.hoSoDetails dt { color: var(--chuPhu); }
+.hoSoDetails dd { margin: 0; overflow-wrap: anywhere; }
+.hoSoEmpty { color: var(--chuMo); }
+.hoSoForm { display: grid; gap: var(--kc4); margin-top: var(--kc5); }
+.hoSoActions { display: flex; justify-content: flex-end; gap: var(--kc3); }
+.hoSoLoi { padding: var(--kc3); border-radius: var(--boGocNho); background: var(--loiNen); color: var(--loi); }
+.hoSoSecurity { display: flex; align-items: center; justify-content: space-between; gap: var(--kc4); }
+.hoSoSecurity h2 { margin-bottom: var(--kc3); }
+.hoSoSecurity p { margin-bottom: var(--kc1); font-weight: 600; }
+.hoSoSecurity span { color: var(--chuPhu); }
+@media (max-width: 639px) { .hoSoCard { padding: var(--kc4); } .hoSoActions { flex-direction: column-reverse; } .hoSoActions .button, .hoSoSecurity .button { width: 100%; } .hoSoSecurity { align-items: stretch; flex-direction: column; } }

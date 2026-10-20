@@ -1,0 +1,12 @@
+const express = require('express');
+const controller = require('../controllers/voucher.controller');
+const { batBuocNguoiBan } = require('../middlewares/role.middleware');
+const router = express.Router();
+router.use(...batBuocNguoiBan);
+router.get('/', controller.nguoiBanLayDanhSachVoucher);
+router.post('/', controller.nguoiBanTaoVoucher);
+router.get('/:id', controller.nguoiBanLayChiTietVoucher);
+router.patch('/:id', controller.nguoiBanCapNhatVoucher);
+router.patch('/:id/trang-thai', controller.nguoiBanCapNhatTrangThaiVoucher);
+router.delete('/:id', controller.nguoiBanXoaVoucher);
+module.exports = router;

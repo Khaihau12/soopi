@@ -1,0 +1,3 @@
+.tabs { display: flex; gap: var(--kc2); overflow-x: auto; border-bottom: var(--doDayVien) solid var(--vien); }
+.tabs button { flex: none; min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc4); border: 0; border-bottom: var(--doDayVien) solid transparent; background: transparent; color: var(--chuPhu); font-weight: 600; }
+.tabs button[aria-selected="true"] { border-bottom-color: var(--mauChinh); color: var(--mauChinh); }

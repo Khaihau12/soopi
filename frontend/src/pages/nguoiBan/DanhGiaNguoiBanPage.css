@@ -1,0 +1,17 @@
+.danhGiaBanPage { display: grid; gap: var(--kc4); min-width: 0; }
+.danhGiaBanBoLoc { display: grid; gap: var(--kc3); }
+.danhGiaBanLocSao { display: flex; gap: var(--kc2); overflow-x: auto; padding-bottom: var(--kc2); }
+.danhGiaBanLocSao .button { flex: none; }
+.danhGiaBanGoiY, .danhGiaBanLoi { margin: 0; color: var(--chuPhu); }
+.danhGiaBanLoi { color: var(--loi); }
+.danhGiaBanThongKe, .danhGiaBanDong { padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.danhGiaBanThongKe { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc3); }
+.danhGiaBanThongKe strong { font-size: 1.5rem; }
+.danhGiaBanDanhSach { display: grid; gap: var(--kc3); }
+.danhGiaBanDong { display: grid; gap: var(--kc3); }
+.danhGiaBanDong p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.danhGiaBanSanPham, .danhGiaBanNguoiMua { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc2); }
+.danhGiaBanSanPham img, .danhGiaBanSanPham > span { width: 48px; height: 48px; border-radius: var(--boGocNho); object-fit: cover; background: var(--nen); }
+.danhGiaBanSanPham > span { display: grid; place-items: center; font-size: .75rem; text-align: center; }
+.danhGiaBanNguoiMua time { color: var(--chuPhu); }
+@media (min-width: 768px) { .danhGiaBanBoLoc { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

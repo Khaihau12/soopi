@@ -1,0 +1,16 @@
+@import '../nguoiBan/ThongKeNguoiBanPage.css';
+
+.thongKeQuanTriThe { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.thongKeQuanTriThayDoi { display: block; font-size: .8125rem; }
+.thongKeQuanTriThayDoiTang { color: var(--thanhCong); }
+.thongKeQuanTriThayDoiGiam { color: var(--loi); }
+.thongKeQuanTriDanhSach { list-style: none; padding: 0; margin: 0; display: grid; }
+.thongKeQuanTriDanhSach li { display: grid; grid-template-columns: auto 48px minmax(0, 1fr) auto; align-items: center; gap: var(--kc3); padding: var(--kc3) 0; border-bottom: var(--doDayVien) solid var(--vien); }
+.thongKeQuanTriDanhSach li:last-child { border: 0; }
+.thongKeQuanTriDanhSach img, .thongKeQuanTriAnhTrong { width: 48px; height: 48px; object-fit: cover; border-radius: var(--boGocNho); background: var(--nen); }
+.thongKeQuanTriAnhTrong { display: grid; place-items: center; font-size: .7rem; text-align: center; }
+.thongKeQuanTriDanhSach small { display: block; color: var(--chuPhu); }
+.thongKeQuanTriDanhSach strong { text-align: right; }
+.thongKeQuanTriPhu { color: var(--chuPhu); font-size: .875rem; margin: 0 0 var(--kc4); }
+@media (min-width: 1024px) { .thongKeQuanTriThe { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .thongKeQuanTriThe { grid-template-columns: 1fr; } .thongKeQuanTriDanhSach li { grid-template-columns: auto 40px minmax(0, 1fr); } .thongKeQuanTriDanhSach strong { grid-column: 3; text-align: left; } }

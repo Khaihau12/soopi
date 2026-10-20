@@ -1,0 +1,6 @@
+.dropdownMenu { position: relative; }
+.dropdownMenuTrigger { display: inline-flex; align-items: center; gap: var(--kc2); min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc3); border: 0; border-radius: var(--boGocNho); background: transparent; color: var(--chu); }
+.dropdownMenuTrigger:hover { background: var(--nen); }
+.dropdownMenuPanel { position: absolute; top: 100%; right: 0; z-index: var(--tangDrawer); min-width: 12rem; padding: var(--kc2); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); box-shadow: var(--bongNoi); }
+.dropdownMenuPanel a, .dropdownMenuPanel button { display: flex; align-items: center; width: 100%; min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc3); border: 0; border-radius: var(--boGocNho); background: transparent; color: var(--chu); text-align: left; text-decoration: none; }
+.dropdownMenuPanel a:hover, .dropdownMenuPanel button:hover { background: var(--mauChinhNhat); }

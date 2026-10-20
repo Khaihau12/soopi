@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="2280" height="1590"
+     viewBox="0 0 2280 1590"
+     role="img" aria-label="Biểu đồ lớp UML hệ thống Soopi" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTphM2Y4M2RkYy01MjVlLTQ2MzItOGM0Yy02N2EyYjAwYjFkYWYAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaNG8tvC5XznLm79CNYNVXTMAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDoxYTZjYTMxYi1hMmVlLTRhM2ItYWQzZi01YjE3OGVjYWNiOTFscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNo+0M9A6rU+lvF8RPRE7PcSAAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggJcS+ChKF4l174gqjtSokJXkVL4mrSoWH2ee2kMz6J2ukZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaP/4x4J2fJeYJs/QbviCWtgAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIHGsOiswLi7Uu9sa6rBwHJ3xLKF+n8j4PR0bRQx/ymvLZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GQESZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmEzZjgzZGRjLTUyNWUtNDYzMi04YzRjLTY3YTJiMDBiMWRhZi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjFlYjQyMDg3LTU3N2YtNGJkYS1iZGY3LTBiYjVhOTQ4YjkwNnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCAlxL4KEoXiXXviCqO1KiQleRUviatKhYfZ57aQzPona6JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggJMdZhZXNnZQyWlgB1B/qIrXYi38SDgqFXqaPX3Zq9wKiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggDXL2eTFYGy+BJ47Es1rbmz2rJe2FDyXx5S/ycJxqndx0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQP6aFzVNdZMZAWcnJXtD8I5O87Ek5xlaUlP5PyGEMb2LykDR3bKpJtUt9a0f5G+yo4HTptBFfQEiV3PmX43FnYc=</c2pa:manifest></metadata>
+  <style>
+    .box {
+      fill: #ffffff;
+      stroke: #555555;
+      stroke-width: 1.5;
+    }
+    .sep {
+      stroke: #555555;
+      stroke-width: 1.4;
+    }
+    .title {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      fill: #222222;
+    }
+    .item {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      fill: #222222;
+    }
+    .assoc {
+      fill: none;
+      stroke: #666666;
+      stroke-width: 1.35;
+      stroke-linejoin: miter;
+      stroke-linecap: square;
+    }
+    .comp {
+      fill: #666666;
+      stroke: #666666;
+      stroke-width: 1.35;
+      stroke-linejoin: miter;
+    }
+    .mult {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      fill: #333333;
+    }
+  </style>
+
+  <rect x="0" y="0" width="2280" height="1590" fill="#ffffff"/>
+
+  <!-- Quan hệ được vẽ phía sau các lớp -->
+  <g id="relationships">
+    <path d="M 230 700 L 230 600 L 510 600" class="assoc"/><text x="238" y="688" text-anchor="start" class="mult">1</text><text x="496" y="592" text-anchor="end" class="mult">0..1</text>
+    <path d="M 70 700 L 70 574" class="assoc"/><text x="78" y="688" text-anchor="start" class="mult">1</text><text x="78" y="598" text-anchor="start" class="mult">0..*</text>
+    <path d="M 730 600 L 870 600 L 870 840 L 1630 840" class="assoc"/><text x="744" y="592" text-anchor="start" class="mult">1</text><text x="1616" y="832" text-anchor="end" class="mult">0..*</text>
+    <path d="M 1660 502 L 1660 640" class="assoc"/><text x="1668" y="526" text-anchor="start" class="mult">1</text><text x="1668" y="628" text-anchor="start" class="mult">0..*</text>
+    <path d="M 730 640 L 840 640 L 840 950 L 890 950" class="assoc"/><text x="744" y="632" text-anchor="start" class="mult">0..1</text><text x="876" y="942" text-anchor="end" class="mult">0..*</text>
+    <path d="M 1110 1010 L 1260 1010" class="assoc"/><text x="1124" y="1002" text-anchor="start" class="mult">1</text><text x="1246" y="1002" text-anchor="end" class="mult">1..*</text>
+    <path d="M 1660 928 L 1660 1010 L 1480 1010" class="assoc"/><text x="1668" y="952" text-anchor="start" class="mult">1</text><text x="1494" y="1002" text-anchor="start" class="mult">0..*</text>
+    <path d="M 730 510 L 890 510" class="assoc"/><text x="744" y="502" text-anchor="start" class="mult">0..1</text><text x="876" y="502" text-anchor="end" class="mult">0..*</text>
+    <path d="M 890 450 L 840 450 L 840 320 L 890 320" class="assoc"/><text x="876" y="442" text-anchor="end" class="mult">1</text><text x="876" y="312" text-anchor="end" class="mult">0..*</text>
+    <path d="M 750 240 L 890 240" class="assoc"/><text x="764" y="232" text-anchor="start" class="mult">1</text><text x="876" y="232" text-anchor="end" class="mult">0..*</text>
+    <path d="M 230 1078 L 230 1190 L 510 1190" class="assoc"/><text x="238" y="1102" text-anchor="start" class="mult">1</text><text x="496" y="1182" text-anchor="end" class="mult">0..1</text>
+    <path d="M 746 1280 L 890 1280" class="assoc"/><polygon points="730,1280 738,1286 746,1280 738,1274" class="comp"/><text x="760" y="1272" text-anchor="start" class="mult">1</text><text x="876" y="1272" text-anchor="end" class="mult">0..*</text>
+    <path d="M 1720 928 L 1720 1280 L 1110 1280" class="assoc"/><text x="1728" y="952" text-anchor="start" class="mult">1</text><text x="1124" y="1272" text-anchor="start" class="mult">0..*</text>
+    <path d="M 70 1078 L 70 1130 L 20 1130 L 20 320 L 510 320" class="assoc"/><text x="78" y="1102" text-anchor="start" class="mult">1</text><text x="496" y="312" text-anchor="end" class="mult">0..*</text>
+    <path d="M 510 510 L 460 510 L 460 390 L 510 390" class="assoc"/><text x="496" y="502" text-anchor="end" class="mult">1</text><text x="496" y="382" text-anchor="end" class="mult">0..*</text>
+    <path d="M 766 160 L 2040 160 L 2040 640" class="assoc"/><polygon points="750,160 758,166 766,160 758,154" class="comp"/><text x="780" y="152" text-anchor="start" class="mult">1</text><text x="2048" y="628" text-anchor="start" class="mult">1..*</text>
+    <path d="M 1850 670 L 2010 670" class="assoc"/><text x="1864" y="662" text-anchor="start" class="mult">1</text><text x="1996" y="662" text-anchor="end" class="mult">0..*</text>
+    <path d="M 280 90 L 510 90" class="assoc"/><text x="294" y="82" text-anchor="start" class="mult">1</text><text x="496" y="82" text-anchor="end" class="mult">1..*</text>
+    <path d="M 170 1078 L 170 1420 L 510 1420" class="assoc"/><text x="178" y="1102" text-anchor="start" class="mult">1</text><text x="496" y="1412" text-anchor="end" class="mult">0..*</text>
+    <path d="M 1780 928 L 1780 1440 L 730 1440" class="assoc"/><text x="1788" y="952" text-anchor="start" class="mult">1</text><text x="744" y="1432" text-anchor="start" class="mult">0..*</text>
+    <path d="M 2010 750 L 1870 750 L 1870 1480 L 730 1480" class="assoc"/><text x="1996" y="742" text-anchor="end" class="mult">1</text><text x="744" y="1472" text-anchor="start" class="mult">0..1</text>
+    <path d="M 2010 790 L 1960 790 L 1960 910 L 2010 910" class="assoc"/><text x="1996" y="782" text-anchor="end" class="mult">1</text><text x="1996" y="902" text-anchor="end" class="mult">0..1</text>
+    <path d="M 260 810 L 510 810" class="assoc"/><text x="274" y="802" text-anchor="start" class="mult">1</text><text x="496" y="802" text-anchor="end" class="mult">0..*</text>
+    <path d="M 510 640 L 460 640 L 460 770 L 510 770" class="assoc"/><text x="496" y="632" text-anchor="end" class="mult">1</text><text x="496" y="762" text-anchor="end" class="mult">0..*</text>
+    <path d="M 494 860 L 460 860 L 460 990 L 510 990" class="assoc"/><polygon points="510,860 502,854 494,860 502,866" class="comp"/><text x="480" y="852" text-anchor="end" class="mult">1</text><text x="496" y="982" text-anchor="end" class="mult">1..*</text>
+    <path d="M 260 1030 L 510 1030" class="assoc"/><text x="274" y="1022" text-anchor="start" class="mult">1</text><text x="496" y="1022" text-anchor="end" class="mult">0..*</text>
+  </g>
+
+  <!-- Các lớp -->
+  <g id="classes">
+    <g class="uml-box">
+      <rect x="40" y="20" width="240" height="252" rx="0" ry="0" class="box"/>
+      <line x1="40" y1="52" x2="280" y2="52" class="sep"/>
+      <line x1="40" y1="198" x2="280" y2="198" class="sep"/>
+      <text x="160" y="41" text-anchor="middle" class="title">GiaoDichThanhToan</text>
+      <text x="50" y="76" class="item">- idGiaoDich: String</text>
+      <text x="50" y="94" class="item">- maGiaoDich: String</text>
+      <text x="50" y="112" class="item">- soTien: Number</text>
+      <text x="50" y="130" class="item">- phuongThucThanhToan: String</text>
+      <text x="50" y="148" class="item">- trangThaiThanhToan: String</text>
+      <text x="50" y="166" class="item">- thoiGianTao: Date</text>
+      <text x="50" y="184" class="item">- thoiGianHoanTat: Date</text>
+      <text x="50" y="222" class="item">+ taoGiaoDich()</text>
+      <text x="50" y="240" class="item">+ capNhatKetQua()</text>
+      <text x="50" y="258" class="item">+ danhDauHetHan()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="40" y="340" width="250" height="234" rx="0" ry="0" class="box"/>
+      <line x1="40" y1="372" x2="290" y2="372" class="sep"/>
+      <line x1="40" y1="500" x2="290" y2="500" class="sep"/>
+      <text x="165" y="361" text-anchor="middle" class="title">YeuCauDangKyNguoiBan</text>
+      <text x="50" y="396" class="item">- idYeuCau: String</text>
+      <text x="50" y="414" class="item">- tenCuaHang: String</text>
+      <text x="50" y="432" class="item">- moTaCuaHang: String</text>
+      <text x="50" y="450" class="item">- diaChiCuaHang: String</text>
+      <text x="50" y="468" class="item">- ngayGui: Date</text>
+      <text x="50" y="486" class="item">- trangThai: String</text>
+      <text x="50" y="524" class="item">+ guiYeuCau()</text>
+      <text x="50" y="542" class="item">+ pheDuyet()</text>
+      <text x="50" y="560" class="item">+ tuChoi()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="40" y="700" width="220" height="378" rx="0" ry="0" class="box"/>
+      <line x1="40" y1="732" x2="260" y2="732" class="sep"/>
+      <line x1="40" y1="932" x2="260" y2="932" class="sep"/>
+      <text x="150" y="721" text-anchor="middle" class="title">TaiKhoan</text>
+      <text x="50" y="756" class="item">- idTaiKhoan: String</text>
+      <text x="50" y="774" class="item">- email: String</text>
+      <text x="50" y="792" class="item">- matKhau: String</text>
+      <text x="50" y="810" class="item">- hoTen: String</text>
+      <text x="50" y="828" class="item">- ngaySinh: Date</text>
+      <text x="50" y="846" class="item">- gioiTinh: String</text>
+      <text x="50" y="864" class="item">- soDienThoai: String</text>
+      <text x="50" y="882" class="item">- diaChiNhanHang: String</text>
+      <text x="50" y="900" class="item">- vaiTro: Array</text>
+      <text x="50" y="918" class="item">- trangThaiTaiKhoan: String</text>
+      <text x="50" y="956" class="item">+ dangKy()</text>
+      <text x="50" y="974" class="item">+ dangNhap()</text>
+      <text x="50" y="992" class="item">+ capNhatThongTin()</text>
+      <text x="50" y="1010" class="item">+ datLaiMatKhau()</text>
+      <text x="50" y="1028" class="item">+ khoaTaiKhoan()</text>
+      <text x="50" y="1046" class="item">+ moKhoaTaiKhoan()</text>
+      <text x="50" y="1064" class="item">+ themQuyenNguoiBan()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="510" y="60" width="240" height="360" rx="0" ry="0" class="box"/>
+      <line x1="510" y1="92" x2="750" y2="92" class="sep"/>
+      <line x1="510" y1="310" x2="750" y2="310" class="sep"/>
+      <text x="630" y="81" text-anchor="middle" class="title">DonHang</text>
+      <text x="520" y="116" class="item">- idDonHang: String</text>
+      <text x="520" y="134" class="item">- diaChiNhanHang: String</text>
+      <text x="520" y="152" class="item">- tongTienHang: Number</text>
+      <text x="520" y="170" class="item">- tongGiamVoucher: Number</text>
+      <text x="520" y="188" class="item">- phiVanChuyen: Number</text>
+      <text x="520" y="206" class="item">- giamPhiVanChuyen: Number</text>
+      <text x="520" y="224" class="item">- tongThanhToan: Number</text>
+      <text x="520" y="242" class="item">- phuongThucThanhToan: String</text>
+      <text x="520" y="260" class="item">- trangThaiThanhToan: String</text>
+      <text x="520" y="278" class="item">- trangThaiXuLy: String</text>
+      <text x="520" y="296" class="item">- ngayTao: Date</text>
+      <text x="520" y="334" class="item">+ taoDonHang()</text>
+      <text x="520" y="352" class="item">+ tinhTongTien()</text>
+      <text x="520" y="370" class="item">+ tinhTongGiamGia()</text>
+      <text x="520" y="388" class="item">+ capNhatTrangThai()</text>
+      <text x="520" y="406" class="item">+ huyDonHang()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="510" y="480" width="220" height="198" rx="0" ry="0" class="box"/>
+      <line x1="510" y1="512" x2="730" y2="512" class="sep"/>
+      <line x1="510" y1="622" x2="730" y2="622" class="sep"/>
+      <text x="620" y="501" text-anchor="middle" class="title">CuaHang</text>
+      <text x="520" y="536" class="item">- idCuaHang: String</text>
+      <text x="520" y="554" class="item">- tenCuaHang: String</text>
+      <text x="520" y="572" class="item">- moTa: String</text>
+      <text x="520" y="590" class="item">- diaChi: String</text>
+      <text x="520" y="608" class="item">- trangThaiHoatDong: String</text>
+      <text x="520" y="646" class="item">+ xemThongTin()</text>
+      <text x="520" y="664" class="item">+ capNhatThongTin()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="510" y="734" width="220" height="162" rx="0" ry="0" class="box"/>
+      <line x1="510" y1="766" x2="730" y2="766" class="sep"/>
+      <line x1="510" y1="840" x2="730" y2="840" class="sep"/>
+      <text x="620" y="755" text-anchor="middle" class="title">CuocTroChuyen</text>
+      <text x="520" y="790" class="item">- idCuocTroChuyen: String</text>
+      <text x="520" y="808" class="item">- thoiGianBatDau: Date</text>
+      <text x="520" y="826" class="item">- thoiGianCapNhat: Date</text>
+      <text x="520" y="864" class="item">+ taoCuocTroChuyen()</text>
+      <text x="520" y="882" class="item">+ layDanhSachTinNhan()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="510" y="952" width="220" height="144" rx="0" ry="0" class="box"/>
+      <line x1="510" y1="984" x2="730" y2="984" class="sep"/>
+      <line x1="510" y1="1058" x2="730" y2="1058" class="sep"/>
+      <text x="620" y="973" text-anchor="middle" class="title">TinNhan</text>
+      <text x="520" y="1008" class="item">- idTinNhan: String</text>
+      <text x="520" y="1026" class="item">- noiDung: String</text>
+      <text x="520" y="1044" class="item">- thoiGianGui: Date</text>
+      <text x="520" y="1082" class="item">+ guiTinNhan()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="510" y="1152" width="220" height="180" rx="0" ry="0" class="box"/>
+      <line x1="510" y1="1184" x2="730" y2="1184" class="sep"/>
+      <line x1="510" y1="1240" x2="730" y2="1240" class="sep"/>
+      <text x="620" y="1173" text-anchor="middle" class="title">GioHang</text>
+      <text x="520" y="1208" class="item">- idGioHang: String</text>
+      <text x="520" y="1226" class="item">- tongGiaTri: Number</text>
+      <text x="520" y="1264" class="item">+ themSanPham()</text>
+      <text x="520" y="1282" class="item">+ xoaSanPham()</text>
+      <text x="520" y="1300" class="item">+ capNhatSoLuong()</text>
+      <text x="520" y="1318" class="item">+ tinhTongTien()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="510" y="1390" width="220" height="180" rx="0" ry="0" class="box"/>
+      <line x1="510" y1="1422" x2="730" y2="1422" class="sep"/>
+      <line x1="510" y1="1514" x2="730" y2="1514" class="sep"/>
+      <text x="620" y="1411" text-anchor="middle" class="title">DanhGia</text>
+      <text x="520" y="1446" class="item">- idDanhGia: String</text>
+      <text x="520" y="1464" class="item">- soSao: Number</text>
+      <text x="520" y="1482" class="item">- noiDung: String</text>
+      <text x="520" y="1500" class="item">- ngayDanhGia: Date</text>
+      <text x="520" y="1538" class="item">+ taoDanhGia()</text>
+      <text x="520" y="1556" class="item">+ kiemTraDieuKien()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="890" y="210" width="220" height="144" rx="0" ry="0" class="box"/>
+      <line x1="890" y1="242" x2="1110" y2="242" class="sep"/>
+      <line x1="890" y1="316" x2="1110" y2="316" class="sep"/>
+      <text x="1000" y="231" text-anchor="middle" class="title">ApDungVoucher</text>
+      <text x="900" y="266" class="item">- idApDungVoucher: String</text>
+      <text x="900" y="284" class="item">- giaTriGiamThucTe: Number</text>
+      <text x="900" y="302" class="item">- thoiGianApDung: Date</text>
+      <text x="900" y="340" class="item">+ tinhGiaTriGiamThucTe()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="890" y="420" width="220" height="396" rx="0" ry="0" class="box"/>
+      <line x1="890" y1="452" x2="1110" y2="452" class="sep"/>
+      <line x1="890" y1="688" x2="1110" y2="688" class="sep"/>
+      <text x="1000" y="441" text-anchor="middle" class="title">Voucher</text>
+      <text x="900" y="476" class="item">- idVoucher: String</text>
+      <text x="900" y="494" class="item">- maVoucher: String</text>
+      <text x="900" y="512" class="item">- tenVoucher: String</text>
+      <text x="900" y="530" class="item">- loaiVoucher: String</text>
+      <text x="900" y="548" class="item">- kieuGiam: String</text>
+      <text x="900" y="566" class="item">- giaTriGiam: Number</text>
+      <text x="900" y="584" class="item">- giamToiDa: Number</text>
+      <text x="900" y="602" class="item">- giaTriDonToiThieu: Number</text>
+      <text x="900" y="620" class="item">- soLuong: Number</text>
+      <text x="900" y="638" class="item">- ngayBatDau: Date</text>
+      <text x="900" y="656" class="item">- ngayKetThuc: Date</text>
+      <text x="900" y="674" class="item">- trangThai: String</text>
+      <text x="900" y="712" class="item">+ taoVoucher()</text>
+      <text x="900" y="730" class="item">+ capNhatVoucher()</text>
+      <text x="900" y="748" class="item">+ kiemTraHopLe()</text>
+      <text x="900" y="766" class="item">+ tinhGiaTriGiam()</text>
+      <text x="900" y="784" class="item">+ kichHoat()</text>
+      <text x="900" y="802" class="item">+ voHieuHoa()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="890" y="920" width="220" height="270" rx="0" ry="0" class="box"/>
+      <line x1="890" y1="952" x2="1110" y2="952" class="sep"/>
+      <line x1="890" y1="1098" x2="1110" y2="1098" class="sep"/>
+      <text x="1000" y="941" text-anchor="middle" class="title">KhuyenMai</text>
+      <text x="900" y="976" class="item">- idKhuyenMai: String</text>
+      <text x="900" y="994" class="item">- tenKhuyenMai: String</text>
+      <text x="900" y="1012" class="item">- loaiKhuyenMai: String</text>
+      <text x="900" y="1030" class="item">- phamVi: String</text>
+      <text x="900" y="1048" class="item">- ngayBatDau: Date</text>
+      <text x="900" y="1066" class="item">- ngayKetThuc: Date</text>
+      <text x="900" y="1084" class="item">- trangThai: String</text>
+      <text x="900" y="1122" class="item">+ taoKhuyenMai()</text>
+      <text x="900" y="1140" class="item">+ capNhatKhuyenMai()</text>
+      <text x="900" y="1158" class="item">+ kiemTraHieuLuc()</text>
+      <text x="900" y="1176" class="item">+ capNhatTrangThai()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="890" y="1250" width="220" height="162" rx="0" ry="0" class="box"/>
+      <line x1="890" y1="1282" x2="1110" y2="1282" class="sep"/>
+      <line x1="890" y1="1356" x2="1110" y2="1356" class="sep"/>
+      <text x="1000" y="1271" text-anchor="middle" class="title">ChiTietGioHang</text>
+      <text x="900" y="1306" class="item">- idChiTietGioHang: String</text>
+      <text x="900" y="1324" class="item">- soLuong: Number</text>
+      <text x="900" y="1342" class="item">- duocChon: Boolean</text>
+      <text x="900" y="1380" class="item">+ capNhatSoLuong()</text>
+      <text x="900" y="1398" class="item">+ tinhThanhTien()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="1260" y="180" width="220" height="234" rx="0" ry="0" class="box"/>
+      <line x1="1260" y1="212" x2="1480" y2="212" class="sep"/>
+      <line x1="1260" y1="322" x2="1480" y2="322" class="sep"/>
+      <text x="1370" y="201" text-anchor="middle" class="title">BannerQuangCao</text>
+      <text x="1270" y="236" class="item">- idBanner: String</text>
+      <text x="1270" y="254" class="item">- tieuDe: String</text>
+      <text x="1270" y="272" class="item">- hinhAnh: String</text>
+      <text x="1270" y="290" class="item">- noiDung: String</text>
+      <text x="1270" y="308" class="item">- trangThai: String</text>
+      <text x="1270" y="346" class="item">+ themBanner()</text>
+      <text x="1270" y="364" class="item">+ capNhatBanner()</text>
+      <text x="1270" y="382" class="item">+ kichHoat()</text>
+      <text x="1270" y="400" class="item">+ voHieuHoa()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="1260" y="980" width="220" height="144" rx="0" ry="0" class="box"/>
+      <line x1="1260" y1="1012" x2="1480" y2="1012" class="sep"/>
+      <line x1="1260" y1="1086" x2="1480" y2="1086" class="sep"/>
+      <text x="1370" y="1001" text-anchor="middle" class="title">ChiTietKhuyenMai</text>
+      <text x="1270" y="1036" class="item">- idChiTietKhuyenMai: String</text>
+      <text x="1270" y="1054" class="item">- tyLeGiam: Number</text>
+      <text x="1270" y="1072" class="item">- giaKhuyenMai: Number</text>
+      <text x="1270" y="1110" class="item">+ tinhGiaKhuyenMai()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="1630" y="340" width="220" height="162" rx="0" ry="0" class="box"/>
+      <line x1="1630" y1="372" x2="1850" y2="372" class="sep"/>
+      <line x1="1630" y1="428" x2="1850" y2="428" class="sep"/>
+      <text x="1740" y="361" text-anchor="middle" class="title">DanhMuc</text>
+      <text x="1640" y="396" class="item">- idDanhMuc: String</text>
+      <text x="1640" y="414" class="item">- tenDanhMuc: String</text>
+      <text x="1640" y="452" class="item">+ themDanhMuc()</text>
+      <text x="1640" y="470" class="item">+ capNhatDanhMuc()</text>
+      <text x="1640" y="488" class="item">+ xoaDanhMuc()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="1630" y="640" width="220" height="288" rx="0" ry="0" class="box"/>
+      <line x1="1630" y1="672" x2="1850" y2="672" class="sep"/>
+      <line x1="1630" y1="818" x2="1850" y2="818" class="sep"/>
+      <text x="1740" y="661" text-anchor="middle" class="title">SanPham</text>
+      <text x="1640" y="696" class="item">- idSanPham: String</text>
+      <text x="1640" y="714" class="item">- tenSanPham: String</text>
+      <text x="1640" y="732" class="item">- hinhAnh: Array</text>
+      <text x="1640" y="750" class="item">- moTa: String</text>
+      <text x="1640" y="768" class="item">- giaGoc: Number</text>
+      <text x="1640" y="786" class="item">- soLuongTon: Number</text>
+      <text x="1640" y="804" class="item">- trangThaiKinhDoanh: String</text>
+      <text x="1640" y="842" class="item">+ themSanPham()</text>
+      <text x="1640" y="860" class="item">+ capNhatSanPham()</text>
+      <text x="1640" y="878" class="item">+ xoaSanPham()</text>
+      <text x="1640" y="896" class="item">+ capNhatTonKho()</text>
+      <text x="1640" y="914" class="item">+ capNhatGia()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="2010" y="640" width="250" height="180" rx="0" ry="0" class="box"/>
+      <line x1="2010" y1="672" x2="2260" y2="672" class="sep"/>
+      <line x1="2010" y1="782" x2="2260" y2="782" class="sep"/>
+      <text x="2135" y="661" text-anchor="middle" class="title">ChiTietDonHang</text>
+      <text x="2020" y="696" class="item">- idChiTietDonHang: String</text>
+      <text x="2020" y="714" class="item">- soLuong: Number</text>
+      <text x="2020" y="732" class="item">- giaGocTaiThoiDiemDat: Number</text>
+      <text x="2020" y="750" class="item">- giaBanThucTe: Number</text>
+      <text x="2020" y="768" class="item">- thanhTien: Number</text>
+      <text x="2020" y="806" class="item">+ tinhThanhTien()</text>
+    </g>
+    <g class="uml-box">
+      <rect x="2010" y="880" width="230" height="252" rx="0" ry="0" class="box"/>
+      <line x1="2010" y1="912" x2="2240" y2="912" class="sep"/>
+      <line x1="2010" y1="1040" x2="2240" y2="1040" class="sep"/>
+      <text x="2125" y="901" text-anchor="middle" class="title">YeuCauDoiTraKhieuNai</text>
+      <text x="2020" y="936" class="item">- idYeuCau: String</text>
+      <text x="2020" y="954" class="item">- loaiYeuCau: String</text>
+      <text x="2020" y="972" class="item">- noiDung: String</text>
+      <text x="2020" y="990" class="item">- trangThaiXuLy: String</text>
+      <text x="2020" y="1008" class="item">- ketQuaXuLy: String</text>
+      <text x="2020" y="1026" class="item">- ngayTao: Date</text>
+      <text x="2020" y="1064" class="item">+ guiYeuCau()</text>
+      <text x="2020" y="1082" class="item">+ chapNhan()</text>
+      <text x="2020" y="1100" class="item">+ tuChoi()</text>
+      <text x="2020" y="1118" class="item">+ capNhatTrangThai()</text>
+    </g>
+  </g>
+</svg>

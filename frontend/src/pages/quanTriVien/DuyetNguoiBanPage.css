@@ -1,0 +1,13 @@
+.duyetNguoiBanPage { display: grid; gap: var(--kc5); min-width: 0; }
+.duyetNguoiBanNguoiGui { display: grid; gap: var(--kc1); }
+.duyetNguoiBanNguoiGui span { color: var(--chuPhu); overflow-wrap: anywhere; }
+.duyetNguoiBanLoi { margin: 0; padding: var(--kc3) var(--kc4); border-radius: var(--boGocNho); background: var(--loiNen); color: var(--loi); }
+.duyetNguoiBanChiTiet { display: grid; gap: var(--kc5); }
+.duyetNguoiBanChiTiet section { min-width: 0; }
+.duyetNguoiBanChiTiet h3 { margin-bottom: var(--kc3); }
+.duyetNguoiBanChiTiet dl { display: grid; gap: var(--kc2); margin: 0; }
+.duyetNguoiBanDong { display: grid; grid-template-columns: minmax(7rem, 35%) minmax(0, 1fr); gap: var(--kc3); }
+.duyetNguoiBanDong dt { color: var(--chuPhu); }
+.duyetNguoiBanDong dd { margin: 0; overflow-wrap: anywhere; white-space: pre-line; }
+.duyetNguoiBanActions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--kc3); }
+@media (max-width: 639px) { .duyetNguoiBanDong { grid-template-columns: 1fr; gap: 0; } .duyetNguoiBanActions { display: grid; } }

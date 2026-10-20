@@ -1,0 +1,5 @@
+.pagination { display: flex; align-items: center; justify-content: center; gap: var(--kc3); flex-wrap: wrap; }
+.paginationPages { display: none; align-items: center; gap: var(--kc1); }
+.paginationPage { min-width: var(--chieuCaoCham); min-height: var(--chieuCaoCham); border: 0; border-radius: var(--boGocNho); background: transparent; color: var(--chu); }
+.paginationPage[aria-current="page"] { color: var(--mauChinhDam); background: var(--mauChinhNhat); font-weight: 700; }
+@media (min-width: 48em) { .paginationPages { display: flex; } }

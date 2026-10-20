@@ -1,0 +1,11 @@
+.danhMucPage { width: 100%; }
+.danhMucActions { display: flex; flex-wrap: wrap; gap: var(--kc2); }
+.danhMucDelete { color: var(--loi); }
+.danhMucDelete:hover:not(:disabled) { background: var(--loiNen); }
+.danhMucForm { display: grid; gap: var(--kc5); }
+.danhMucFormActions { display: flex; justify-content: flex-end; gap: var(--kc3); }
+@media (max-width: 639px) {
+  .danhMucActions { justify-content: flex-end; }
+  .danhMucFormActions { flex-direction: column-reverse; }
+  .danhMucFormActions .button { width: 100%; }
+}

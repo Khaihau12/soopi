@@ -1,0 +1,4 @@
+.pageHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--kc4); flex-wrap: wrap; margin-bottom: var(--kc5); }
+.pageHeader h1 { margin-bottom: var(--kc1); }
+.pageHeader p { margin: 0; color: var(--chuPhu); }
+.pageHeaderActions { display: flex; gap: var(--kc2); flex-wrap: wrap; }

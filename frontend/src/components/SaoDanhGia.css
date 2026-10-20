@@ -1,0 +1,12 @@
+.saoDanhGiaXem, .saoDanhGiaLuaChon { display: inline-flex; align-items: center; gap: var(--kc1); color: var(--canhBao); }
+.saoDanhGiaHinh { position: relative; display: inline-flex; }
+.saoDanhGiaPhu { position: absolute; top: 0; left: 0; overflow: hidden; }
+.saoDanhGiaPhu .icon { max-width: none; }
+.saoDanhGiaNhap { min-width: 0; padding: 0; margin: 0; border: 0; }
+.saoDanhGiaNhap legend { margin-bottom: var(--kc2); font-weight: 600; }
+.saoDanhGiaLuaChon { flex-wrap: wrap; gap: var(--kc2); }
+.saoDanhGiaNhan { position: relative; display: grid; place-items: center; min-width: var(--chieuCaoCham); min-height: var(--chieuCaoCham); border-radius: var(--boGocNho); cursor: pointer; }
+.saoDanhGiaNhan input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.saoDanhGiaNhan:focus-within { outline: 2px solid var(--mauChinh); outline-offset: 2px; }
+.saoDanhGiaGoiY { color: var(--chuPhu); }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }

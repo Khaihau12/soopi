@@ -1,0 +1,23 @@
+.theThongKe { display: flex; flex-direction: column; gap: var(--kc2); min-width: 0; padding: var(--kc5); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); color: var(--chu); text-decoration: none; }
+.theThongKeNhan { color: var(--chuPhu); font-size: .875rem; }
+.theThongKeGiaTri { font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.2; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.theThongKe small { color: var(--chuMo); }
+.theThongKeNhanManh { border-color: var(--mauChinh); background: var(--mauChinhNhat); }
+.boChonKhoang { display: grid; gap: var(--kc3); }
+.boChonKhoangNut, .boChonKhoangForm { display: flex; flex-wrap: wrap; gap: var(--kc2); align-items: end; }
+.boChonKhoangNut button, .thongKeChon button { min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc4); border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); background: var(--beMat); color: var(--chu); }
+.boChonKhoangNut button[aria-pressed=true], .thongKeChon button[aria-pressed=true] { border-color: var(--mauChinh); background: var(--mauChinhNhat); color: var(--mauChinhDam); font-weight: 600; }
+.boChonKhoangForm label { display: grid; gap: var(--kc1); font-size: .875rem; }
+.boChonKhoangForm input { min-height: var(--chieuCaoCham); padding: var(--kc2); border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); }
+.boChonKhoangLoi { color: var(--loi); }
+.bieuDoKhung { min-width: 0; }
+.bieuDoDoanhThu { width: 100%; height: 280px; min-width: 0; }
+.bieuDoBangWrap { overflow-x: auto; }
+.bieuDoKhung details { margin-top: var(--kc4); }
+.bieuDoKhung summary { cursor: pointer; color: var(--mauChinh); }
+.bieuDoKhung table { width: 100%; border-collapse: collapse; margin-top: var(--kc3); }
+.bieuDoKhung th, .bieuDoKhung td { padding: var(--kc2); border-bottom: var(--doDayVien) solid var(--vien); text-align: right; }
+.bieuDoKhung th:first-child { text-align: left; }
+.bieuDoThanhCuon { max-width: 100%; overflow-x: auto; }
+.bieuDoThanhNgang { min-width: 520px; }
+@media (max-width: 639px) { .theThongKe { padding: var(--kc4); } .bieuDoDoanhThu { height: 260px; } }

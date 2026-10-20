@@ -1,0 +1,81 @@
+/* Điểm ngắt mobile-first: 640px, 768px, 1024px, 1280px. */
+:root {
+  --mauChinh: #0F766E;
+  --mauChinhDam: #115E59;
+  --mauChinhNhat: #CCFBF1;
+  --mauGia: #E11D48;
+  --mauGiaNhat: #FFE4E6;
+  --nen: #F8FAFC;
+  --beMat: #FFFFFF;
+  --chu: #0F172A;
+  --chuPhu: #475569;
+  --chuMo: #64748B;
+  --vien: #E2E8F0;
+  --vienDam: #CBD5E1;
+  --thanhCong: #15803D;
+  --thanhCongNen: #DCFCE7;
+  --canhBao: #B45309;
+  --canhBaoNen: #FEF3C7;
+  --loi: #B91C1C;
+  --loiNen: #FEE2E2;
+  --thongTin: #1D4ED8;
+  --thongTinNen: #DBEAFE;
+  --mauBieuDo1: #0F766E;
+  --mauBieuDo2: #1D4ED8;
+  --mauBieuDo3: #B45309;
+  --mauBieuDo4: #7C3AED;
+  --mauBieuDo5: #64748B;
+  --mauLuoiBieuDo: #E2E8F0;
+
+  --phongChu: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --kc1: 4px;
+  --kc2: 8px;
+  --kc3: 12px;
+  --kc4: 16px;
+  --kc5: 24px;
+  --kc6: 32px;
+  --kc7: 48px;
+  --boGocNho: 8px;
+  --boGocVua: 12px;
+  --boGocTron: 999px;
+  --bongNoi: 0 8px 24px rgba(15, 23, 42, .12);
+  --lopPhu: rgba(15, 23, 42, .48);
+  --doDayVien: 1px;
+  --chieuCaoCham: 44px;
+  --chieuCaoHeader: 64px;
+  --chieuRongToiDa: 1200px;
+  --chieuRongSidebar: 248px;
+  --tangHeader: 100;
+  --tangNoiDungNoi: 5;
+  --tangTongKet: 90;
+  --tangDrawer: 200;
+  --tangModal: 300;
+  --tangToast: 400;
+  --thoiGianNhanh: 120ms;
+  --thoiGianVua: 200ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; background: var(--nen); color: var(--chu); font: 400 1rem/1.55 var(--phongChu); }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+a { color: var(--mauChinh); }
+img, svg { max-width: 100%; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { font-size: 1.75rem; line-height: 1.25; font-weight: 700; }
+h2 { font-size: 1.375rem; line-height: 1.35; font-weight: 600; }
+h3 { font-size: 1.125rem; line-height: 1.4; font-weight: 600; }
+p { max-width: 70ch; }
+:focus-visible { outline: 2px solid var(--mauChinh); outline-offset: 2px; }
+.container { width: 100%; max-width: var(--chieuRongToiDa); margin-inline: auto; padding-inline: var(--kc4); }
+.chiDocBangManHinh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+@media (min-width: 768px) {
+  h1 { font-size: 2rem; }
+  .container { padding-inline: var(--kc5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

@@ -1,0 +1,4 @@
+.danhMucChips { display: flex; gap: var(--kc2); margin-block: var(--kc4); overflow-x: auto; padding-bottom: var(--kc2); }
+.danhMucChip { flex: none; display: inline-flex; align-items: center; min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc4); border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocTron); background: var(--beMat); color: var(--chuPhu); text-decoration: none; }
+.danhMucChip:hover, .danhMucChip:focus-visible { border-color: var(--mauChinh); color: var(--mauChinhDam); }
+.danhMucChipActive { border-color: var(--mauChinh); background: var(--mauChinhNhat); color: var(--mauChinhDam); font-weight: 600; }

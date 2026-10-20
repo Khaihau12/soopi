@@ -1,0 +1,4 @@
+.danhSachSanPhamPage { display: grid; gap: var(--kc5); }
+.danhSachSanPhamHeading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--kc2); }
+.danhSachSanPhamHeading h1, .danhSachSanPhamHeading p { margin: 0; }
+.danhSachSanPhamHeading p { color: var(--chuPhu); }

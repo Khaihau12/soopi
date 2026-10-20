@@ -1,0 +1,5 @@
+.khuyenMaiListPage { display: grid; gap: var(--kc5); min-width: 0; }
+.khuyenMaiListFilters { display: flex; flex-wrap: wrap; align-items: end; gap: var(--kc3); background: var(--beMat); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); padding: var(--kc4); }
+.khuyenMaiListFilters .field { flex: 1; min-width: 160px; }
+.khuyenMaiListActions { display: flex; flex-wrap: wrap; gap: var(--kc2); }
+@media (max-width: 639px) { .khuyenMaiListFilters { display: grid; } .khuyenMaiListFilters .field { min-width: 0; } }

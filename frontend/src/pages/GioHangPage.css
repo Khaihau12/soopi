@@ -1,0 +1,15 @@
+.gioHangPage { display: grid; gap: var(--kc5); min-width: 0; }
+.gioHangPage h1 { margin: 0; }
+.gioHangBoCuc { display: grid; gap: var(--kc5); min-width: 0; }
+.gioHangDanhSach { display: grid; gap: var(--kc4); min-width: 0; }
+.gioHangChonTatCa, .gioHangNhom { padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.gioHangChonTatCa { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--kc3); }
+.gioHangChonTatCa label, .gioHangNhomHeader label { display: inline-flex; align-items: center; gap: var(--kc3); min-height: 44px; cursor: pointer; }
+.gioHangChonTatCa input, .gioHangNhomHeader input { width: 20px; height: 20px; accent-color: var(--mauChinh); }
+.gioHangChonTatCa span { color: var(--chuPhu); }
+.gioHangNhomHeader { padding-bottom: var(--kc2); }
+.gioHangMuaTiep { color: var(--mauChinh); }
+.gioHangLoi { padding: var(--kc3); border-radius: var(--boGocNho); background: var(--loiNen); color: var(--loi); }
+.gioHangLoi button { border: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; }
+@media (max-width: 1023px) { .gioHangBoCuc { padding-bottom: 140px; } }
+@media (min-width: 1024px) { .gioHangBoCuc { grid-template-columns: minmax(0, 1fr) minmax(270px, 320px); align-items: start; } }

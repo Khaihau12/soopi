@@ -1,0 +1,4 @@
+.quantityInput { display: inline-flex; align-items: center; border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); overflow: hidden; background: var(--beMat); }
+.quantityInput button { display: grid; place-items: center; min-width: var(--chieuCaoCham); min-height: var(--chieuCaoCham); border: 0; background: transparent; }
+.quantityInput button:disabled { opacity: .5; cursor: not-allowed; }
+.quantityInput input { width: 3.5em; min-height: var(--chieuCaoCham); border: 0; border-inline: var(--doDayVien) solid var(--vienDam); text-align: center; }

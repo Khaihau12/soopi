@@ -1,0 +1,2 @@
+.emptyState { display: grid; justify-items: center; gap: var(--kc3); padding: var(--kc7) var(--kc5); border: var(--doDayVien) dashed var(--vienDam); border-radius: var(--boGocVua); text-align: center; color: var(--chuPhu); }
+.emptyState h2, .emptyState p { margin: 0; }

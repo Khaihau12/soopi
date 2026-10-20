@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="164" height="44" viewBox="0 0 164 44" role="img" aria-labelledby="title">
+  <title id="title">Soopi</title>
+  <rect x="1" y="2" width="40" height="40" rx="11" fill="#0F766E"/>
+  <path d="M29 14c-2-2.2-4.7-3.3-8.1-3.3-4.6 0-7.6 2.3-7.6 5.7 0 3.1 2.8 4.5 7.7 5.5 5 1 7.5 2.2 7.5 5.8 0 3.5-3 5.8-8 5.8-3.8 0-6.8-1.3-9-3.8" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="54" y="32" fill="#115E59" font-family="Be Vietnam Pro, Arial, sans-serif" font-size="25" font-weight="700">Soopi</text>
+</svg>

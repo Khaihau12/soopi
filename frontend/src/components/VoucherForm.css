@@ -1,0 +1,7 @@
+.voucherForm { display: grid; gap: var(--kc4); }
+.voucherFormFields { display: grid; gap: var(--kc4); }
+.voucherFormPreview { margin: 0; padding: var(--kc3); border-radius: var(--boGocNho); background: var(--mauChinhNhat); color: var(--chu); }
+.voucherFormLoi { margin: 0; color: var(--loi); }
+.voucherFormActions { display: flex; justify-content: flex-end; gap: var(--kc3); padding-top: var(--kc3); border-top: var(--doDayVien) solid var(--vien); background: var(--beMat); }
+@media (min-width: 768px) { .voucherFormFields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .voucherFormActions { position: sticky; bottom: 0; z-index: var(--tangNoiDungNoi); } .voucherFormActions .button { flex: 1; } }

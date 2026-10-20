@@ -1,0 +1,7 @@
+.badge { display: inline-flex; align-items: center; width: fit-content; max-width: 100%; padding: var(--kc1) var(--kc2); border-radius: var(--boGocTron); font-size: .875rem; font-weight: 600; line-height: 1.3; }
+.badgeSuccess { color: var(--thanhCong); background: var(--thanhCongNen); }
+.badgeWarning { color: var(--canhBao); background: var(--canhBaoNen); }
+.badgeDanger { color: var(--loi); background: var(--loiNen); }
+.badgeInfo { color: var(--thongTin); background: var(--thongTinNen); }
+.badgeNeutral { color: var(--chuPhu); background: var(--nen); }
+.badgeBrand { color: var(--mauChinhDam); background: var(--mauChinhNhat); }

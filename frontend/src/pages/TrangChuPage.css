@@ -1,0 +1,9 @@
+.trangChuPage, .trangChuSection { display: grid; gap: var(--kc5); }
+.trangChuPage { gap: var(--kc7); }
+.trangChuSection h1, .trangChuSection h2 { margin: 0; }
+.trangChuHeading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--kc3); }
+.trangChuHeading p { color: var(--chuPhu); margin: var(--kc2) 0 0; }
+.trangChuKhuyenMai { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--kc4); }
+.trangChuKhuyenMai a { display: grid; gap: var(--kc2); padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); color: var(--chu); text-decoration: none; }
+.trangChuKhuyenMai a:hover, .trangChuKhuyenMai a:focus-visible { border-color: var(--mauChinh); }
+.trangChuKhuyenMai span { color: var(--chuPhu); font-size: .875rem; }
