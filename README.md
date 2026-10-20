@@ -56,6 +56,8 @@ Truy cập `http://localhost:5173`; kiểm tra API tại `http://localhost:3000/
 
 Các tài khoản F29 dùng chung mật khẩu từ `DEMO_PASSWORD`: `nguoi-mua-f29@soopi.test`, `nguoi-ban-f29-a@soopi.test`, `nguoi-ban-f29-b@soopi.test`, `nguoi-ban-f29-c@soopi.test`. Nếu đã tồn tại với mật khẩu khác, script giữ nguyên mật khẩu đó.
 
+Nếu database cũ có Flash Sale do Người bán tạo, chạy `npm --prefix backend run migrate:flash-sale` một lần. Script sao lưu các chương trình đó vào `backend/backups/` (không đưa lên Git), rồi chuyển chúng thành chương trình `Giảm giá`. Chỉ Quản trị viên tạo Flash Sale Toàn sàn; `seed:demo` tạo một chương trình mẫu để thử mục Flash Sale trên trang chủ.
+
 ## VNPay sandbox và kiểm thử
 
 Đăng ký môi trường thử nghiệm trên [cổng VNPay](https://sandbox.vnpayment.vn/) để lấy `VNP_TMN_CODE` và `VNP_HASH_SECRET`, điền vào `backend/.env`; cấu hình URL nhận kết quả trỏ về API local. Chưa có tài khoản sandbox vẫn thử được luồng COD. Không gửi khóa qua chat hoặc đưa `.env` vào Git.

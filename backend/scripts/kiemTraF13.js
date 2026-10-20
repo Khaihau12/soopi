@@ -52,12 +52,13 @@ async function run() {
   const batDau = new Date(Date.now() - 3600000).toISOString();
   const ketThuc = new Date(Date.now() + 86400000).toISOString();
   const body = {
-    tenKhuyenMai: '  Flash Sale thử nghiệm  ', loaiKhuyenMai: 'Flash Sale', ngayBatDau: batDau, ngayKetThuc: ketThuc,
+    tenKhuyenMai: '  Giảm giá thử nghiệm  ', loaiKhuyenMai: 'Giảm giá', ngayBatDau: batDau, ngayKetThuc: ketThuc,
     chiTiet: [{ sanPhamId: spA1._id, tyLeGiam: 20 }, { sanPhamId: spA2._id, giaKhuyenMai: 15000 }],
   };
   let r = await goi('GET', seller, undefined, null); assert.equal(r[0], 401);
   r = await goi('GET', seller, undefined, thuong._id); assert.equal(r[0], 403);
   r = await goi('GET', admin, undefined, thuong._id); assert.equal(r[0], 403);
+  r = await goi('POST', seller, { ...body, loaiKhuyenMai: 'Flash Sale' }); assert.equal(r[0], 403);
 
   for (const sai of [
     { chiTiet: [] },
@@ -77,12 +78,13 @@ async function run() {
   r = await goi('POST', seller, { ...body, phamVi: 'Toàn sàn', cuaHangId: shopB._id });
   assert.equal(r[0], 201, JSON.stringify(r[1]));
   const id = r[1].data.khuyenMai._id;
-  assert.equal(r[1].data.khuyenMai.tenKhuyenMai, 'Flash Sale thử nghiệm');
+  assert.equal(r[1].data.khuyenMai.tenKhuyenMai, 'Giảm giá thử nghiệm');
   assert.equal((await KhuyenMai.findById(id)).phamVi, 'Cửa hàng');
   assert.equal(String((await KhuyenMai.findById(id)).cuaHangId), String(shopA._id));
   assert.equal(r[1].data.khuyenMai.chiTiet.length, 2);
   assert.deepEqual(r[1].data.khuyenMai.chiTiet.map((dong) => dong.giaSauKhuyenMai).sort(), [15000, 8000].sort());
   r = await goi('GET', seller); assert.equal(r[0], 200); assert.equal(r[1].data.danhSach[0].soSanPham, 2);
+  r = await goi('PATCH', `${seller}/${id}`, { loaiKhuyenMai: 'Flash Sale' }); assert.equal(r[0], 403);
   r = await goi('PATCH', `${seller}/${id}`, { chiTiet: [{ sanPhamId: spA1._id, giaKhuyenMai: 10001 }] });
   assert.equal(r[0], 400);
   assert.equal(await ChiTietKhuyenMai.countDocuments({ khuyenMaiId: id }), 2);
@@ -105,14 +107,38 @@ async function run() {
   r = await goi('GET', `/api/san-pham?khuyenMaiId=${id}`, undefined, null);
   assert.equal(r[1].data.danhSach[0].giaBanThucTe, 7000);
 
+  const flashSaleAdmin = { ...body, tenKhuyenMai: 'Flash Sale toàn sàn thử nghiệm', loaiKhuyenMai: 'Flash Sale',
+    chiTiet: [{ sanPhamId: spA1._id, tyLeGiam: 15 }] };
+  r = await goi('POST', admin, flashSaleAdmin, quanTri._id); assert.equal(r[0], 201, JSON.stringify(r[1]));
+  const idFlashSaleAdmin = r[1].data.khuyenMai._id;
+  assert.equal(r[1].data.khuyenMai.chiTiet[0].giaSauKhuyenMai, 8500);
+  r = await goi('GET', '/api/khuyen-mai?loaiKhuyenMai=Flash%20Sale', undefined, null);
+  assert.equal(r[1].data.danhSach.length, 1);
+  assert.equal(r[1].data.danhSach[0]._id, idFlashSaleAdmin);
+  const flashSaleCu = await KhuyenMai.create({ tenKhuyenMai: 'Flash Sale cửa hàng cũ', loaiKhuyenMai: 'Flash Sale',
+    phamVi: 'Cửa hàng', cuaHangId: shopA._id, ngayBatDau: batDau, ngayKetThuc: ketThuc, trangThai: 'Đang hoạt động' });
+  await ChiTietKhuyenMai.create({ khuyenMaiId: flashSaleCu._id, sanPhamId: spA2._id, tyLeGiam: 10 });
+  r = await goi('GET', '/api/khuyen-mai?loaiKhuyenMai=Flash%20Sale', undefined, null);
+  assert.deepEqual(r[1].data.danhSach.map((muc) => muc._id), [idFlashSaleAdmin]);
+  r = await goi('PATCH', `${seller}/${flashSaleCu._id}`, { tenKhuyenMai: 'Sửa Flash Sale cũ' }); assert.equal(r[0], 403);
+  r = await goi('PATCH', `${seller}/${flashSaleCu._id}`, { loaiKhuyenMai: 'Giảm giá' }); assert.equal(r[0], 200);
+  r = await goi('DELETE', `${seller}/${flashSaleCu._id}`); assert.equal(r[0], 200);
+  r = await goi('GET', `/api/san-pham?khuyenMaiId=${idFlashSaleAdmin}`, undefined, null);
+  assert.equal(r[1].data.danhSach.length, 1);
+  assert.equal(r[1].data.danhSach[0].giaGoc, 10000);
+  assert.equal(r[1].data.danhSach[0].giaBanThucTe, 7000); // Hai chương trình tính từ giá gốc, lấy giá thấp nhất.
+
   r = await goi('PATCH', `${admin}/${id}/vo-hieu-hoa`, undefined, quanTri._id);
   assert.equal(r[0], 200); assert.equal(r[1].data.khuyenMai.trangThai, 'Đã kết thúc');
   r = await goi('PATCH', `${admin}/${id}/vo-hieu-hoa`, undefined, quanTri._id); assert.equal(r[0], 409);
   r = await goi('GET', `/api/san-pham/${spA1._id}`, undefined, null);
-  assert.equal(r[1].data.sanPham.giaBanThucTe, 10000);
+  assert.equal(r[1].data.sanPham.giaBanThucTe, 8500);
   r = await goi('GET', `/api/san-pham?khuyenMaiId=${id}`, undefined, null);
   assert.equal(r[1].data.danhSach.length, 0);
   r = await goi('PATCH', `${seller}/${id}`, { tenKhuyenMai: 'Không sửa được' }); assert.equal(r[0], 409);
+  r = await goi('PATCH', `${admin}/${idFlashSaleAdmin}/vo-hieu-hoa`, undefined, quanTri._id); assert.equal(r[0], 200);
+  r = await goi('GET', `/api/san-pham/${spA1._id}`, undefined, null);
+  assert.equal(r[1].data.sanPham.giaBanThucTe, 10000);
 
   const tuongLai = { ...body, ngayBatDau: new Date(Date.now() + 5 * 86400000).toISOString(), ngayKetThuc: new Date(Date.now() + 10 * 86400000).toISOString() };
   r = await goi('POST', admin, { ...tuongLai, chiTiet: [{ sanPhamId: spB._id, tyLeGiam: 10 }], phamVi: 'Cửa hàng' }, quanTri._id);
@@ -150,6 +176,7 @@ async function run() {
   r = await goi('DELETE', `${admin}/${idTuongLai}`, undefined, quanTri._id); assert.equal(r[0], 200);
   assert.equal(await ChiTietKhuyenMai.countDocuments({ khuyenMaiId: idTuongLai }), 0);
   r = await goi('DELETE', `${seller}/${idShopB}`, undefined, b._id); assert.equal(r[0], 200);
+  r = await goi('DELETE', `${admin}/${idFlashSaleAdmin}`, undefined, quanTri._id); assert.equal(r[0], 200);
   console.log('F13 API: validation, quyền, tạo/sửa/xóa, giá, công khai, vô hiệu hóa một chiều: OK');
 }
 

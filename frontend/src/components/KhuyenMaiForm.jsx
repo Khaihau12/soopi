@@ -27,7 +27,7 @@ const taoDong = (muc) => ({
 export default function KhuyenMaiForm({ phamVi, khuyenMai, onSubmit, dangGui, loiChung, onCancel }) {
   const laQuanTri = phamVi === PHAM_VI_KHUYEN_MAI.TOAN_SAN;
   const [tenKhuyenMai, setTenKhuyenMai] = useState(khuyenMai?.tenKhuyenMai || '');
-  const [loaiKhuyenMai, setLoaiKhuyenMai] = useState(khuyenMai?.loaiKhuyenMai || LOAI_KHUYEN_MAI.GIAM_GIA);
+  const [loaiKhuyenMai, setLoaiKhuyenMai] = useState(laQuanTri ? (khuyenMai?.loaiKhuyenMai || LOAI_KHUYEN_MAI.GIAM_GIA) : LOAI_KHUYEN_MAI.GIAM_GIA);
   const [ngayBatDau, setNgayBatDau] = useState(gioVietNam(khuyenMai?.ngayBatDau));
   const [ngayKetThuc, setNgayKetThuc] = useState(gioVietNam(khuyenMai?.ngayKetThuc));
   const [chiTiet, setChiTiet] = useState((khuyenMai?.chiTiet || []).filter((muc) => muc.sanPham).map(taoDong));
@@ -92,7 +92,8 @@ export default function KhuyenMaiForm({ phamVi, khuyenMai, onSubmit, dangGui, lo
   return <form className="khuyenMaiForm" noValidate onSubmit={luu}>
     <Card><h2>Thông tin chương trình</h2><div className="khuyenMaiFormFields">
       <Field label="Tên chương trình" required error={loi.tenKhuyenMai}><Input id="khuyen-mai-tenKhuyenMai" value={tenKhuyenMai} maxLength={201} disabled={dangGui} onChange={(event) => setTenKhuyenMai(event.target.value)} /></Field>
-      <Field label="Loại khuyến mãi" required><Select value={loaiKhuyenMai} disabled={dangGui} onChange={(event) => setLoaiKhuyenMai(event.target.value)}>{Object.values(LOAI_KHUYEN_MAI).map((giaTri) => <option key={giaTri}>{giaTri}</option>)}</Select></Field>
+      {laQuanTri ? <Field label="Loại khuyến mãi" required><Select value={loaiKhuyenMai} disabled={dangGui} onChange={(event) => setLoaiKhuyenMai(event.target.value)}>{Object.values(LOAI_KHUYEN_MAI).map((giaTri) => <option key={giaTri}>{giaTri}</option>)}</Select></Field>
+        : <p>Người bán chỉ tạo chương trình giảm giá. Mức giảm được tính từ giá gốc của từng sản phẩm.</p>}
       <Field label="Bắt đầu" required hint="Giờ Việt Nam" error={loi.ngayBatDau}><Input id="khuyen-mai-ngayBatDau" type="datetime-local" value={ngayBatDau} disabled={dangGui} onChange={(event) => setNgayBatDau(event.target.value)} /></Field>
       <Field label="Kết thúc" required hint="Giờ Việt Nam" error={loi.ngayKetThuc}><Input id="khuyen-mai-ngayKetThuc" type="datetime-local" value={ngayKetThuc} disabled={dangGui} onChange={(event) => setNgayKetThuc(event.target.value)} /></Field>
     </div></Card>

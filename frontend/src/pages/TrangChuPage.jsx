@@ -10,7 +10,7 @@ import { layDanhSachDanhMuc } from '../services/danhMuc.api.js';
 import { layDanhSachSanPham } from '../services/sanPham.api.js';
 import { layDanhSachKhuyenMaiDangDienRa } from '../services/khuyenMai.api.js';
 import { dinhDangNgayGio } from '../utils/dinhDang.js';
-import { DUONG_DAN, LOAI_KHUYEN_MAI, PHAN_TRANG } from '../utils/hangSo.js';
+import { DUONG_DAN, LOAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, PHAN_TRANG } from '../utils/hangSo.js';
 import './TrangChuPage.css';
 
 export default function TrangChuPage() {
@@ -42,11 +42,12 @@ export default function TrangChuPage() {
       setKhuyenMaiGiamGia([]);
       if (ketQuaKhuyenMai.status === 'fulfilled') {
         const cacChuongTrinh = ketQuaKhuyenMai.value.danhSach;
-        const sapKetThuc = cacChuongTrinh.find((muc) => muc.loaiKhuyenMai === LOAI_KHUYEN_MAI.FLASH_SALE);
+        const cacFlashSale = cacChuongTrinh.filter((muc) => muc.loaiKhuyenMai === LOAI_KHUYEN_MAI.FLASH_SALE && muc.phamVi === PHAM_VI_KHUYEN_MAI.TOAN_SAN);
         setKhuyenMaiGiamGia(cacChuongTrinh.filter((muc) => muc.loaiKhuyenMai === LOAI_KHUYEN_MAI.GIAM_GIA));
-        if (sapKetThuc) {
-          const ketQuaFlashSale = await layDanhSachSanPham({ khuyenMaiId: sapKetThuc._id, trang: 1, gioiHan: 6 }).catch(() => null);
-          if (conHieuLuc && ketQuaFlashSale?.danhSach.length) { setFlashSale(sapKetThuc); setSanPhamFlashSale(ketQuaFlashSale.danhSach); }
+        for (const chuongTrinh of cacFlashSale) {
+          const ketQuaFlashSale = await layDanhSachSanPham({ khuyenMaiId: chuongTrinh._id, trang: 1, gioiHan: 6 }).catch(() => null);
+          if (!conHieuLuc) return;
+          if (ketQuaFlashSale?.danhSach.length) { setFlashSale(chuongTrinh); setSanPhamFlashSale(ketQuaFlashSale.danhSach); break; }
         }
       }
       setDangTai(false);

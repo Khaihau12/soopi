@@ -98,6 +98,7 @@
   4. Sản phẩm nằm trong nhiều chương trình đang hiệu lực: lấy **giá thấp nhất**; `giaBanThucTe = min(giá KM, giaGoc)`.
   5. Khi tạo: `ngayKetThuc > ngayBatDau` và `ngayKetThuc > hiện tại`; mỗi `ChiTietKhuyenMai` dùng **một trong hai** `tyLeGiam` (0 < x < 100) hoặc `giaKhuyenMai` (1 ≤ x ≤ `giaGoc`); có **ít nhất 1** chi tiết.
   6. `loaiKhuyenMai` chỉ `Giảm giá` hoặc `Flash Sale`.
+  7. Quyết định mới: **chỉ Quản trị viên tạo/sửa Flash Sale toàn sàn**. Người bán chỉ tạo chương trình `Giảm giá` cho sản phẩm cửa hàng mình. Giá giảm luôn tính từ `giaGoc`, nhiều chương trình cùng hiệu lực chọn giá thấp nhất, không cộng dồn. Trang chủ chỉ hiển thị sản phẩm thuộc Flash Sale toàn sàn đang hiệu lực; Flash Sale cửa hàng cũ chuyển thành `Giảm giá`.
 - **Trạng thái: ĐÃ CHỐT** — làm theo quyết định trên.
 
 ### QĐ-13 — Voucher: tính giảm, số lượng, hoàn lại, voucher không hợp lệ

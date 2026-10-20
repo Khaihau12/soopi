@@ -69,8 +69,10 @@ const layDanhSachKhuyenMaiDangDienRa = async ({ loaiKhuyenMai } = {}) => {
     trangThai: { $ne: TRANG_THAI_KHUYEN_MAI.DA_KET_THUC },
     ...(loaiKhuyenMai ? { loaiKhuyenMai } : {}),
   }).sort({ ngayKetThuc: 1, _id: 1 }).populate({ path: 'cuaHangId', select: '_id tenCuaHang trangThaiHoatDong' }).lean();
-  const hienThi = chuongTrinh.filter((item) => item.phamVi === PHAM_VI_KHUYEN_MAI.TOAN_SAN
-    || item.cuaHangId?.trangThaiHoatDong === TRANG_THAI_HOAT_DONG_CUA_HANG.HOAT_DONG);
+  const hienThi = chuongTrinh.filter((item) =>
+    (item.loaiKhuyenMai !== LOAI_KHUYEN_MAI.FLASH_SALE || item.phamVi === PHAM_VI_KHUYEN_MAI.TOAN_SAN)
+    && (item.phamVi === PHAM_VI_KHUYEN_MAI.TOAN_SAN
+      || item.cuaHangId?.trangThaiHoatDong === TRANG_THAI_HOAT_DONG_CUA_HANG.HOAT_DONG));
   return { danhSach: await dinhDangDanhSach(hienThi) };
 };
 
@@ -173,12 +175,18 @@ const taoKhuyenMai = async (body, phamVi, cuaHangId = null) => {
   return layChiTiet(khuyenMai._id, { _id: khuyenMai._id });
 };
 
-const nguoiBanTaoKhuyenMai = (cuaHangId, body) => taoKhuyenMai(body, PHAM_VI_KHUYEN_MAI.CUA_HANG, cuaHangId);
+const nguoiBanTaoKhuyenMai = (cuaHangId, body) => {
+  if (body?.loaiKhuyenMai === LOAI_KHUYEN_MAI.FLASH_SALE) throw taoLoi(403, 'Chỉ Quản trị viên được tạo Flash Sale');
+  return taoKhuyenMai(body, PHAM_VI_KHUYEN_MAI.CUA_HANG, cuaHangId);
+};
 const quanTriTaoKhuyenMai = (body) => taoKhuyenMai(body, PHAM_VI_KHUYEN_MAI.TOAN_SAN);
 
 const capNhatKhuyenMai = async (id, dieuKien, body, cuaHangId = null) => {
   await dongBoTrangThaiKhuyenMai();
   const hienTai = await layKhuyenMai(id, dieuKien);
+  if (cuaHangId && (body?.loaiKhuyenMai ?? hienTai.loaiKhuyenMai) === LOAI_KHUYEN_MAI.FLASH_SALE) {
+    throw taoLoi(403, 'Chỉ Quản trị viên được quản lý Flash Sale');
+  }
   if (hienTai.trangThai === TRANG_THAI_KHUYEN_MAI.DA_KET_THUC) throw taoLoi(409, 'Chương trình đã kết thúc, không thể chỉnh sửa');
   const duLieu = await kiemTraDuLieuKhuyenMai(body, cuaHangId, hienTai);
   const cacDongCu = await ChiTietKhuyenMai.find({ khuyenMaiId: id }).lean();
@@ -208,7 +216,10 @@ const capNhatKhuyenMai = async (id, dieuKien, body, cuaHangId = null) => {
   return layChiTiet(id, dieuKien);
 };
 
-const nguoiBanCapNhatKhuyenMai = (cuaHangId, id, body) => capNhatKhuyenMai(id, { cuaHangId }, body, cuaHangId);
+const nguoiBanCapNhatKhuyenMai = (cuaHangId, id, body) => {
+  if (body?.loaiKhuyenMai === LOAI_KHUYEN_MAI.FLASH_SALE) throw taoLoi(403, 'Chỉ Quản trị viên được quản lý Flash Sale');
+  return capNhatKhuyenMai(id, { cuaHangId }, body, cuaHangId);
+};
 const quanTriCapNhatKhuyenMai = async (id, body) => {
   const khuyenMai = await layKhuyenMai(id);
   if (khuyenMai.phamVi !== PHAM_VI_KHUYEN_MAI.TOAN_SAN) throw taoLoi(409, 'Chương trình của cửa hàng chỉ có thể vô hiệu hóa');

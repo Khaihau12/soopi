@@ -250,6 +250,7 @@ GET   /api/giao-dich-thanh-toan/vnpay/ket-qua           # VNPay trả về
 - Tài khoản `Bị khóa` không dùng được chức năng yêu cầu tài khoản hoạt động.
 
 **Giá và khuyến mãi**
+- Chỉ QuanTriVien tạo/sửa chương trình `Flash Sale` Toàn sàn; NguoiBan chỉ tạo chương trình `Giảm giá` cho cửa hàng mình. Trang chủ chỉ lấy sản phẩm thuộc Flash Sale Toàn sàn đang hiệu lực.
 - `giaGoc` và giá khuyến mãi lưu riêng. Không ghi đè `giaGoc`.
 - Giá khuyến mãi lấy từ `ChiTietKhuyenMai` (`tyLeGiam` hoặc `giaKhuyenMai`) của chương trình `Đang hoạt động` và còn trong `ngayBatDau`–`ngayKetThuc`. Giá khuyến mãi ≤ `giaGoc`.
 - Backend quyết định giá cuối (`giaBanThucTe`).

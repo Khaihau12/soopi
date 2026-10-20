@@ -93,7 +93,7 @@ async function main() {
   const ngayKetThuc = new Date(hienTai + 30 * 24 * 60 * 60 * 1000);
   const chuongTrinh = [
     { tenKhuyenMai: 'Giảm giá thời trang F29', loaiKhuyenMai: LOAI_KHUYEN_MAI.GIAM_GIA, phamVi: PHAM_VI_KHUYEN_MAI.CUA_HANG, cuaHangId: cuaHang[0]._id, sanPhamId: sanPham[0]._id, tyLeGiam: 10 },
-    { tenKhuyenMai: 'Flash Sale gia dụng F29', loaiKhuyenMai: LOAI_KHUYEN_MAI.FLASH_SALE, phamVi: PHAM_VI_KHUYEN_MAI.CUA_HANG, cuaHangId: cuaHang[1]._id, sanPhamId: sanPham[4]._id, tyLeGiam: 20 },
+    { tenKhuyenMai: 'Flash Sale toàn sàn F29', loaiKhuyenMai: LOAI_KHUYEN_MAI.FLASH_SALE, phamVi: PHAM_VI_KHUYEN_MAI.TOAN_SAN, cuaHangId: null, sanPhamId: sanPham[5]._id, tyLeGiam: 20 },
   ];
   for (const item of chuongTrinh) {
     const khuyenMai = await timHoacTao(KhuyenMai, { tenKhuyenMai: item.tenKhuyenMai, cuaHangId: item.cuaHangId }, {

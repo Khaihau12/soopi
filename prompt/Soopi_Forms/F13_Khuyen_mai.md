@@ -5,7 +5,7 @@
 
 ## 1. Mục tiêu
 
-- **Người bán** tạo/sửa/xóa chương trình khuyến mãi của cửa hàng mình (giảm giá hoặc Flash Sale) cho một hoặc nhiều sản phẩm.
+- **Người bán** tạo/sửa/xóa chương trình `Giảm giá` của cửa hàng mình cho một hoặc nhiều sản phẩm; không tạo Flash Sale.
 - **Quản trị viên** tạo chương trình **Toàn sàn** (kể cả Flash Sale) và **vô hiệu hóa** chương trình bất kỳ.
 - **Người dùng** xem các chương trình đang diễn ra; giá bán thực tế tự cập nhật nhờ hàm F09.
 
@@ -35,7 +35,7 @@
 ```json
 {
   "tenKhuyenMai": "Sale cuối tuần",
-  "loaiKhuyenMai": "Flash Sale",
+  "loaiKhuyenMai": "Giảm giá",
   "ngayBatDau": "2026-10-10T00:00:00+07:00",
   "ngayKetThuc": "2026-10-12T23:59:00+07:00",
   "chiTiet": [
@@ -44,6 +44,7 @@
   ]
 }
 ```
+Quản trị viên có thể đổi `loaiKhuyenMai` thành `Flash Sale` khi tạo chương trình Toàn sàn.
 **`chiTiet` trả về:** `{ _id, sanPham: { _id, tenSanPham, hinhAnh, giaGoc }, tyLeGiam, giaKhuyenMai, giaSauKhuyenMai }` (`giaSauKhuyenMai` tính bằng cùng công thức F09).
 **Phần tử danh sách:** `_id, tenKhuyenMai, loaiKhuyenMai, phamVi, ngayBatDau, ngayKetThuc, trangThai, cuaHang: { _id, tenCuaHang } | null, soSanPham`.
 
@@ -56,13 +57,13 @@
 - Hàm tính giá F09 dựa trên **ngày trong khoảng** **và** `trangThai ≠ Đã kết thúc`, nên giá luôn đúng dù DB chưa đồng bộ — và chương trình bị vô hiệu hóa **không bao giờ** được áp dụng lại dù ngày còn hiệu lực.
 
 ### 4.2 Kiểm tra khi tạo/sửa (làm hết **trước khi ghi**, lỗi → 400)
-1. `tenKhuyenMai` bắt buộc, `trim`, ≤ 200 ký tự. `loaiKhuyenMai` ∈ {`Giảm giá`, `Flash Sale`}.
+1. `tenKhuyenMai` bắt buộc, `trim`, ≤ 200 ký tự. Quản trị viên chọn `loaiKhuyenMai` ∈ {`Giảm giá`, `Flash Sale`}; Người bán chỉ dùng `Giảm giá`.
 2. `ngayBatDau`, `ngayKetThuc` là ngày hợp lệ; `ngayKetThuc > ngayBatDau` **và** `ngayKetThuc > hiện tại` (Bảng 3.14/3.23: thời gian không hợp lệ → báo lỗi, không lưu).
 3. `chiTiet` có **ít nhất 1** phần tử, **không trùng** `sanPhamId`.
 4. Mỗi phần tử có **đúng một** trong hai: `tyLeGiam` (số, `0 < x < 100`) **hoặc** `giaKhuyenMai` (số nguyên, `1 ≤ x ≤ giaGoc` của sản phẩm). Giá sau khuyến mãi **lớn hơn giá gốc → không cho lưu** (Bảng 3.14).
 5. Sản phẩm phải **tồn tại**. Người bán: phải thuộc **cửa hàng của mình** (không → 400 "Sản phẩm không thuộc cửa hàng của bạn"). Quản trị viên: sản phẩm của bất kỳ cửa hàng.
 6. Người bán: `phamVi = 'Cửa hàng'`, `cuaHangId = req.cuaHang._id` (bỏ qua giá trị từ body). Quản trị viên: `phamVi = 'Toàn sàn'`, `cuaHangId` rỗng.
-7. Cho phép một sản phẩm thuộc nhiều chương trình cùng thời gian (giá thấp nhất thắng, đã xử lý ở F09).
+7. Cho phép một sản phẩm thuộc nhiều chương trình cùng thời gian (giá thấp nhất thắng, đã xử lý ở F09). Mỗi giá khuyến mãi tính riêng từ `giaGoc`, không cộng dồn.
 
 ### 4.3 Sửa, xóa, vô hiệu hóa
 - **Sở hữu:** Người bán chỉ thao tác chương trình có `cuaHangId` của mình (khác → 404). Quản trị viên chỉ `PATCH`/`DELETE` chương trình `Toàn sàn`; chương trình của cửa hàng chỉ **vô hiệu hóa** được (thao tác khác → 409 "Chương trình của cửa hàng chỉ có thể vô hiệu hóa").
@@ -71,7 +72,7 @@
 - **Vô hiệu hóa** (Quản trị viên) — **`QĐ-12` v2:** chỉ đặt `trangThai = 'Đã kết thúc'` bằng thao tác nguyên tử có điều kiện (`findOneAndUpdate({ _id, trangThai: { $ne: 'Đã kết thúc' } }, ...)`); **KHÔNG sửa `ngayBatDau`/`ngayKetThuc`** → không bao giờ tạo khoảng ngày sai (kể cả chương trình `Chưa bắt đầu`), giữ nguyên lịch sử. Áp dụng như nhau cho `Đang hoạt động` và `Chưa bắt đầu`. Đã `Đã kết thúc` → 409. Không có thao tác bật lại; muốn dùng tiếp thì tạo chương trình mới. Vì tra giá luôn loại trừ `trangThai = Đã kết thúc` (F09), giá quay về ngay.
 
 ### 4.4 Công khai
-- `GET /api/khuyen-mai`: chỉ chương trình đang hiệu lực (ngày trong khoảng, `trangThai ≠ Đã kết thúc`); sắp theo `ngayKetThuc` tăng dần. Với chương trình `Cửa hàng`, chỉ trả khi cửa hàng `Hoạt động`.
+- `GET /api/khuyen-mai`: chỉ chương trình đang hiệu lực (ngày trong khoảng, `trangThai ≠ Đã kết thúc`); sắp theo `ngayKetThuc` tăng dần. Với chương trình `Cửa hàng`, chỉ trả khi cửa hàng `Hoạt động`. Flash Sale chỉ lấy chương trình Toàn sàn; chương trình Flash Sale cửa hàng cũ được chuyển sang `Giảm giá`.
 - `GET /api/san-pham?khuyenMaiId=`: nếu chương trình không còn hiệu lực → trả danh sách rỗng (không lỗi). Vẫn áp dụng đầy đủ điều kiện hiển thị sản phẩm của F09.
 
 ## 5. Backend — file cần tạo/sửa
@@ -90,12 +91,12 @@
 - Bộ lọc (trạng thái; Quản trị viên thêm phạm vi, loại) lưu trên URL; `Pagination`; đủ 4 trạng thái.
 
 ### 6.2 `KhuyenMaiForm` (trang riêng, 2 `Card`)
-1. **Thông tin chương trình:** Tên, Loại (`Select`), Bắt đầu và Kết thúc (`<input type="datetime-local">`, ghi chú "Giờ Việt Nam"; khi gửi chuyển sang ISO).
+1. **Thông tin chương trình:** Tên, Loại (`Select` chỉ ở màn Quản trị viên; Người bán mặc định `Giảm giá`), Bắt đầu và Kết thúc (`<input type="datetime-local">`, ghi chú "Giờ Việt Nam"; khi gửi chuyển sang ISO).
 2. **Sản phẩm tham gia:** nút "Chọn sản phẩm" mở `Modal` có ô tìm theo tên và danh sách chọn nhiều (Người bán dùng `GET /nguoi-ban/san-pham`; Quản trị viên dùng `GET /san-pham` công khai). Các sản phẩm đã chọn hiện trong bảng: *Sản phẩm* · *Giá gốc* · *Kiểu giảm* (`Select`: "Theo phần trăm" / "Theo giá sau giảm") · *Giá trị* · *Giá sau khuyến mãi* (**xem trước chỉ để hiển thị**, cùng công thức với backend) · nút xóa. Lỗi hiện **ngay trên dòng** (ví dụ "Giá sau giảm phải ≤ giá gốc").
 - Nút chính duy nhất **"Lưu chương trình"**, nút "Hủy". Backend vẫn là nơi quyết định cuối cùng.
 
 ### 6.3 Hiển thị cho khách
-- **Trang chủ:** thêm khu **Flash Sale** (giữa danh mục và sản phẩm mới): lấy chương trình `Flash Sale` đang hiệu lực kết thúc **sớm nhất** → tiêu đề "Flash Sale", dòng "Kết thúc lúc …", dải 6 sản phẩm (`SanPhamCard`) + liên kết "Xem tất cả" tới `/san-pham?khuyenMaiId=…`. Dưới đó (nếu có) dải thẻ các chương trình `Giảm giá` đang diễn ra, mỗi thẻ dẫn tới danh sách lọc. Không có chương trình → **bỏ qua cả khu**.
+- **Trang chủ:** khu **Flash Sale** chỉ lấy chương trình Toàn sàn do Quản trị viên tạo đang hiệu lực và có sản phẩm công khai; ưu tiên chương trình kết thúc sớm nhất → tiêu đề "Flash Sale", dòng "Kết thúc lúc …", dải 6 sản phẩm (`SanPhamCard`) + liên kết "Xem tất cả" tới `/san-pham?khuyenMaiId=…`. Dưới đó (nếu có) dải thẻ các chương trình `Giảm giá` đang diễn ra. Không có chương trình/sản phẩm hợp lệ → **bỏ qua khu Flash Sale**.
 - **Danh sách sản phẩm:** khi có `khuyenMaiId` hiện tên chương trình ở tiêu đề kèm nút "Xem tất cả sản phẩm".
 - `GiaTien`/chip khuyến mãi ở thẻ và chi tiết đã có từ F09.
 

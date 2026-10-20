@@ -91,7 +91,7 @@ Dùng hai trình duyệt/hồ sơ riêng (hoặc cửa sổ ẩn danh) để mô
 1. **Khách:** xem trang chủ, tìm kiếm "áo", lọc danh mục, xem chi tiết (thấy giá gốc/giá khuyến mãi, voucher, đánh giá), thêm giỏ → bị chuyển đăng nhập.
 2. **Đăng ký → đăng nhập → hồ sơ** (nhập địa chỉ).
 3. **Đăng ký Người bán** (hai tài khoản A, B) → **Quản trị viên duyệt** A, từ chối B; A thấy menu "Kênh người bán" **không cần đăng nhập lại**.
-4. **Người bán A:** sửa cửa hàng; thêm 2–3 sản phẩm có ảnh; tạo khuyến mãi (một Flash Sale); tạo voucher cửa hàng. (Có thêm Người bán C với cửa hàng thứ hai để thử tách đơn.)
+4. **Người bán A:** sửa cửa hàng; thêm 2–3 sản phẩm có ảnh; tạo chương trình `Giảm giá`; tạo voucher cửa hàng. (Có thêm Người bán C với cửa hàng thứ hai để thử tách đơn.)
 5. **Quản trị viên:** tạo voucher Toàn sàn và Freeship; banner; Flash Sale Toàn sàn.
 6. **Người dùng mua hàng:** giỏ có sản phẩm của **2 cửa hàng** → chọn một phần → xem trước đơn (tách 2 đơn, voucher đủ loại, voucher sai bị loại có lý do) → đặt hàng → VNPay sandbox: **(a)** thanh toán thành công; **(b)** lần khác: hủy tại cổng; **(c)** lần khác: bỏ dở và ép hết hạn (chỉnh `thoiGianTao` lùi 25 giờ).
 7. **Người bán** xử lý đơn đã thanh toán đi hết các trạng thái đến `Hoàn thành`; **Người dùng** theo dõi từng bước.
