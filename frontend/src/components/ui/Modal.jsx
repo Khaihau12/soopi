@@ -5,7 +5,7 @@ import './Modal.css';
 
 const BO_CHON_FOCUS = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-export default function Modal({ open, onClose, title, children }) {
+export default function Modal({ open, onClose, title, children, className = '' }) {
   const dialogRef = useRef(null);
   const titleId = useId();
   const onCloseRef = useRef(onClose);
@@ -42,5 +42,5 @@ export default function Modal({ open, onClose, title, children }) {
   }, [open]);
 
   if (!open) return null;
-  return createPortal(<div className="modalOverlay" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose?.(); }}><section ref={dialogRef} className="modal" role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}><div className="modalHeader"><h2 id={titleId}>{title}</h2><button className="modalClose" type="button" aria-label="Đóng hộp thoại" disabled={!onClose} onClick={onClose}><Icon name="close" /></button></div><div className="modalBody">{children}</div></section></div>, document.body);
+  return createPortal(<div className="modalOverlay" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose?.(); }}><section ref={dialogRef} className={['modal', className].filter(Boolean).join(' ')} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}><div className="modalHeader"><h2 id={titleId}>{title}</h2><button className="modalClose" type="button" aria-label="Đóng hộp thoại" disabled={!onClose} onClick={onClose}><Icon name="close" /></button></div><div className="modalBody">{children}</div></section></div>, document.body);
 }

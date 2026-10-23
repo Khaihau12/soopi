@@ -228,6 +228,6 @@ export default function DanhGiaNguoiBanPage() {
         </>}
       </div>
     </div>
-    <Modal open={moChonSanPham} onClose={() => setMoChonSanPham(false)} title="Chọn sản phẩm"><BoChonSanPham {...boChon} /></Modal>
+    <Modal open={moChonSanPham} onClose={() => setMoChonSanPham(false)} title="Chọn sản phẩm" className="danhGiaBanModal"><BoChonSanPham {...boChon} /></Modal>
   </div>;
 }
