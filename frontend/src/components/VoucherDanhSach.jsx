@@ -89,18 +89,18 @@ export default function VoucherDanhSach({ laQuanTri = false }) {
     { khoa: 'soLuong', tieuDe: 'Còn lại' },
     { khoa: 'soDonDaApDung', tieuDe: 'Đã áp dụng (đơn)' },
     { khoa: 'trangThai', tieuDe: 'Trạng thái', render: (_, voucher) => { const tinhTrang = tinhTinhTrangVoucher(voucher); return <Badge variant={MAU_TINH_TRANG_VOUCHER[tinhTrang]}>{tinhTrang}</Badge>; } },
-    ...(laQuanTri ? [{ khoa: 'cuaHang', tieuDe: 'Cửa hàng', render: (cuaHang) => cuaHang?.tenCuaHang || 'Toàn hệ thống' }] : []),
+    ...(laQuanTri ? [{ khoa: 'loaiVoucher', tieuDe: 'Loại' }] : []),
     { khoa: 'thaoTac', tieuDe: 'Thao tác', render: (_, voucher) => <div className="voucherListActions">
-      {(!laQuanTri || voucher.loaiVoucher !== LOAI_VOUCHER.CUA_HANG) && <Button variant="ghost" size="sm" onClick={() => { setForm({ voucher }); setLoiGui(''); }}>Sửa</Button>}
+      <Button variant="ghost" size="sm" onClick={() => { setForm({ voucher }); setLoiGui(''); }}>Sửa</Button>
       <button type="button" className="voucherSwitch" role="switch" aria-checked={voucher.trangThai === TRANG_THAI_VOUCHER.KICH_HOAT} aria-label={`${voucher.trangThai === TRANG_THAI_VOUCHER.KICH_HOAT ? 'Tắt' : 'Bật'} voucher ${voucher.maVoucher}`} onClick={() => { setHanhDong({ loai: 'trang-thai', voucher }); setLoiGui(''); }}>{voucher.trangThai === TRANG_THAI_VOUCHER.KICH_HOAT ? 'Đang bật' : 'Đang tắt'}</button>
-      {(!laQuanTri || voucher.loaiVoucher !== LOAI_VOUCHER.CUA_HANG) && <Button variant="ghost" size="sm" onClick={() => { setHanhDong({ loai: 'xoa', voucher }); setLoiGui(''); }}>Xóa</Button>}
+      <Button variant="ghost" size="sm" onClick={() => { setHanhDong({ loai: 'xoa', voucher }); setLoiGui(''); }}>Xóa</Button>
     </div> },
   ];
   return <div className="voucherListPage">
-    <PageHeader title="Voucher" description={laQuanTri ? 'Quản lý voucher toàn hệ thống và trạng thái voucher cửa hàng.' : 'Quản lý voucher của cửa hàng bạn.'} actions={<Button onClick={() => { setForm({ voucher: null }); setLoiGui(''); }}>Tạo voucher</Button>} />
+    <PageHeader title="Voucher" description={laQuanTri ? 'Quản lý voucher Toàn sàn và Freeship.' : 'Quản lý voucher của cửa hàng bạn.'} actions={<Button onClick={() => { setForm({ voucher: null }); setLoiGui(''); }}>Tạo voucher</Button>} />
     <div className="voucherListFilters">
       <Field label="Trạng thái"><Select value={params.get('trangThai') || ''} onChange={(event) => doiLoc('trangThai', event.target.value)}><option value="">Tất cả</option>{Object.values(TRANG_THAI_VOUCHER).map((muc) => <option key={muc}>{muc}</option>)}</Select></Field>
-      {laQuanTri && <Field label="Loại voucher"><Select value={params.get('loaiVoucher') || ''} onChange={(event) => doiLoc('loaiVoucher', event.target.value)}><option value="">Tất cả</option>{Object.values(LOAI_VOUCHER).map((muc) => <option key={muc}>{muc}</option>)}</Select></Field>}
+      {laQuanTri && <Field label="Loại voucher"><Select value={params.get('loaiVoucher') || ''} onChange={(event) => doiLoc('loaiVoucher', event.target.value)}><option value="">Tất cả</option>{[LOAI_VOUCHER.TOAN_SAN, LOAI_VOUCHER.FREESHIP].map((muc) => <option key={muc}>{muc}</option>)}</Select></Field>}
       <Field label="Tìm mã hoặc tên"><Input value={params.get('tuKhoa') || ''} onChange={(event) => doiLoc('tuKhoa', event.target.value)} placeholder="Nhập mã hoặc tên voucher" /></Field>
       {[...params.keys()].some((ten) => ten !== 'trang') && <Button variant="ghost" onClick={() => setParams(new URLSearchParams())}>Xóa bộ lọc</Button>}
     </div>

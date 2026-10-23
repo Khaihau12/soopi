@@ -68,8 +68,10 @@ async function run() {
   assert.equal((await goi('PATCH', `${seller}/${idB}`, { tenVoucher: 'Sai quyền' }))[0], 404);
   assert.equal((await goi('DELETE', `${seller}/${idB}`))[0], 404);
   assert.equal((await goi('PATCH', `${seller}/${idB}/trang-thai`, { trangThai: 'Vô hiệu hóa' }))[0], 404);
-  assert.equal((await goi('PATCH', `${admin}/${idA}`, { tenVoucher: 'Sai phạm vi' }, quanTri._id))[0], 409);
-  assert.equal((await goi('DELETE', `${admin}/${idA}`, undefined, quanTri._id))[0], 409);
+  assert.equal((await goi('PATCH', `${admin}/${idA}`, { tenVoucher: 'Sai phạm vi' }, quanTri._id))[0], 404);
+  assert.equal((await goi('DELETE', `${admin}/${idA}`, undefined, quanTri._id))[0], 404);
+  assert.equal((await goi('GET', `${admin}/${idA}`, undefined, quanTri._id))[0], 404);
+  assert.equal((await goi('GET', `${admin}?loaiVoucher=${encodeURIComponent('Cửa hàng')}`, undefined, quanTri._id))[0], 400);
   assert.equal((await goi('PATCH', `${seller}/${idA}`, { maVoucher: 'KHONGDUOC' }))[0], 400);
   assert.equal((await goi('PATCH', `${seller}/${idA}`, { giaTriGiam: null }))[0], 400);
   assert.equal((await goi('PATCH', `${seller}/${idA}`, { giamToiDa: null }))[0], 200);
@@ -79,10 +81,19 @@ async function run() {
   assert.equal(r[0], 201);
   const idAdmin = r[1].data.voucher._id;
   assert.equal(r[1].data.voucher.cuaHang, null);
+  r = await goi('GET', admin, undefined, quanTri._id);
+  assert.deepEqual(r[1].data.danhSach.map((v) => v.maVoucher), ['TOANSAN1']);
+  assert.equal(r[1].data.phanTrang.tongSo, 1);
+  assert.equal((await goi('GET', `${admin}/${idAdmin}`, undefined, quanTri._id))[0], 200);
   assert.equal((await goi('PATCH', `${admin}/${idAdmin}`, { tenVoucher: 'Voucher hệ thống' }, quanTri._id))[0], 200);
-  assert.equal((await goi('PATCH', `${admin}/${idA}/trang-thai`, { trangThai: 'Vô hiệu hóa' }, quanTri._id))[0], 200);
-  assert.equal((await goi('GET', '/api/voucher', undefined, null))[1].data.danhSach.some((v) => v.maVoucher === 'AB12CD'), false);
-  assert.equal((await goi('PATCH', `${admin}/${idA}/trang-thai`, { trangThai: 'Kích hoạt' }, quanTri._id))[0], 200);
+  assert.equal((await goi('PATCH', `${admin}/${idAdmin}/trang-thai`, { trangThai: 'Vô hiệu hóa' }, quanTri._id))[0], 200);
+  assert.equal((await Voucher.findById(idAdmin)).trangThai, 'Vô hiệu hóa');
+  assert.equal((await goi('PATCH', `${admin}/${idAdmin}/trang-thai`, { trangThai: 'Kích hoạt' }, quanTri._id))[0], 200);
+  assert.equal((await goi('PATCH', `${admin}/${idA}/trang-thai`, { trangThai: 'Vô hiệu hóa' }, quanTri._id))[0], 404);
+  assert.equal((await Voucher.findById(idA)).trangThai, 'Kích hoạt');
+  assert.equal((await goi('PATCH', `${seller}/${idA}/trang-thai`, { trangThai: 'Vô hiệu hóa' }))[0], 200);
+  assert.equal((await goi('GET', '/api/voucher?cuaHangId=' + shopA._id, undefined, null))[1].data.danhSach.some((v) => v.maVoucher === 'AB12CD'), false);
+  assert.equal((await goi('PATCH', `${seller}/${idA}/trang-thai`, { trangThai: 'Kích hoạt' }))[0], 200);
 
   r = await goi('GET', '/api/voucher', undefined, null);
   assert.deepEqual(r[1].data.danhSach.map((v) => v.maVoucher), ['TOANSAN1']);

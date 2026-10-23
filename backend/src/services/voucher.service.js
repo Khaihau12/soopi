@@ -76,7 +76,7 @@ const layDanhSach = async (dieuKien, query = {}) => {
 
 const kiemTraBoLoc = (query, laQuanTri) => {
   if (query.trangThai && !Object.values(TRANG_THAI_VOUCHER).includes(query.trangThai)) throw taoLoi(400, 'Trạng thái voucher không hợp lệ');
-  if (laQuanTri && query.loaiVoucher && !Object.values(LOAI_VOUCHER).includes(query.loaiVoucher)) throw taoLoi(400, 'Loại voucher không hợp lệ');
+  if (laQuanTri && query.loaiVoucher && ![LOAI_VOUCHER.TOAN_SAN, LOAI_VOUCHER.FREESHIP].includes(query.loaiVoucher)) throw taoLoi(400, 'Quản trị viên chỉ xem voucher Toàn sàn hoặc Freeship');
   if (query.tuKhoa && (typeof query.tuKhoa !== 'string' || query.tuKhoa.trim().length > 100)) throw taoLoi(400, 'Từ khóa tối đa 100 ký tự');
 };
 
@@ -93,9 +93,10 @@ const nguoiBanLayDanhSachVoucher = (cuaHangId, query = {}) => {
   kiemTraBoLoc(query, false);
   return layDanhSach({ cuaHangId, ...taoBoLoc({ ...query, loaiVoucher: undefined }) }, query);
 };
+const boLocVoucherHeThong = { loaiVoucher: { $in: [LOAI_VOUCHER.TOAN_SAN, LOAI_VOUCHER.FREESHIP] }, cuaHangId: null };
 const quanTriLayDanhSachVoucher = (query = {}) => {
   kiemTraBoLoc(query, true);
-  return layDanhSach(taoBoLoc(query), query);
+  return layDanhSach({ ...boLocVoucherHeThong, ...taoBoLoc(query) }, query);
 };
 
 const layDanhSachVoucherDangDung = async ({ cuaHangId } = {}) => {
@@ -123,7 +124,7 @@ const layVoucher = async (id, dieuKien = {}) => {
   return dinhDangVoucher(voucher, dem.get(String(voucher._id)) ?? 0);
 };
 const nguoiBanLayChiTietVoucher = (cuaHangId, id) => layVoucher(id, { cuaHangId });
-const quanTriLayChiTietVoucher = (id) => layVoucher(id);
+const quanTriLayChiTietVoucher = (id) => layVoucher(id, boLocVoucherHeThong);
 
 const kiemTraSoNguyen = (value, ten, toiThieu, macDinh) => {
   if (value === undefined && macDinh !== undefined) return macDinh;
@@ -188,11 +189,7 @@ const capNhatVoucher = async (id, dieuKien, body) => {
   return layVoucher(id, dieuKien);
 };
 const nguoiBanCapNhatVoucher = (cuaHangId, id, body) => capNhatVoucher(id, { cuaHangId }, body);
-const quanTriCapNhatVoucher = async (id, body) => {
-  const voucher = await layVoucher(id);
-  if (voucher.loaiVoucher === LOAI_VOUCHER.CUA_HANG) throw taoLoi(409, 'Voucher cửa hàng chỉ có thể bật hoặc tắt');
-  return capNhatVoucher(id, { loaiVoucher: { $in: [LOAI_VOUCHER.TOAN_SAN, LOAI_VOUCHER.FREESHIP] } }, body);
-};
+const quanTriCapNhatVoucher = (id, body) => capNhatVoucher(id, boLocVoucherHeThong, body);
 
 const capNhatTrangThaiVoucher = async (id, dieuKien, trangThai) => {
   if (!Object.values(TRANG_THAI_VOUCHER).includes(trangThai)) throw taoLoi(400, 'Trạng thái voucher không hợp lệ');
@@ -201,7 +198,7 @@ const capNhatTrangThaiVoucher = async (id, dieuKien, trangThai) => {
   return layVoucher(id, dieuKien);
 };
 const nguoiBanCapNhatTrangThaiVoucher = (cuaHangId, id, body) => capNhatTrangThaiVoucher(id, { cuaHangId }, body?.trangThai);
-const quanTriCapNhatTrangThaiVoucher = (id, body) => capNhatTrangThaiVoucher(id, {}, body?.trangThai);
+const quanTriCapNhatTrangThaiVoucher = (id, body) => capNhatTrangThaiVoucher(id, boLocVoucherHeThong, body?.trangThai);
 
 const xoaVoucher = async (id, dieuKien) => {
   await layVoucher(id, dieuKien);
@@ -213,11 +210,7 @@ const xoaVoucher = async (id, dieuKien) => {
   return { message: 'Đã xóa voucher' };
 };
 const nguoiBanXoaVoucher = (cuaHangId, id) => xoaVoucher(id, { cuaHangId });
-const quanTriXoaVoucher = async (id) => {
-  const voucher = await layVoucher(id);
-  if (voucher.loaiVoucher === LOAI_VOUCHER.CUA_HANG) throw taoLoi(409, 'Voucher cửa hàng chỉ có thể bật hoặc tắt');
-  return xoaVoucher(id, { loaiVoucher: { $in: [LOAI_VOUCHER.TOAN_SAN, LOAI_VOUCHER.FREESHIP] } });
-};
+const quanTriXoaVoucher = (id) => xoaVoucher(id, boLocVoucherHeThong);
 
 module.exports = {
   kiemTraDieuKienVoucher, tinhMucGiamVoucher, layDanhSachVoucherDangDung,

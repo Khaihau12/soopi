@@ -6,7 +6,7 @@
 ## 1. Mục tiêu
 
 - **Người bán** tạo/sửa/bật-tắt/xóa **voucher cửa hàng**.
-- **Quản trị viên** tạo/quản lý voucher **Toàn sàn** và **Freeship**, và vô hiệu hóa voucher bất kỳ; theo dõi mức độ sử dụng.
+- **Quản trị viên** chỉ tạo/quản lý voucher **Toàn sàn** và **Freeship**, theo dõi mức độ sử dụng của hai loại này. Voucher cửa hàng do Người bán quản lý.
 - **Người dùng** xem voucher đang áp dụng (ở trang chi tiết sản phẩm) và sao chép mã.
 - Dựng **hàm kiểm tra điều kiện + tính mức giảm của một voucher** để F16/F17 (đặt hàng) dùng lại. **Chưa** áp voucher vào đơn ở form này.
 
@@ -26,11 +26,11 @@
 | `PATCH /api/nguoi-ban/voucher/:id` | Người bán | `tenVoucher`, `kieuGiam`, `giaTriGiam`, `giamToiDa`, `giaTriDonToiThieu`, `soLuong`, `ngayBatDau`, `ngayKetThuc` | 200 |
 | `PATCH /api/nguoi-ban/voucher/:id/trang-thai` | Người bán | `trangThai` (`Kích hoạt`/`Vô hiệu hóa`) | 200 |
 | `DELETE /api/nguoi-ban/voucher/:id` | Người bán | — | 200 |
-| `GET /api/quan-tri-vien/voucher` | Quản trị viên | `loaiVoucher?`, `trangThai?`, `tuKhoa?`, `trang`, `gioiHan` | danh sách **tất cả** voucher |
-| `GET /api/quan-tri-vien/voucher/:id` | Quản trị viên | — | chi tiết |
+| `GET /api/quan-tri-vien/voucher` | Quản trị viên | `loaiVoucher?` (`Toàn sàn`/`Freeship`), `trangThai?`, `tuKhoa?`, `trang`, `gioiHan` | chỉ voucher hệ thống; lọc `Cửa hàng` → 400 |
+| `GET /api/quan-tri-vien/voucher/:id` | Quản trị viên | — | chi tiết voucher hệ thống; voucher cửa hàng → 404 |
 | `POST /api/quan-tri-vien/voucher` | Quản trị viên | như Người bán **+ `loaiVoucher`** (`Toàn sàn` hoặc `Freeship`) | **201** |
 | `PATCH`, `DELETE /api/quan-tri-vien/voucher/:id` | Quản trị viên | — | chỉ voucher `Toàn sàn`/`Freeship` |
-| `PATCH /api/quan-tri-vien/voucher/:id/trang-thai` | Quản trị viên | `trangThai` | **mọi** voucher (kể cả của cửa hàng) |
+| `PATCH /api/quan-tri-vien/voucher/:id/trang-thai` | Quản trị viên | `trangThai` | chỉ voucher hệ thống; voucher cửa hàng → 404 |
 
 **Phần tử voucher trả về (Người bán/Quản trị viên):** `_id, maVoucher, tenVoucher, loaiVoucher, kieuGiam, giaTriGiam, giamToiDa, giaTriDonToiThieu, soLuong, ngayBatDau, ngayKetThuc, trangThai, cuaHang: { _id, tenCuaHang } | null, soDonDaApDung`.
 **Công khai:** chỉ `maVoucher, tenVoucher, loaiVoucher, kieuGiam, giaTriGiam, giamToiDa, giaTriDonToiThieu, ngayKetThuc`.
@@ -49,7 +49,7 @@
 
 ### 4.2 Sở hữu, sửa, xóa
 - Người bán chỉ thấy/sửa/xóa voucher có `cuaHangId` của mình (khác → 404).
-- Quản trị viên chỉ `PATCH`/`DELETE` voucher `Toàn sàn`/`Freeship`; với voucher `Cửa hàng` chỉ **bật/tắt trạng thái** (thao tác khác → 409).
+- Quản trị viên chỉ xem/sửa/bật-tắt/xóa voucher `Toàn sàn`/`Freeship` không thuộc cửa hàng; mọi thao tác theo ID với voucher `Cửa hàng` → 404.
 - **Xóa (`QĐ-14`):** voucher **đã có** `ApDungVoucher` → **không xóa cứng**, chuyển `Vô hiệu hóa` (message nói rõ); chưa có → xóa cứng.
 - Vô hiệu hóa → ngừng cho áp dụng ngay (F16/F17 kiểm tra `trangThai`).
 - `soLuong` là số lượng **còn lại**; checkout sẽ trừ dần (F17). Khi sửa `soLuong`, ghi trực tiếp giá trị mới (chấp nhận khả năng đua rất nhỏ với đơn hàng đang tạo; nêu trong báo cáo).
@@ -81,7 +81,7 @@ Hai hàm **không truy cập DB**, không trừ `soLuong`; việc trừ/hoàn `s
 ### 6.1 Trang quản lý (Người bán và Quản trị viên dùng cùng khung)
 - `PageHeader` + nút chính **"Tạo voucher"**; bộ lọc trạng thái (Quản trị viên thêm loại voucher) + ô tìm mã/tên, lưu trên URL.
 - `DataTable`: *Mã* (nhãn chữ đậm dạng monospace + nút "Sao chép"), *Tên*, *Ưu đãi* (`moTaVoucher`), *Hiệu lực*, *Còn lại*, *Đã áp dụng (đơn)*, *Trạng thái* (`Badge` + nhãn từ `tinhTinhTrangVoucher`), *Thao tác*: "Sửa", công tắc **Bật/Tắt**, "Xóa" (`ConfirmDialog`; thông báo nêu rõ nếu voucher đã dùng sẽ chỉ bị vô hiệu hóa).
-- Quản trị viên: thấy cột *Cửa hàng* (rỗng với voucher hệ thống); với voucher `Cửa hàng` chỉ có công tắc Bật/Tắt (ẩn Sửa/Xóa).
+- Quản trị viên: cột *Loại* chỉ hiển thị `Toàn sàn` hoặc `Freeship`; bộ lọc không có `Cửa hàng`.
 - **`VoucherForm`** trong `Modal` rộng (lưới 2 cột từ 768px, 1 cột trên mobile): Mã (khóa khi sửa), Tên, [Loại — chỉ Quản trị viên: `Select` Toàn sàn/Freeship], Kiểu giảm, Giá trị giảm (hậu tố `%` hoặc `đ` tùy kiểu), Giảm tối đa (gợi ý "Để trống nếu không giới hạn"), Đơn tối thiểu, Số lượng, Bắt đầu, Kết thúc. Dưới form luôn hiện **câu xem trước** từ `moTaVoucher`. Nút chính **"Lưu voucher"**.
 - Đủ trạng thái tải/rỗng/lỗi.
 
@@ -101,7 +101,7 @@ Hai hàm **không truy cập DB**, không trừ `soLuong`; việc trừ/hoàn `s
 
 - [ ] Người bán tạo voucher → `loaiVoucher = Cửa hàng`, `cuaHangId` là cửa hàng mình, kể cả khi body cố gán loại/cửa hàng khác. Quản trị viên tạo `Cửa hàng` → 400.
 - [ ] `maVoucher` trùng → 409; `abc` (3 ký tự) hoặc có khoảng trắng → 400; `Phần trăm` với `giaTriGiam = 150` → 400; `giaTriGiam = 0`, `soLuong = 0` khi tạo, `ngayKetThuc ≤ ngayBatDau` → 400. Nhập `ab12cd` được lưu thành `AB12CD`.
-- [ ] Người bán A sửa/xóa/bật-tắt voucher của B → 404. Quản trị viên sửa voucher `Cửa hàng` → 409 nhưng bật/tắt được.
+- [ ] Người bán A sửa/xóa/bật-tắt voucher của B → 404. Quản trị viên không thấy voucher `Cửa hàng` trong danh sách; xem/sửa/bật-tắt/xóa theo ID → 404; Người bán vẫn quản lý voucher của mình.
 - [ ] Xóa voucher đã có `ApDungVoucher` (chèn tạm một bản ghi) → chuyển `Vô hiệu hóa`; chưa có → xóa hẳn.
 - [ ] `GET /api/voucher` không trả voucher `Vô hiệu hóa`, hết hạn, chưa bắt đầu, `soLuong = 0`; không có `cuaHangId` → không có voucher `Cửa hàng`; có `cuaHangId` → có voucher của cửa hàng đó và **không** có của cửa hàng khác.
 - [ ] Kiểm thử hai hàm thuần bằng **script tạm** (xóa sau): `Phần trăm` 10% của 1.000.000 với `giamToiDa 50.000` → 50.000; `Số tiền cố định` 100.000 với đơn 80.000 → 80.000 (không vượt cơ sở); không có `giamToiDa` → không bị kẹp; voucher `Cửa hàng` dùng cho cửa hàng khác → `hopLe: false`; đơn dưới `giaTriDonToiThieu` → `hopLe: false` kèm `lyDo`.
