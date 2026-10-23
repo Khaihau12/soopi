@@ -1,4 +1,5 @@
 const BannerQuangCao = require('../models/bannerQuangCao.model');
+const DanhMuc = require('../models/danhMuc.model');
 const { TRANG_THAI_BANNER } = require('../constants/trangThai.constant');
 const mongoose = require('mongoose');
 const { PHAN_TRANG, DO_DAI_TOI_DA } = require('../constants/cauHinh.constant');
@@ -6,7 +7,7 @@ const { laDuongDanAnhHopLe } = require('../utils/kiemTra');
 const { taoLoi } = require('../utils/taoLoi');
 const { donAnhCu } = require('./anhCloudinary.service');
 
-const layDanhSachBanner = () => BannerQuangCao.find({ trangThai: TRANG_THAI_BANNER.KICH_HOAT }, '_id tieuDe hinhAnh noiDung').sort({ _id: -1 }).lean();
+const layDanhSachBanner = () => BannerQuangCao.find({ trangThai: TRANG_THAI_BANNER.KICH_HOAT }, '_id tieuDe hinhAnh noiDung danhMucId').sort({ _id: -1 }).lean();
 
 const docPhanTrang = (query) => {
   const trang = Number(query.trang ?? 1);
@@ -27,13 +28,19 @@ const kiemTraHinhAnh = (hinhAnh) => {
   if (!laDuongDanAnhHopLe(hinhAnh)) throw taoLoi(400, 'Hình ảnh banner không hợp lệ. Vui lòng tải ảnh JPG, PNG, WEBP hoặc nhập URL http(s).');
   return hinhAnh;
 };
+const kiemTraDanhMuc = async (danhMucId) => {
+  if (!mongoose.isValidObjectId(danhMucId) || !(await DanhMuc.exists({ _id: danhMucId }))) {
+    throw taoLoi(400, 'Vui lòng chọn danh mục đích hợp lệ cho banner.');
+  }
+  return danhMucId;
+};
 const quanTriLayDanhSachBanner = async (query = {}) => {
   if (query.trangThai) kiemTraTrangThai(query.trangThai);
   const { trang, gioiHan } = docPhanTrang(query);
   const dieuKien = query.trangThai ? { trangThai: query.trangThai } : {};
   const [tongSo, danhSach] = await Promise.all([
     BannerQuangCao.countDocuments(dieuKien),
-    BannerQuangCao.find(dieuKien, '_id tieuDe hinhAnh noiDung trangThai').sort({ _id: -1 }).skip((trang - 1) * gioiHan).limit(gioiHan).lean(),
+    BannerQuangCao.find(dieuKien, '_id tieuDe hinhAnh noiDung danhMucId trangThai').sort({ _id: -1 }).skip((trang - 1) * gioiHan).limit(gioiHan).lean(),
   ]);
   return { danhSach, phanTrang: { trang, gioiHan, tongSo, tongTrang: Math.ceil(tongSo / gioiHan) } };
 };
@@ -42,6 +49,7 @@ const quanTriTaoBanner = async (body = {}) => {
     tieuDe: kiemTraChuoi(body.tieuDe, 'Tiêu đề banner', 200, true),
     hinhAnh: kiemTraHinhAnh(body.hinhAnh),
     noiDung: body.noiDung === undefined ? '' : kiemTraChuoi(body.noiDung, 'Nội dung banner', DO_DAI_TOI_DA.NOI_DUNG),
+    danhMucId: await kiemTraDanhMuc(body.danhMucId),
     trangThai: body.trangThai === undefined ? TRANG_THAI_BANNER.KICH_HOAT : kiemTraTrangThai(body.trangThai),
   };
   return BannerQuangCao.create(duLieu);
@@ -53,6 +61,7 @@ const quanTriCapNhatBanner = async (id, body = {}) => {
   if (Object.hasOwn(body, 'tieuDe')) capNhat.tieuDe = kiemTraChuoi(body.tieuDe, 'Tiêu đề banner', 200, true);
   if (Object.hasOwn(body, 'hinhAnh')) capNhat.hinhAnh = kiemTraHinhAnh(body.hinhAnh);
   if (Object.hasOwn(body, 'noiDung')) capNhat.noiDung = kiemTraChuoi(body.noiDung, 'Nội dung banner', DO_DAI_TOI_DA.NOI_DUNG);
+  if (Object.hasOwn(body, 'danhMucId')) capNhat.danhMucId = await kiemTraDanhMuc(body.danhMucId);
   if (!Object.keys(capNhat).length) throw taoLoi(400, 'Vui lòng chọn thông tin banner cần cập nhật.');
   const banner = await BannerQuangCao.findByIdAndUpdate(id, { $set: capNhat }, { returnDocument: 'after', runValidators: true });
   if (!banner) throw taoLoi(404, 'Không tìm thấy banner.');

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Icon from './ui/Icon.jsx';
 import { taoUrlAnh } from '../utils/dinhDang.js';
-import { CHU_KY_BANNER_MS } from '../utils/hangSo.js';
+import { CHU_KY_BANNER_MS, DUONG_DAN } from '../utils/hangSo.js';
 import './BannerCarousel.css';
 
 export default function BannerCarousel({ danhSach = [] }) {
@@ -26,9 +27,10 @@ export default function BannerCarousel({ danhSach = [] }) {
   const viTriHienThi = viTri % danhSach.length;
   const banner = danhSach[viTriHienThi];
   const hinhAnh = taoUrlAnh(banner.hinhAnh);
+  const duongDan = banner.danhMucId ? `${DUONG_DAN.SAN_PHAM}?danhMucId=${encodeURIComponent(banner.danhMucId)}` : DUONG_DAN.SAN_PHAM;
   const doiBanner = (buoc) => setViTri((hienTai) => (hienTai + buoc + danhSach.length) % danhSach.length);
   return <section className="bannerCarousel" aria-label="Banner Soopi" onMouseEnter={() => setTamDung(true)} onMouseLeave={() => setTamDung(false)} onFocusCapture={() => setTamDung(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setTamDung(false); }}>
-    <div className="bannerSlide"><div className="bannerImage">{hinhAnh && !anhLoi.includes(hinhAnh) ? <img src={hinhAnh} alt={banner.tieuDe} onError={() => setAnhLoi((cu) => [...cu, hinhAnh])} /> : <span className="bannerImageTrong"><Icon name="image" size={44} /><span>Chưa có ảnh banner</span></span>}</div><div className="bannerContent"><h2>{banner.tieuDe}</h2>{banner.noiDung && <p>{banner.noiDung}</p>}</div></div>
+    <div className="bannerSlide"><div className="bannerImage">{hinhAnh && !anhLoi.includes(hinhAnh) ? <img src={hinhAnh} alt="" onError={() => setAnhLoi((cu) => [...cu, hinhAnh])} /> : <span className="bannerImageTrong"><Icon name="image" size={44} /><span>Chưa có ảnh banner</span></span>}</div><div className="bannerContent"><span className="bannerEyebrow">Khám phá trên Soopi</span><h2>{banner.tieuDe}</h2>{banner.noiDung && <p>{banner.noiDung}</p>}<Link className="bannerCta" to={duongDan}>Xem sản phẩm <Icon name="chevronRight" size={18} /></Link></div></div>
     {danhSach.length > 1 && <div className="bannerControls"><button type="button" aria-label="Banner trước" onClick={() => doiBanner(-1)}><Icon name="chevronLeft" /></button><div className="bannerDots">{danhSach.map((item, index) => <button key={item._id} type="button" aria-label={`Đến banner ${index + 1}`} aria-current={index === viTriHienThi ? 'true' : undefined} className={index === viTriHienThi ? 'bannerDotActive' : ''} onClick={() => setViTri(index)} />)}</div><button type="button" aria-label="Banner sau" onClick={() => doiBanner(1)}><Icon name="chevronRight" /></button></div>}
   </section>;
 }

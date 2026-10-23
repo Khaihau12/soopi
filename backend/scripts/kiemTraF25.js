@@ -36,6 +36,7 @@ async function run() {
   await new Promise((resolve) => server.once('listening', resolve));
   const bam = await bcrypt.hash('MatKhauF25!', 4);
   const admin = await TaiKhoan.create({ email: 'f25-admin@example.com', matKhau: bam, hoTen: 'Admin', vaiTro: ['Quản trị viên'] });
+  const adminVaiTroCu = await TaiKhoan.create({ email: 'f25-admin-cu@example.com', matKhau: bam, hoTen: 'Admin cũ', vaiTro: ['Người dùng', 'Người bán', 'Quản trị viên'] });
   const mua = await TaiKhoan.create({ email: 'f25-mua@example.com', matKhau: bam, hoTen: 'Người mua' });
   const ban = await TaiKhoan.create({ email: 'f25-ban@example.com', matKhau: bam, hoTen: 'Người bán', vaiTro: ['Người dùng', 'Người bán'] });
   const shop = await CuaHang.create({ taiKhoanId: ban._id, tenCuaHang: 'Cửa hàng F25' });
@@ -53,6 +54,12 @@ async function run() {
     assert.equal((await goi(path, mua._id))[0], 403);
     assert.equal((await goi(path, ban._id))[0], 403);
   }
+  for (const path of ['/gio-hang', '/don-hang', '/yeu-cau-dang-ky-nguoi-ban/cua-toi', '/cuoc-tro-chuyen']) {
+    assert.equal((await goi(path, admin._id))[0], 403);
+  }
+  assert.equal((await goi('/gio-hang/chi-tiet', admin._id, 'POST', { sanPhamId: sanPham._id, soLuong: 1 }))[0], 403);
+  assert.equal((await goi('/gio-hang', adminVaiTroCu._id))[0], 403);
+  assert.equal((await goi('/nguoi-ban/san-pham', adminVaiTroCu._id))[0], 403);
   const [maLoc, loc] = await goi(`${dau}/giao-dich-thanh-toan?canHoanTien=true`, admin._id);
   assert.equal(maLoc, 200); assert.equal(loc.data.phanTrang.tongSo, 1);
   assert.equal(loc.data.danhSach[0].soDonCanHoanTien, 1);
@@ -89,8 +96,10 @@ async function run() {
   assert.equal((await goi('/san-pham', null))[1].data.phanTrang.tongSo, 1);
   assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: '', hinhAnh: '/uploads/hop-le.png' }))[0], 400);
   assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: 'Sai', hinhAnh: 'javascript:alert(1)' }))[0], 400);
-  const [maTao, tao] = await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: ' Banner F25 ', hinhAnh: '/uploads/hop-le.png' });
+  assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: 'Banner thiếu đích', hinhAnh: '/uploads/hop-le.png' }))[0], 400);
+  const [maTao, tao] = await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: ' Banner F25 ', hinhAnh: '/uploads/hop-le.png', danhMucId: danhMuc._id });
   assert.equal(maTao, 201); assert.equal(tao.data.banner.tieuDe, 'Banner F25');
+  assert.equal(String(tao.data.banner.danhMucId), String(danhMuc._id));
   const idBanner = tao.data.banner._id;
   assert.equal((await goi('/banner-quang-cao', null))[1].data.danhSach.length, 1);
   assert.equal((await goi(`${dau}/banner-quang-cao/${idBanner}`, admin._id, 'PATCH', { noiDung: 'Nội dung mới' }))[0], 200);

@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useXacThuc } from './XacThucContext.jsx';
 import * as api from '../services/gioHang.api.js';
+import { VAI_TRO } from '../utils/hangSo.js';
 
 const GioHangContext = createContext(null);
 
@@ -15,7 +16,7 @@ export function GioHangProvider({ children }) {
 
   const taiLai = useCallback(async () => {
     const id = taiKhoan?._id;
-    if (!id) return;
+    if (!id || taiKhoan?.vaiTro?.includes(VAI_TRO.QUAN_TRI_VIEN)) return;
     const lan = ++lanYeuCauRef.current;
     setDangTai(true); setLoi('');
     try { const data = await api.layGioHang(); if (taiKhoanIdRef.current === id && lanYeuCauRef.current === lan) setGioHang(data); }
@@ -26,7 +27,9 @@ export function GioHangProvider({ children }) {
   useEffect(() => {
     const lan = ++lanYeuCauRef.current;
     if (dangTaiXacThuc) return undefined;
-    if (!taiKhoan) { setGioHang(null); setLoi(''); setDangTai(false); return undefined; }
+    if (!taiKhoan || taiKhoan.vaiTro?.includes(VAI_TRO.QUAN_TRI_VIEN)) {
+      setGioHang(null); setLoi(''); setDangTai(false); return undefined;
+    }
     let conHieuLuc = true;
     setGioHang(null);
     setDangTai(true); setLoi('');

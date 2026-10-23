@@ -7,7 +7,7 @@ import './TaiAnhLen.css';
 const LOAI_ANH = ['image/jpeg', 'image/png', 'image/webp'];
 const GIOI_HAN = 5 * 1024 * 1024;
 
-export default function TaiAnhLen({ value = [], onChange, toiDa = 8, disabled = false }) {
+export default function TaiAnhLen({ value = [], onChange, toiDa = 8, disabled = false, loaiAnh = 'sản phẩm' }) {
   const inputRef = useRef(null);
   const [dangTai, setDangTai] = useState('');
   const [loi, setLoi] = useState('');
@@ -43,13 +43,13 @@ export default function TaiAnhLen({ value = [], onChange, toiDa = 8, disabled = 
     <div className={`taiAnhLenDrop ${keoQua ? 'taiAnhLenDropActive' : ''}`} onDragOver={(event) => { event.preventDefault(); if (!disabled) setKeoQua(true); }} onDragLeave={() => setKeoQua(false)} onDrop={(event) => { event.preventDefault(); setKeoQua(false); xuLyTep(event.dataTransfer.files); }}>
       <input ref={inputRef} id="san-pham-hinh-anh" type="file" accept="image/jpeg,image/png,image/webp" multiple={toiDa > 1} disabled={disabled || Boolean(dangTai) || value.length >= toiDa} className="taiAnhLenInput" onChange={(event) => xuLyTep(event.target.files)} />
       <label htmlFor="san-pham-hinh-anh">Chọn ảnh hoặc kéo ảnh vào đây</label>
-      <p>Tối đa {toiDa} ảnh, JPG/PNG/WEBP, mỗi ảnh không quá 5 MB. Ảnh đầu tiên là ảnh chính.</p>
+      <p>Tối đa {toiDa} ảnh, JPG/PNG/WEBP, mỗi ảnh không quá 5 MB.{toiDa > 1 ? ' Ảnh đầu tiên là ảnh chính.' : ''}</p>
     </div>
     {dangTai && <p role="status">Đang tải “{dangTai}”…</p>}
     {loi && <p className="taiAnhLenLoi" role="alert">{loi}</p>}
     {value.length > 0 && <ul className="taiAnhLenList">{value.map((duongDan, index) => <li key={`${duongDan}-${index}`}>
-      <img src={taoUrlAnh(duongDan)} alt={`Ảnh sản phẩm ${index + 1}`} />
-      <span>{index === 0 ? 'Ảnh chính' : `Ảnh ${index + 1}`}</span>
+      <img src={taoUrlAnh(duongDan)} alt={`Ảnh ${loaiAnh} ${index + 1}`} />
+      <span>{toiDa === 1 ? `Ảnh ${loaiAnh}` : index === 0 ? 'Ảnh chính' : `Ảnh ${index + 1}`}</span>
       <div className="taiAnhLenActions">
         {index > 0 && <Button variant="ghost" size="sm" disabled={disabled || Boolean(dangTai)} onClick={() => datAnhChinh(index)} aria-label={`Đặt ảnh ${index + 1} làm ảnh chính`}>Đặt làm ảnh chính</Button>}
         <Button variant="ghost" size="sm" disabled={disabled || Boolean(dangTai)} onClick={() => boAnh(index)} aria-label={`Xóa ảnh ${index + 1}`}>Xóa</Button>

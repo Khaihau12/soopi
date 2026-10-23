@@ -148,6 +148,7 @@ Dựa vào biểu đồ lớp (Hình 3.72) gồm 19 lớp, cơ sở dữ liệu 
 | tieuDe | String | Tiêu đề banner |
 | hinhAnh | String | Hình ảnh của banner (đường dẫn ảnh) |
 | noiDung | String | Nội dung banner |
+| danhMucId | ObjectId | Danh mục đích khi người mua nhấn banner (bổ sung theo giao diện trang chủ) |
 | trangThai | String | Trạng thái hiển thị của banner (Kích hoạt, Vô hiệu hóa) |
 
 **l. Thiết kế Collection Giỏ hàng**

@@ -1,11 +1,11 @@
 const express = require('express');
 const controller = require('../controllers/donHang.controller');
 const { batBuocDangNhap } = require('../middlewares/auth.middleware');
-const { batBuocVaiTro, batBuocCuaHang } = require('../middlewares/role.middleware');
+const { batBuocVaiTro, batBuocCuaHang, camQuanTriMuaSam } = require('../middlewares/role.middleware');
 const { VAI_TRO } = require('../constants/vaiTro.constant');
 
 const router = express.Router();
-router.use(batBuocDangNhap);
+router.use(batBuocDangNhap, camQuanTriMuaSam);
 router.post('/xem-truoc', controller.xemTruocDonHang);
 router.post('/', controller.datHang);
 router.get('/', controller.layDanhSachDonHangCuaToi);

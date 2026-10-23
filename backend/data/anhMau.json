@@ -1,0 +1,296 @@
+[
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526bb",
+    "ten": "Chảo chống dính 24 cm",
+    "file": "chao-chong-dinh.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776686/soopi/2570bedb-0cf9-47d0-8290-cdfbec539e8d.png",
+    "tenCuaHang": "Bếp Nhà Mây"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526bc",
+    "ten": "Bình giữ nhiệt 500 ml",
+    "file": "binh-giu-nhiet.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776687/soopi/c3fc94a9-31bf-44bb-98d7-d749d56060eb.png",
+    "tenCuaHang": "Bếp Nhà Mây"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526bd",
+    "ten": "Hộp đựng thực phẩm",
+    "file": "hop-thuc-pham.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776688/soopi/743a758c-fdec-4f9f-ab7f-d38953dc97ec.png",
+    "tenCuaHang": "Bếp Nhà Mây"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526be",
+    "ten": "Nồi inox 20 cm",
+    "file": "noi-inox.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776689/soopi/56d768c0-dc85-4607-a18e-89ab5c787b9f.png",
+    "tenCuaHang": "Bếp Nhà Mây"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526bf",
+    "ten": "Bộ muỗng gỗ",
+    "file": "bo-muong-go.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776690/soopi/1ef80548-4a5d-4e86-8414-05bcaa4a236f.png",
+    "tenCuaHang": "Bếp Nhà Mây"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c0",
+    "ten": "Khăn lau bếp",
+    "file": "khan-lau-bep.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776691/soopi/700eed92-0765-4d6a-aac9-370dd5bdc90e.png",
+    "tenCuaHang": "Bếp Nhà Mây"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c1",
+    "ten": "Chuột không dây",
+    "file": "chuot-khong-day.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776691/soopi/88d2a811-816e-4d70-ab9d-0b9d750bc20e.png",
+    "tenCuaHang": "Công Nghệ Sao"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c2",
+    "ten": "Bàn phím cơ nhỏ gọn",
+    "file": "ban-phim-co.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776692/soopi/38fd9329-121b-4bd5-b996-6620dfc68cd3.png",
+    "tenCuaHang": "Công Nghệ Sao"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c3",
+    "ten": "Tai nghe có dây",
+    "file": "tai-nghe-co-day.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776693/soopi/d50b617d-82a3-4371-9fbc-8fd5544309be.png",
+    "tenCuaHang": "Công Nghệ Sao"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c4",
+    "ten": "Đèn bàn USB",
+    "file": "den-ban-usb.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776694/soopi/1d4a7273-6958-45a9-863b-9b7d73cdeea1.png",
+    "tenCuaHang": "Công Nghệ Sao"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c5",
+    "ten": "Cáp sạc USB C",
+    "file": "cap-sac-usb-c.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776695/soopi/adb6a22e-0e60-487d-9c61-70428fd66f10.png",
+    "tenCuaHang": "Công Nghệ Sao"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c6",
+    "ten": "Giá đỡ laptop",
+    "file": "gia-do-laptop.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776696/soopi/62c77402-3c6f-4109-828d-972c5d4b4fde.png",
+    "tenCuaHang": "Công Nghệ Sao"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c7",
+    "ten": "Áo thun cotton",
+    "file": "ao-thun-xanh.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776696/soopi/1eeb95bb-4f8c-45bd-992d-d730906af155.png",
+    "tenCuaHang": "Thời Trang Mộc"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c8",
+    "ten": "Quần jean xanh",
+    "file": "quan-jean-dam.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776698/soopi/8cf13350-63cd-46c2-9a15-c53fbb0cee61.png",
+    "tenCuaHang": "Thời Trang Mộc"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526c9",
+    "ten": "Áo khoác mỏng",
+    "file": "ao-khoac-xanh.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776700/soopi/cb47b056-fb02-4691-b2fc-c14bc18af1ff.png",
+    "tenCuaHang": "Thời Trang Mộc"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526ca",
+    "ten": "Túi vải canvas",
+    "file": "tui-canvas.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776701/soopi/53639d25-e6ce-4a18-8fc5-230438790c05.png",
+    "tenCuaHang": "Thời Trang Mộc"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526cb",
+    "ten": "Mũ lưỡi trai",
+    "file": "mu-luoi-trai.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776703/soopi/6bdf64ee-f681-4227-9720-2f0823f9f7a5.png",
+    "tenCuaHang": "Thời Trang Mộc"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526cc",
+    "ten": "Tất cổ ngắn",
+    "file": "tat-co-ngan.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776704/soopi/99c3de48-a6ac-4b94-85ad-a9d6485687ff.png",
+    "tenCuaHang": "Thời Trang Mộc"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526cd",
+    "ten": "Sổ tay kẻ dòng",
+    "file": "so-tay-ke-dong.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776705/soopi/05017f1d-aaee-43f9-91fe-ec58c670dd80.png",
+    "tenCuaHang": "Sách và Góc Học"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526ce",
+    "ten": "Bút bi xanh bộ 10",
+    "file": "but-bi-xanh.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776706/soopi/23572cbe-b362-4c63-8d91-02b14d1a3603.png",
+    "tenCuaHang": "Sách và Góc Học"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526cf",
+    "ten": "Truyện thiếu nhi",
+    "file": "truyen-thieu-nhi.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776707/soopi/35ae383b-3ec6-4703-b95c-2d628022043c.png",
+    "tenCuaHang": "Sách và Góc Học"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526d0",
+    "ten": "Sách kỹ năng học tập",
+    "file": "sach-ky-nang.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776708/soopi/0672d1f0-c877-4c82-9d0b-71c8aef03aa8.png",
+    "tenCuaHang": "Sách và Góc Học"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526d1",
+    "ten": "Kẹp tài liệu",
+    "file": "kep-tai-lieu.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776708/soopi/108f43de-1159-44e7-adaf-af289f7dfc3a.png",
+    "tenCuaHang": "Sách và Góc Học"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad5a2eacbf43cab454526d2",
+    "ten": "Bộ giấy ghi chú",
+    "file": "giay-ghi-chu.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776709/soopi/3e23d7de-9e79-49df-a136-f546d3d59149.png",
+    "tenCuaHang": "Sách và Góc Học"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad6bf611dddc5701e8aa5cf",
+    "ten": "Áo thun cotton",
+    "file": "ao-thun-trang.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776710/soopi/1367b7b5-a358-42d6-9529-c9ba722525e1.png",
+    "tenCuaHang": "Soopi Thời trang A"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad6bf611dddc5701e8aa5d0",
+    "ten": "Áo sơ mi trắng",
+    "file": "ao-so-mi-trang.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776711/soopi/94bab890-9976-4568-b6fd-5bed2a716674.png",
+    "tenCuaHang": "Soopi Thời trang A"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad6bf611dddc5701e8aa5d1",
+    "ten": "Quần jean xanh",
+    "file": "quan-jean-sang.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776712/soopi/81dba9b3-f0f6-41f4-8c2d-0f10f5101a31.png",
+    "tenCuaHang": "Soopi Thời trang A"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad6bf611dddc5701e8aa5d2",
+    "ten": "Áo khoác nhẹ",
+    "file": "ao-khoac-be.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776713/soopi/06c66843-d7f9-4834-811c-3a26a039a72d.png",
+    "tenCuaHang": "Soopi Thời trang A"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad6bf611dddc5701e8aa5d3",
+    "ten": "Bình nước giữ nhiệt",
+    "file": "binh-nuoc-giu-nhiet.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776713/soopi/c0e75496-1cf8-4d3f-86e9-3f741757ecc9.png",
+    "tenCuaHang": "Soopi Gia dụng B"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad6bf611dddc5701e8aa5d4",
+    "ten": "Đèn bàn học",
+    "file": "den-ban-hoc.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776714/soopi/23451a66-a595-4cc7-9e02-1439698fc17e.png",
+    "tenCuaHang": "Soopi Gia dụng B"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad6bf611dddc5701e8aa5d5",
+    "ten": "Hộp đựng thực phẩm",
+    "file": "hop-thuc-pham-moi.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776715/soopi/a7169376-6900-4219-83c8-37f00876c5f0.png",
+    "tenCuaHang": "Soopi Gia dụng B"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad6bf611dddc5701e8aa5d6",
+    "ten": "Túi vải đi chợ",
+    "file": "tui-di-cho.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776716/soopi/378c43a9-0950-480c-9d7d-c85a1defa546.png",
+    "tenCuaHang": "Soopi Phụ kiện C"
+  },
+  {
+    "loai": "sanPham",
+    "id": "6ad6bf611dddc5701e8aa5d7",
+    "ten": "Sổ tay bìa cứng",
+    "file": "so-tay-bia-cung.png",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776717/soopi/876c6504-e019-4e05-845d-a5b93848d847.png",
+    "tenCuaHang": "Soopi Phụ kiện C"
+  },
+  {
+    "loai": "banner",
+    "id": "6ad5a2eacbf43cab454526f6",
+    "ten": "Mua sắm cho căn bếp",
+    "file": "banner-can-bep.png",
+    "danhMucId": "6ad5a2eacbf43cab454526b5",
+    "noiDung": "Chảo, nồi và đồ dùng giúp việc bếp gọn nhẹ hơn.",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776718/soopi/56a75be3-61cc-4fa0-a1d5-cc0d1c07a68d.png",
+    "tenDanhMuc": "Đồ gia dụng"
+  },
+  {
+    "loai": "banner",
+    "id": "6ad5a2eacbf43cab454526f7",
+    "ten": "Góc làm việc tiện nghi",
+    "file": "banner-goc-lam-viec.png",
+    "danhMucId": "6ad5a2eacbf43cab454526b6",
+    "noiDung": "Đèn, bàn phím và phụ kiện cho góc làm việc ngăn nắp.",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776718/soopi/2e0f0682-19cc-452f-b885-d6c78f516804.png",
+    "tenDanhMuc": "Điện tử"
+  },
+  {
+    "loai": "banner",
+    "id": "6ad5a2eacbf43cab454526f8",
+    "ten": "Trang phục mỗi ngày",
+    "file": "banner-thoi-trang.png",
+    "danhMucId": "6ad5a2eacbf43cab454526b7",
+    "noiDung": "Trang phục cơ bản dễ kết hợp cho mỗi ngày.",
+    "url": "https://res.cloudinary.com/d5xnoz4z/image/upload/v1792776719/soopi/3d3274a9-62ff-47f3-93ef-bd017b395c6b.png",
+    "tenDanhMuc": "Thời trang"
+  }
+]

@@ -15,6 +15,7 @@ coverage/
 # Dữ liệu chạy trên máy cá nhân
 backend/uploads/
 backend/backups/
+backend/assets/generated-images/
 *.dump
 *.archive
 

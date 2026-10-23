@@ -9,6 +9,7 @@
     "seed:admin": "node scripts/taoQuanTriVien.js",
     "seed:demo-accounts": "node scripts/taoTaiKhoanMau.js",
     "seed:demo": "node scripts/taoDuLieuMau.js",
+    "seed:images": "node scripts/boSungAnhMau.js",
     "migrate:flash-sale": "node scripts/chuyenFlashSaleCuaHang.js",
     "test:f12": "node scripts/kiemTraF12.js",
     "test:f13": "node scripts/kiemTraF13.js",

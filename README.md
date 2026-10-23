@@ -56,6 +56,8 @@ Truy cập `http://localhost:5173`; kiểm tra API tại `http://localhost:3000/
 
 Các tài khoản F29 dùng chung mật khẩu từ `DEMO_PASSWORD`: `nguoi-mua-f29@soopi.test`, `nguoi-ban-f29-a@soopi.test`, `nguoi-ban-f29-b@soopi.test`, `nguoi-ban-f29-c@soopi.test`. Nếu đã tồn tại với mật khẩu khác, script giữ nguyên mật khẩu đó.
 
+Ảnh mẫu sản phẩm và banner đã lưu trên Cloudinary, URL công khai nằm trong `backend/data/anhMau.json`. Sau khi tạo dữ liệu mẫu, chạy `npm --prefix backend run seed:images` để gắn ảnh cho các bản ghi có ảnh trống hoặc đường dẫn `/anh-demo/` cũ. Lệnh nhận diện sản phẩm theo tên và cửa hàng, bỏ qua ảnh đã tải thủ công; chạy lại không tạo ảnh trùng. Cần cấu hình Cloudinary nếu phải tải ảnh mới từ `backend/assets/generated-images/`. Ảnh gốc tạo trên máy được bỏ qua khỏi Git để repository nhẹ; các URL trong manifest đủ dùng khi cài lại dữ liệu mẫu còn tồn tại trên Cloudinary.
+
 Nếu database cũ có Flash Sale do Người bán tạo, chạy `npm --prefix backend run migrate:flash-sale` một lần. Script sao lưu các chương trình đó vào `backend/backups/` (không đưa lên Git), rồi chuyển chúng thành chương trình `Giảm giá`. Chỉ Quản trị viên tạo Flash Sale Toàn sàn; `seed:demo` tạo một chương trình mẫu để thử mục Flash Sale trên trang chủ.
 
 ## VNPay sandbox và kiểm thử

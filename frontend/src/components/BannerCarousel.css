@@ -1,17 +1,26 @@
 .bannerCarousel { overflow: hidden; border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
 .bannerSlide { display: grid; }
-.bannerImage { aspect-ratio: 16 / 9; background: var(--nen); }
-.bannerImage img { width: 100%; height: 100%; object-fit: cover; }
+.bannerImage { height: clamp(190px, 40vw, 260px); background: var(--nen); }
+.bannerImage img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .bannerImageTrong { display: grid; place-content: center; justify-items: center; gap: var(--kc2); width: 100%; height: 100%; color: var(--chuMo); }
-.bannerContent { display: grid; align-content: center; gap: var(--kc3); padding: var(--kc5); background: var(--mauChinhNhat); }
+.bannerContent { display: grid; align-content: center; justify-items: start; gap: var(--kc4); padding: var(--kc5); background: var(--mauChinhNhat); }
 .bannerContent h2, .bannerContent p { margin: 0; }
-.bannerContent h2 { color: var(--mauChinhDam); }
-.bannerContent p { color: var(--chuPhu); }
-.bannerControls { display: flex; align-items: center; justify-content: space-between; padding: var(--kc2); }
+.bannerContent h2 { max-width: 18ch; color: var(--mauChinhDam); font-size: clamp(1.75rem, 3vw, 2.75rem); line-height: 1.2; }
+.bannerContent p { max-width: 40ch; color: var(--chuPhu); }
+.bannerEyebrow { color: var(--mauChinhDam); font-size: .875rem; font-weight: 700; letter-spacing: .02em; }
+.bannerCta { display: inline-flex; align-items: center; justify-content: center; gap: var(--kc2); min-height: var(--chieuCaoCham); margin-top: var(--kc2); padding: var(--kc2) var(--kc4); border-radius: var(--boGocNho); background: var(--mauChinh); color: white; font-weight: 600; text-decoration: none; }
+.bannerCta:hover { background: var(--mauChinhDam); }
+.bannerCta:focus-visible, .bannerControls button:focus-visible { outline: 2px solid var(--mauChinhDam); outline-offset: 2px; }
+.bannerControls { display: flex; align-items: center; justify-content: center; gap: var(--kc4); padding: var(--kc2); }
 .bannerControls > button { display: grid; place-items: center; min-width: var(--chieuCaoCham); min-height: var(--chieuCaoCham); border: 0; border-radius: var(--boGocNho); background: transparent; color: var(--mauChinhDam); }
 .bannerControls > button:hover { background: var(--mauChinhNhat); }
 .bannerDots { display: flex; align-items: center; gap: var(--kc2); }
 .bannerDots button { width: var(--chieuCaoCham); height: var(--chieuCaoCham); border: 0; background: transparent; }
 .bannerDots button::before { content: ''; display: block; width: var(--kc2); height: var(--kc2); margin: auto; border-radius: var(--boGocTron); background: var(--vienDam); }
 .bannerDots .bannerDotActive::before { background: var(--mauChinh); }
-@media (min-width: 768px) { .bannerSlide { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 768px) {
+  .bannerSlide { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); min-height: 380px; }
+  .bannerImage { grid-column: 2; grid-row: 1; height: auto; min-height: 380px; }
+  .bannerContent { grid-column: 1; grid-row: 1; padding: var(--kc6); }
+}
+@media (min-width: 1024px) { .bannerSlide { min-height: 420px; } .bannerImage { min-height: 420px; } .bannerContent { padding: var(--kc7); } }

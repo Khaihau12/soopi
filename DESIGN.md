@@ -104,7 +104,7 @@ Một tầng nổi phải có mục đích: base → card → dropdown → modal
 
 ## 10. Icons & Imagery
 
-Icon nét thống nhất 20px (24px cho hành động lớn), độ dày nét khoảng 1.75–2px. Icon đi cùng nhãn đối với tác vụ có rủi ro hoặc không hiển nhiên. Không sử dụng emoji làm icon sản phẩm. Ảnh sản phẩm rõ, có nền trung tính nhất quán, không bóp méo; nếu thiếu ảnh, dùng placeholder có nhãn trung thực. Banner chỉ dùng hình và nội dung có nguồn trong BannerQuangCao hoặc khuyến mãi thật; không hứa hẹn ưu đãi không tồn tại.
+Icon nét thống nhất 20px (24px cho hành động lớn), độ dày nét khoảng 1.75–2px. Icon đi cùng nhãn đối với tác vụ có rủi ro hoặc không hiển nhiên. Không sử dụng emoji làm icon sản phẩm. Ảnh sản phẩm rõ, có nền trung tính nhất quán, không bóp méo; nếu thiếu ảnh, dùng placeholder có nhãn trung thực. Banner dùng hình và nội dung có nguồn trong BannerQuangCao, dẫn đến danh mục thật; không hứa hẹn ưu đãi không tồn tại.
 
 Không sao chép ảnh, logo, khẩu hiệu hoặc màu nhận diện của thương hiệu tham khảo. Nếu dùng ảnh mẫu ngoài project, kiểm tra quyền sử dụng khi đưa vào sản phẩm chính thức.
 
@@ -154,7 +154,7 @@ Sản phẩm: form tên, ảnh, mô tả, giá gốc, tồn kho, danh mục, tr�
 
 Điều hướng theo nhiệm vụ: Tổng quan, Tài khoản, Duyệt Người bán, Cửa hàng, Danh mục, Sản phẩm, Giao dịch, Banner, Khuyến mãi, Voucher hệ thống và Báo cáo. Bảng tài khoản hiển thị vai trò có thể chồng nhau; không cộng số Người dùng và Người bán như hai nhóm luôn tách biệt.
 
-Danh mục là danh sách phẳng theo thiết kế collection hiện tại. Form banner dùng tiêu đề, hình ảnh, nội dung, trạng thái; không tạo lịch/CTA/link nếu chưa có trường. Khuyến mãi Toàn sàn gắn sản phẩm cụ thể; điều kiện đơn tối thiểu thuộc voucher. Voucher của Admin gồm Toàn sàn và Freeship. Giao dịch VNPay/COD là dữ liệu đối soát để xem, không có nút sửa tay kết quả thanh toán. Báo cáo ghi kỳ đo và cơ sở tính; doanh thu lọc theo `DonHang.ngayHoanThanh` của đơn `Hoàn thành` theo QĐ-18, không tự suy lợi nhuận, hoa hồng hay lượt xem.
+Danh mục là danh sách phẳng theo thiết kế collection hiện tại. Form banner dùng tiêu đề, hình ảnh, nội dung, trạng thái và danh mục đích; CTA của banner dẫn đến danh sách sản phẩm thuộc danh mục đó. Không tạo lịch hoặc link ngoài. Khuyến mãi Toàn sàn gắn sản phẩm cụ thể; điều kiện đơn tối thiểu thuộc voucher. Voucher của Admin gồm Toàn sàn và Freeship. Giao dịch VNPay/COD là dữ liệu đối soát để xem, không có nút sửa tay kết quả thanh toán. Báo cáo ghi kỳ đo và cơ sở tính; doanh thu lọc theo `DonHang.ngayHoanThanh` của đơn `Hoàn thành` theo QĐ-18, không tự suy lợi nhuận, hoa hồng hay lượt xem.
 
 ## 15. Forms & Validation UX
 
