@@ -18,9 +18,10 @@ const MUC_GOI_Y = [5, 10, 15, 20, 30, 50];
 
 const gioVietNam = (giaTri) => {
   if (!giaTri) return '';
-  const phan = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(giaTri));
-  const lay = (ten) => phan.find((muc) => muc.type === ten)?.value;
-  return `${lay('year')}-${lay('month')}-${lay('day')}T${lay('hour')}:${lay('minute')}`;
+  const thoiDiem = new Date(giaTri);
+  if (Number.isNaN(thoiDiem.getTime())) return '';
+  // Việt Nam dùng UTC+7 quanh năm; datetime-local cần chuỗi YYYY-MM-DDTHH:mm.
+  return new Date(thoiDiem.getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 16);
 };
 
 const taoDong = (muc) => ({ sanPham: muc.sanPham, kieu: muc.tyLeGiam != null ? 'tyLeGiam' : 'giaKhuyenMai', giaTri: String(muc.tyLeGiam ?? muc.giaKhuyenMai ?? '') });
