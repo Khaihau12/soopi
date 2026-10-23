@@ -1,10 +1,18 @@
-.voucherListPage { display: grid; gap: var(--kc5); min-width: 0; }
-.voucherListFilters { display: flex; flex-wrap: wrap; align-items: end; gap: var(--kc3); padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
-.voucherListFilters .field { flex: 1; min-width: 160px; }
-.voucherListMa, .voucherListActions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kc2); }
-.voucherListMa strong { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
-.voucherListCopy { margin: 0; color: var(--thanhCong); }
-.voucherSwitch { min-height: 44px; border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); padding: var(--kc2) var(--kc3); background: var(--beMat); color: var(--chu); font: inherit; cursor: pointer; }
-.voucherSwitch[aria-checked="true"] { border-color: var(--mauChinh); background: var(--mauChinhNhat); color: var(--mauChinhDam); }
-.voucherSwitch:focus-visible { outline: 2px solid var(--mauChinh); outline-offset: 2px; }
-@media (max-width: 639px) { .voucherListFilters { display: grid; } .voucherListFilters .field { min-width: 0; } }
+.voucherListPage { display:grid; gap:var(--kc4); min-width:0; }
+.voucherListPage .tabs { overflow-x:auto; }
+.voucherListFilters { display:flex; flex-wrap:wrap; align-items:end; gap:var(--kc3); padding:var(--kc4); background:var(--beMat); border:var(--doDayVien) solid var(--vien); border-radius:var(--boGocVua); }
+.voucherListFilters .field { flex:1; min-width:200px; }
+.voucherListSearch { display:flex; gap:var(--kc2); }
+.voucherListSearch .input { flex:1; min-width:0; }
+.voucherListDangTai { opacity:.55; pointer-events:none; }
+.voucherListMa, .voucherListActions { display:flex; align-items:center; flex-wrap:wrap; gap:var(--kc2); }
+.voucherListMa small, .voucherListPage td small { display:block; color:var(--chuPhu); }
+.voucherListMa button { border:0; background:transparent; padding:0; font:600 .9rem ui-monospace,monospace; color:var(--mauChinhDam); cursor:pointer; }
+.voucherListCanhBao { color:var(--canhBao); font-weight:600; }
+.voucherSwitch { min-height:40px; border:var(--doDayVien) solid var(--vienDam); border-radius:var(--boGocNho); padding:var(--kc2); background:var(--beMat); color:var(--chu); cursor:pointer; }
+.voucherSwitch[aria-checked=true] { background:var(--mauChinhNhat); border-color:var(--mauChinh); color:var(--mauChinhDam); }
+.voucherSwitch:focus-visible, .voucherListMa button:focus-visible { outline:2px solid var(--mauChinh); outline-offset:2px; }
+.voucherListActions .dropdownMenuPanel button { display:block; width:100%; text-align:left; border:0; padding:var(--kc2) var(--kc3); background:var(--beMat); color:var(--chu); cursor:pointer; }
+.voucherListActions .dropdownMenuPanel button:hover { background:var(--nen); }
+@media(max-width:639px) { .voucherListFilters { display:grid; } .voucherListFilters .field { min-width:0; } .voucherListPage td { min-width:0; } }
+.voucherListSearch .field { flex:1; min-width:0; }

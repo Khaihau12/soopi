@@ -1,7 +1,19 @@
-.voucherForm { display: grid; gap: var(--kc4); }
-.voucherFormFields { display: grid; gap: var(--kc4); }
-.voucherFormPreview { margin: 0; padding: var(--kc3); border-radius: var(--boGocNho); background: var(--mauChinhNhat); color: var(--chu); }
-.voucherFormLoi { margin: 0; color: var(--loi); }
-.voucherFormActions { display: flex; justify-content: flex-end; gap: var(--kc3); padding-top: var(--kc3); border-top: var(--doDayVien) solid var(--vien); background: var(--beMat); }
-@media (min-width: 768px) { .voucherFormFields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 639px) { .voucherFormActions { position: sticky; bottom: 0; z-index: var(--tangNoiDungNoi); } .voucherFormActions .button { flex: 1; } }
+.voucherForm { display:grid; gap:var(--kc4); }
+.modal:has(.voucherForm) { width:min(100%, 68rem); }
+.voucherFormMain { display:grid; grid-template-columns:minmax(0,2fr) minmax(220px,1fr); gap:var(--kc4); }
+.voucherFormGroups { display:grid; gap:var(--kc4); }
+.voucherFormGroups section { display:grid; gap:var(--kc3); padding:var(--kc4); border:var(--doDayVien) solid var(--vien); border-radius:var(--boGocNho); }
+.voucherFormGroups h3 { margin:0; font-size:1.05rem; }
+.voucherFormInline, .voucherFormChips, .voucherFormSegment { display:flex; align-items:center; flex-wrap:wrap; gap:var(--kc2); }
+.voucherFormInline .input { flex:1; min-width:180px; }
+.voucherFormSegment button { padding:var(--kc2) var(--kc3); border:var(--doDayVien) solid var(--vien); background:var(--beMat); color:var(--chu); border-radius:var(--boGocNho); cursor:pointer; }
+.voucherFormSegment button[aria-pressed=true] { color:var(--mauChinhDam); background:var(--mauChinhNhat); border-color:var(--mauChinh); }
+.voucherFormPreview { position:sticky; top:var(--kc3); align-self:start; padding:var(--kc4); background:var(--nen); border-radius:var(--boGocNho); }
+.voucherFormTicket { margin-top:var(--kc3); padding:var(--kc4); background:var(--beMat); border-left:6px solid var(--mauChinh); border-radius:var(--boGocNho); }
+.voucherFormTicket p { color:var(--mauGia); font-weight:700; }
+.voucherFormTicket small, .voucherFormGroups small { color:var(--chuPhu); }
+.voucherFormHint { margin:0; color:var(--canhBao); }
+.voucherFormLoi { color:var(--loi); }
+.voucherFormActions { position:sticky; bottom:0; display:flex; justify-content:flex-end; gap:var(--kc3); padding:var(--kc3); border-top:var(--doDayVien) solid var(--vien); background:var(--beMat); }
+@media(max-width:639px) { .voucherFormMain { display:flex; flex-direction:column-reverse; } .voucherFormPreview { position:static; } .voucherFormActions .button { flex:1; } }
+.voucherFormInline .field { flex:1; min-width:180px; }

@@ -76,12 +76,24 @@ const layDanhSach = async (dieuKien, query = {}) => {
 
 const kiemTraBoLoc = (query, laQuanTri) => {
   if (query.trangThai && !Object.values(TRANG_THAI_VOUCHER).includes(query.trangThai)) throw taoLoi(400, 'Trạng thái voucher không hợp lệ');
+  if (query.tinhTrang && !['Đang hiệu lực', 'Sắp diễn ra', 'Đã hết hạn', 'Hết lượt', 'Đã tắt'].includes(query.tinhTrang)) throw taoLoi(400, 'Tình trạng voucher không hợp lệ');
   if (laQuanTri && query.loaiVoucher && ![LOAI_VOUCHER.TOAN_SAN, LOAI_VOUCHER.FREESHIP].includes(query.loaiVoucher)) throw taoLoi(400, 'Quản trị viên chỉ xem voucher Toàn sàn hoặc Freeship');
   if (query.tuKhoa && (typeof query.tuKhoa !== 'string' || query.tuKhoa.trim().length > 100)) throw taoLoi(400, 'Từ khóa tối đa 100 ký tự');
 };
 
+const locTinhTrang = (tinhTrang, hienTai) => {
+  if (!tinhTrang) return {};
+  if (tinhTrang === 'Đã tắt') return { trangThai: TRANG_THAI_VOUCHER.VO_HIEU_HOA };
+  const kichHoat = { trangThai: TRANG_THAI_VOUCHER.KICH_HOAT };
+  if (tinhTrang === 'Sắp diễn ra') return { ...kichHoat, ngayBatDau: { $gt: hienTai } };
+  if (tinhTrang === 'Đã hết hạn') return { ...kichHoat, ngayBatDau: { $lte: hienTai }, ngayKetThuc: { $lt: hienTai } };
+  if (tinhTrang === 'Hết lượt') return { ...kichHoat, ngayBatDau: { $lte: hienTai }, ngayKetThuc: { $gte: hienTai }, soLuong: { $lt: 1 } };
+  return { ...kichHoat, ngayBatDau: { $lte: hienTai }, ngayKetThuc: { $gte: hienTai }, soLuong: { $gte: 1 } };
+};
+
 const taoBoLoc = (query) => ({
   ...(query.trangThai ? { trangThai: query.trangThai } : {}),
+  ...locTinhTrang(query.tinhTrang, new Date()),
   ...(query.loaiVoucher ? { loaiVoucher: query.loaiVoucher } : {}),
   ...(query.tuKhoa?.trim() ? { $or: [
     { maVoucher: { $regex: thoatKyTuRegex(query.tuKhoa.trim()), $options: 'i' } },
