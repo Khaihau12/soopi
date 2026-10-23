@@ -1,17 +1,70 @@
-.khuyenMaiForm { max-width: 900px; display: grid; gap: var(--kc5); }
-.khuyenMaiForm h2 { font-size: 1.25rem; margin: 0 0 var(--kc4); }
-.khuyenMaiFormFields { display: grid; gap: var(--kc4); }
-.khuyenMaiFormHeading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--kc3); }
-.khuyenMaiFormRows { display: grid; gap: var(--kc3); }
-.khuyenMaiFormRow { border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocNho); padding: var(--kc4); display: grid; gap: var(--kc3); }
-.khuyenMaiFormRow > div:first-child span, .khuyenMaiPickerList small { display: block; color: var(--chuPhu); }
-.khuyenMaiFormPreview { color: var(--chuPhu); }
-.khuyenMaiFormPreview strong { color: var(--mauGia); }
-.khuyenMaiFormLoi { color: var(--loi); background: var(--loiNen); border-radius: var(--boGocNho); padding: var(--kc3); margin: 0; }
-.khuyenMaiFormActions { display: flex; justify-content: flex-end; gap: var(--kc3); background: var(--beMat); }
-.khuyenMaiPicker { display: grid; gap: var(--kc4); }
-.khuyenMaiPickerList { display: grid; gap: var(--kc2); max-height: 50vh; overflow: auto; }
-.khuyenMaiPickerList > div { display: flex; align-items: center; gap: var(--kc3); border-bottom: var(--doDayVien) solid var(--vien); padding: var(--kc2) 0; }
-.khuyenMaiPickerList img { width: 48px; height: 48px; object-fit: cover; border-radius: var(--boGocNho); }
-.khuyenMaiPickerList span { flex: 1; }
-@media (max-width: 639px) { .khuyenMaiFormActions { position: sticky; bottom: 0; z-index: var(--tangNoiDungNoi); border-top: var(--doDayVien) solid var(--vien); padding: var(--kc3); } .khuyenMaiFormActions .button { flex: 1; } }
+.khuyenMaiForm { width: 100%; max-width: 1280px; min-width: 0; display: grid; gap: var(--kc5); }
+.khuyenMaiForm h2 { font-size: 1.25rem; margin: 0; }
+.khuyenMaiFormFields { display: grid; gap: var(--kc4); margin-top: var(--kc4); }
+.khuyenMaiFormHeading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--kc3); margin-bottom: var(--kc4); }
+.khuyenMaiQuick { display: grid; gap: var(--kc3); padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocNho); background: var(--nen); margin-bottom: var(--kc4); }
+.khuyenMaiQuick > .field { max-width: 220px; }
+.khuyenMaiChips, .khuyenMaiQuickActions, .khuyenMaiRowActions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kc2); }
+.khuyenMaiChips .button { border: var(--doDayVien) solid var(--vien); background: var(--beMat); }
+.khuyenMaiFormSummary { color: var(--chuPhu); margin-bottom: var(--kc3); }
+.khuyenMaiFormLoi, .khuyenMaiFormErrorSummary { color: var(--loi); background: var(--loiNen); border-radius: var(--boGocNho); padding: var(--kc3); margin: 0 0 var(--kc3); }
+.khuyenMaiFormErrorSummary { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc2); }
+.khuyenMaiTickAll { display: inline-flex; align-items: center; gap: var(--kc2); margin: var(--kc3) 0; cursor: pointer; }
+.khuyenMaiTableScroll { width: 100%; max-height: 720px; overflow: auto; border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocNho); }
+.khuyenMaiTable { width: 100%; min-width: 1040px; border-collapse: collapse; font-size: .875rem; }
+.khuyenMaiTable th { position: sticky; top: 0; z-index: 1; background: var(--nen); color: var(--chuPhu); font-weight: 600; text-align: left; }
+.khuyenMaiTable th, .khuyenMaiTable td { padding: var(--kc3); border-bottom: var(--doDayVien) solid var(--vien); vertical-align: middle; }
+.khuyenMaiTable td { min-width: 0; }
+.khuyenMaiTable tr:last-child td { border-bottom: 0; }
+.khuyenMaiTableError { background: var(--loiNen); }
+.khuyenMaiTableError td:first-child { border-left: 3px solid var(--loi); }
+.khuyenMaiTable input[type='checkbox'], .khuyenMaiPicker input[type='checkbox'], .khuyenMaiTickAll input { width: 18px; height: 18px; accent-color: var(--mauChinh); flex: none; }
+.khuyenMaiTable .input { min-width: 100px; max-width: 150px; }
+.khuyenMaiProduct { display: flex; align-items: center; gap: var(--kc2); min-width: 180px; }
+.khuyenMaiProduct img, .khuyenMaiPickerItem img { width: 44px; height: 44px; border-radius: var(--boGocNho); object-fit: cover; flex: none; }
+.khuyenMaiProduct strong, .khuyenMaiPickerItem strong { display: block; overflow-wrap: anywhere; }
+.khuyenMaiProduct small, .khuyenMaiPickerItem small, .khuyenMaiTable td > small { display: block; color: var(--chuPhu); }
+.khuyenMaiProduct .khuyenMaiCustom { color: var(--mauChinhDam); font-weight: 600; }
+.khuyenMaiTable .khuyenMaiAfter { color: var(--mauGia); font-weight: 700; white-space: nowrap; }
+.khuyenMaiInlineError { color: var(--loi) !important; margin-top: var(--kc1); }
+.khuyenMaiType { display: inline-flex; border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocNho); overflow: hidden; }
+.khuyenMaiType button { border: 0; background: var(--beMat); color: var(--chu); padding: var(--kc2); cursor: pointer; white-space: nowrap; }
+.khuyenMaiType button[aria-pressed='true'] { background: var(--mauChinhNhat); color: var(--mauChinhDam); font-weight: 600; }
+.khuyenMaiType button:disabled { cursor: not-allowed; }
+.khuyenMaiRowActions { min-width: 110px; }
+.khuyenMaiFormActions { position: sticky; bottom: 0; z-index: var(--tangNoiDungNoi); display: flex; align-items: center; justify-content: space-between; gap: var(--kc3); border-top: var(--doDayVien) solid var(--vien); background: var(--beMat); padding: var(--kc3) var(--kc4); }
+.khuyenMaiFormActions > div { display: flex; flex-wrap: wrap; gap: var(--kc2); }
+.modal:has(.khuyenMaiPicker) { width: min(100%, 54rem); }
+.khuyenMaiPicker { display: grid; gap: var(--kc3); }
+.khuyenMaiPickerFilters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--kc3); }
+.khuyenMaiPickerTools { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--kc2); }
+.khuyenMaiPickerTools label { display: inline-flex; align-items: center; gap: var(--kc2); cursor: pointer; }
+.khuyenMaiPickerList { display: grid; max-height: 48vh; overflow: auto; border-top: var(--doDayVien) solid var(--vien); }
+.khuyenMaiPickerItem { display: flex; align-items: center; gap: var(--kc3); padding: var(--kc2) 0; border-bottom: var(--doDayVien) solid var(--vien); cursor: pointer; }
+.khuyenMaiPickerItem > span { flex: 1; min-width: 0; }
+.khuyenMaiPickerItem:has(input:disabled) { cursor: default; }
+.khuyenMaiPickerFooter { position: sticky; bottom: calc(-1 * var(--kc5)); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--kc3); padding: var(--kc3) 0; background: var(--beMat); border-top: var(--doDayVien) solid var(--vien); }
+.khuyenMaiPickerFooter > div { display: flex; flex-wrap: wrap; gap: var(--kc2); }
+
+@media (max-width: 639px) {
+  .khuyenMaiForm { gap: var(--kc3); }
+  .khuyenMaiQuick { padding: var(--kc3); }
+  .khuyenMaiQuick > .field { max-width: none; }
+  .khuyenMaiQuickActions .button { width: 100%; }
+  .khuyenMaiTableScroll { max-height: 65vh; }
+  .khuyenMaiTable, .khuyenMaiTable tbody, .khuyenMaiTable tr, .khuyenMaiTable td { display: block; min-width: 0; width: 100%; }
+  .khuyenMaiTable thead { display: none; }
+  .khuyenMaiTable tr { padding: var(--kc3); border-bottom: var(--doDayVien) solid var(--vien); }
+  .khuyenMaiTable .khuyenMaiTableError { border-left: 3px solid var(--loi); }
+  .khuyenMaiTableError td:first-child { border-left: 0; }
+  .khuyenMaiTable td { display: grid; grid-template-columns: minmax(95px, 35%) minmax(0, 1fr); align-items: start; gap: var(--kc2); padding: var(--kc2) 0; border: 0; }
+  .khuyenMaiTable td::before { content: attr(data-label); color: var(--chuPhu); font-weight: 600; }
+  .khuyenMaiTable .input { width: 100%; max-width: none; }
+  .khuyenMaiProduct { min-width: 0; }
+  .khuyenMaiRowActions { min-width: 0; }
+  .khuyenMaiFormActions { align-items: stretch; flex-direction: column; }
+  .khuyenMaiFormActions > div, .khuyenMaiFormActions .button { width: 100%; }
+  .khuyenMaiPickerFilters { grid-template-columns: 1fr; }
+  .khuyenMaiPickerFooter > div, .khuyenMaiPickerFooter .button { width: 100%; }
+  .modal:has(.khuyenMaiPicker) .modalBody { padding: var(--kc4); }
+}
