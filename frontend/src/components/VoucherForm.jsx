@@ -20,7 +20,7 @@ const taoDuLieu = (voucher, nhanBan, laQuanTri) => {
   const batDau = gioVietNam(new Date());
   const doDai = nhanBan ? Math.max(1, Math.round((new Date(nhanBan.ngayKetThuc) - new Date(nhanBan.ngayBatDau)) / 86400000)) : 7;
   return {
-    maVoucher: voucher?.maVoucher || '', tenVoucher: goc?.tenVoucher || '',
+    maVoucher: voucher?.maVoucher || '', tenVoucher: goc?.tenVoucher || (laQuanTri ? 'Ưu đãi Soopi' : 'Ưu đãi cửa hàng'),
     loaiVoucher: laQuanTri ? (goc?.loaiVoucher || LOAI_VOUCHER.TOAN_SAN) : LOAI_VOUCHER.CUA_HANG,
     kieuGiam: goc?.kieuGiam || KIEU_GIAM.PHAN_TRAM, giaTriGiam: goc?.giaTriGiam ?? '',
     giamToiDa: goc?.giamToiDa ?? '', giaTriDonToiThieu: goc?.giaTriDonToiThieu ?? 0, soLuong: goc?.soLuong ?? 1,
