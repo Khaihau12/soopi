@@ -92,8 +92,14 @@ async function run() {
   r = await goi('GET', `${seller}/${id}`, undefined, b._id); assert.equal(r[0], 404);
   r = await goi('PATCH', `${seller}/${id}`, { tenKhuyenMai: 'Sai quyền' }, b._id); assert.equal(r[0], 404);
   r = await goi('DELETE', `${seller}/${id}`, undefined, b._id); assert.equal(r[0], 404);
-  r = await goi('PATCH', `${admin}/${id}`, { tenKhuyenMai: 'Sai phạm vi' }, quanTri._id); assert.equal(r[0], 409);
-  r = await goi('DELETE', `${admin}/${id}`, undefined, quanTri._id); assert.equal(r[0], 409);
+  r = await goi('GET', admin, undefined, quanTri._id); assert.equal(r[0], 200);
+  assert.equal(r[1].data.danhSach.length, 0); assert.equal(r[1].data.phanTrang.tongSo, 0);
+  r = await goi('GET', `${admin}?phamVi=${encodeURIComponent('Cửa hàng')}`, undefined, quanTri._id); assert.equal(r[0], 400);
+  r = await goi('GET', `${admin}/${id}`, undefined, quanTri._id); assert.equal(r[0], 404);
+  r = await goi('PATCH', `${admin}/${id}`, { tenKhuyenMai: 'Sai phạm vi' }, quanTri._id); assert.equal(r[0], 404);
+  r = await goi('DELETE', `${admin}/${id}`, undefined, quanTri._id); assert.equal(r[0], 404);
+  r = await goi('PATCH', `${admin}/${id}/vo-hieu-hoa`, undefined, quanTri._id); assert.equal(r[0], 404);
+  assert.equal((await KhuyenMai.findById(id)).trangThai, 'Đang hoạt động');
 
   r = await goi('GET', '/api/khuyen-mai', undefined, null);
   assert.equal(r[0], 200); assert.equal(r[1].data.danhSach.length, 1);
@@ -112,6 +118,12 @@ async function run() {
   r = await goi('POST', admin, flashSaleAdmin, quanTri._id); assert.equal(r[0], 201, JSON.stringify(r[1]));
   const idFlashSaleAdmin = r[1].data.khuyenMai._id;
   assert.equal(r[1].data.khuyenMai.chiTiet[0].giaSauKhuyenMai, 8500);
+  r = await goi('GET', admin, undefined, quanTri._id); assert.equal(r[0], 200);
+  assert.deepEqual(r[1].data.danhSach.map((muc) => muc._id), [idFlashSaleAdmin]);
+  assert.equal(r[1].data.phanTrang.tongSo, 1);
+  r = await goi('GET', `${admin}/${idFlashSaleAdmin}`, undefined, quanTri._id); assert.equal(r[0], 200);
+  r = await goi('PATCH', `${admin}/${idFlashSaleAdmin}`, { tenKhuyenMai: 'Flash Sale toàn sàn đã sửa' }, quanTri._id); assert.equal(r[0], 200);
+  assert.equal(r[1].data.khuyenMai.tenKhuyenMai, 'Flash Sale toàn sàn đã sửa');
   r = await goi('GET', '/api/khuyen-mai?loaiKhuyenMai=Flash%20Sale', undefined, null);
   assert.equal(r[1].data.danhSach.length, 1);
   assert.equal(r[1].data.danhSach[0]._id, idFlashSaleAdmin);
@@ -128,15 +140,18 @@ async function run() {
   assert.equal(r[1].data.danhSach[0].giaGoc, 10000);
   assert.equal(r[1].data.danhSach[0].giaBanThucTe, 7000); // Hai chương trình tính từ giá gốc, lấy giá thấp nhất.
 
-  r = await goi('PATCH', `${admin}/${id}/vo-hieu-hoa`, undefined, quanTri._id);
-  assert.equal(r[0], 200); assert.equal(r[1].data.khuyenMai.trangThai, 'Đã kết thúc');
-  r = await goi('PATCH', `${admin}/${id}/vo-hieu-hoa`, undefined, quanTri._id); assert.equal(r[0], 409);
+  r = await goi('PATCH', `${admin}/${id}/vo-hieu-hoa`, undefined, quanTri._id); assert.equal(r[0], 404);
+  r = await goi('GET', `/api/san-pham/${spA1._id}`, undefined, null);
+  assert.equal(r[1].data.sanPham.giaBanThucTe, 7000);
+  r = await goi('DELETE', `${seller}/${id}`); assert.equal(r[0], 200);
+  assert.equal(await KhuyenMai.countDocuments({ _id: id }), 0);
+  assert.equal(await ChiTietKhuyenMai.countDocuments({ khuyenMaiId: id }), 0);
   r = await goi('GET', `/api/san-pham/${spA1._id}`, undefined, null);
   assert.equal(r[1].data.sanPham.giaBanThucTe, 8500);
   r = await goi('GET', `/api/san-pham?khuyenMaiId=${id}`, undefined, null);
   assert.equal(r[1].data.danhSach.length, 0);
-  r = await goi('PATCH', `${seller}/${id}`, { tenKhuyenMai: 'Không sửa được' }); assert.equal(r[0], 409);
   r = await goi('PATCH', `${admin}/${idFlashSaleAdmin}/vo-hieu-hoa`, undefined, quanTri._id); assert.equal(r[0], 200);
+  r = await goi('PATCH', `${admin}/${idFlashSaleAdmin}/vo-hieu-hoa`, undefined, quanTri._id); assert.equal(r[0], 409);
   r = await goi('GET', `/api/san-pham/${spA1._id}`, undefined, null);
   assert.equal(r[1].data.sanPham.giaBanThucTe, 10000);
 
@@ -170,9 +185,6 @@ async function run() {
   r = await goi('GET', '/api/khuyen-mai', undefined, null);
   assert.equal(r[1].data.danhSach.some((muc) => muc._id === idShopB), true);
 
-  r = await goi('DELETE', `${seller}/${id}`); assert.equal(r[0], 200);
-  assert.equal(await KhuyenMai.countDocuments({ _id: id }), 0);
-  assert.equal(await ChiTietKhuyenMai.countDocuments({ khuyenMaiId: id }), 0);
   r = await goi('DELETE', `${admin}/${idTuongLai}`, undefined, quanTri._id); assert.equal(r[0], 200);
   assert.equal(await ChiTietKhuyenMai.countDocuments({ khuyenMaiId: idTuongLai }), 0);
   r = await goi('DELETE', `${seller}/${idShopB}`, undefined, b._id); assert.equal(r[0], 200);

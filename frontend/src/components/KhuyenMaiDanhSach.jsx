@@ -15,7 +15,7 @@ import TrangThaiBadge from './TrangThaiBadge.jsx';
 import useThongBao from '../hooks/useThongBao.js';
 import * as api from '../services/khuyenMai.api.js';
 import { dinhDangNgayGio } from '../utils/dinhDang.js';
-import { DUONG_DAN, LOAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, TRANG_THAI_KHUYEN_MAI } from '../utils/hangSo.js';
+import { DUONG_DAN, LOAI_KHUYEN_MAI, TRANG_THAI_KHUYEN_MAI } from '../utils/hangSo.js';
 import './KhuyenMaiDanhSach.css';
 
 export default function KhuyenMaiDanhSach({ laQuanTri = false }) {
@@ -55,19 +55,18 @@ export default function KhuyenMaiDanhSach({ laQuanTri = false }) {
     { khoa: 'thoiGian', tieuDe: 'Thời gian', render: (_, muc) => <span>{dinhDangNgayGio(muc.ngayBatDau)} – {dinhDangNgayGio(muc.ngayKetThuc)}</span> },
     { khoa: 'trangThai', tieuDe: 'Trạng thái', render: (giaTri) => <TrangThaiBadge trangThai={giaTri} /> },
     { khoa: 'soSanPham', tieuDe: 'Số sản phẩm' },
-    ...(laQuanTri ? [{ khoa: 'phamVi', tieuDe: 'Phạm vi / Cửa hàng', render: (_, muc) => <span>{muc.phamVi}{muc.cuaHang ? ` · ${muc.cuaHang.tenCuaHang}` : ''}</span> }] : []),
     { khoa: 'thaoTac', tieuDe: 'Thao tác', render: (_, muc) => <div className="khuyenMaiListActions">
-      {muc.trangThai !== TRANG_THAI_KHUYEN_MAI.DA_KET_THUC && (!laQuanTri || muc.phamVi === PHAM_VI_KHUYEN_MAI.TOAN_SAN) && <Button variant="ghost" size="sm" to={duongDan.suaKhuyenMai(muc._id)}>Sửa</Button>}
-      {(!laQuanTri || muc.phamVi === PHAM_VI_KHUYEN_MAI.TOAN_SAN) && <Button variant="ghost" size="sm" onClick={() => { setHanhDong({ loai: 'xoa', khuyenMai: muc }); setLoiGui(''); }}>Xóa</Button>}
+      {muc.trangThai !== TRANG_THAI_KHUYEN_MAI.DA_KET_THUC && <Button variant="ghost" size="sm" to={duongDan.suaKhuyenMai(muc._id)}>Sửa</Button>}
+      <Button variant="ghost" size="sm" onClick={() => { setHanhDong({ loai: 'xoa', khuyenMai: muc }); setLoiGui(''); }}>Xóa</Button>
       {laQuanTri && muc.trangThai !== TRANG_THAI_KHUYEN_MAI.DA_KET_THUC && <Button variant="secondary" size="sm" onClick={() => { setHanhDong({ loai: 'vo-hieu-hoa', khuyenMai: muc }); setLoiGui(''); }}>Vô hiệu hóa</Button>}
     </div> },
   ];
 
   return <div className="khuyenMaiListPage">
-    <PageHeader title="Khuyến mãi" description={laQuanTri ? 'Quản lý chương trình toàn sàn và vô hiệu hóa chương trình khi cần.' : 'Quản lý chương trình giảm giá của cửa hàng bạn.'} actions={<Button to={duongDan.THEM_KHUYEN_MAI}>Tạo chương trình</Button>} />
+    <PageHeader title="Khuyến mãi" description={laQuanTri ? 'Quản lý chương trình Giảm giá và Flash Sale toàn sàn.' : 'Quản lý chương trình giảm giá của cửa hàng bạn.'} actions={<Button to={duongDan.THEM_KHUYEN_MAI}>Tạo chương trình</Button>} />
     <div className="khuyenMaiListFilters">
       <Field label="Trạng thái"><Select value={params.get('trangThai') || ''} onChange={(event) => doiLoc('trangThai', event.target.value)}><option value="">Tất cả</option>{Object.values(TRANG_THAI_KHUYEN_MAI).map((giaTri) => <option key={giaTri}>{giaTri}</option>)}</Select></Field>
-      {laQuanTri && <><Field label="Phạm vi"><Select value={params.get('phamVi') || ''} onChange={(event) => doiLoc('phamVi', event.target.value)}><option value="">Tất cả</option>{Object.values(PHAM_VI_KHUYEN_MAI).map((giaTri) => <option key={giaTri}>{giaTri}</option>)}</Select></Field><Field label="Loại"><Select value={params.get('loaiKhuyenMai') || ''} onChange={(event) => doiLoc('loaiKhuyenMai', event.target.value)}><option value="">Tất cả</option>{Object.values(LOAI_KHUYEN_MAI).map((giaTri) => <option key={giaTri}>{giaTri}</option>)}</Select></Field></>}
+      {laQuanTri && <Field label="Loại"><Select value={params.get('loaiKhuyenMai') || ''} onChange={(event) => doiLoc('loaiKhuyenMai', event.target.value)}><option value="">Tất cả</option>{Object.values(LOAI_KHUYEN_MAI).map((giaTri) => <option key={giaTri}>{giaTri}</option>)}</Select></Field>}
       {[...params.keys()].some((ten) => ten !== 'trang') && <Button variant="ghost" onClick={() => setParams(new URLSearchParams())}>Xóa bộ lọc</Button>}
     </div>
     {dangTai ? <Skeleton variant="block" count={3} /> : loiTai ? <ErrorState message={loiTai} taiLai={taiLai} /> : !ketQua.danhSach.length ? <EmptyState title="Chưa có chương trình phù hợp" description="Tạo chương trình mới hoặc thay đổi bộ lọc." actionLabel="Tạo chương trình" actionTo={duongDan.THEM_KHUYEN_MAI} /> : <><DataTable cot={cot} hang={ketQua.danhSach} khoaHang="_id" /><Pagination trang={ketQua.phanTrang.trang} tongTrang={ketQua.phanTrang.tongTrang} onChange={(trang) => { const moi = new URLSearchParams(params); moi.set('trang', trang); setParams(moi); }} /></>}

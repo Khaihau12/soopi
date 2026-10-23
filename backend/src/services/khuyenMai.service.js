@@ -83,8 +83,10 @@ const nguoiBanLayDanhSachKhuyenMai = (cuaHangId, query = {}) => {
 
 const quanTriLayDanhSachKhuyenMai = (query = {}) => {
   kiemTraBoLoc(query);
+  if (query.phamVi && query.phamVi !== PHAM_VI_KHUYEN_MAI.TOAN_SAN) throw taoLoi(400, 'Quản trị viên chỉ xem khuyến mãi Toàn sàn');
   return layDanhSach({
-    ...(query.phamVi ? { phamVi: query.phamVi } : {}),
+    phamVi: PHAM_VI_KHUYEN_MAI.TOAN_SAN,
+    cuaHangId: null,
     ...(query.loaiKhuyenMai ? { loaiKhuyenMai: query.loaiKhuyenMai } : {}),
     ...(query.trangThai ? { trangThai: query.trangThai } : {}),
   }, query);
@@ -117,7 +119,8 @@ const layChiTiet = async (id, dieuKien) => {
 };
 
 const nguoiBanLayChiTietKhuyenMai = (cuaHangId, id) => layChiTiet(id, { cuaHangId });
-const quanTriLayChiTietKhuyenMai = (id) => layChiTiet(id, {});
+const boLocKhuyenMaiToanSan = { phamVi: PHAM_VI_KHUYEN_MAI.TOAN_SAN, cuaHangId: null };
+const quanTriLayChiTietKhuyenMai = (id) => layChiTiet(id, boLocKhuyenMaiToanSan);
 
 const kiemTraDuLieuKhuyenMai = async (body, cuaHangId, hienTai = null) => {
   const duLieu = body && typeof body === 'object' && !Array.isArray(body) ? body : {};
@@ -220,11 +223,7 @@ const nguoiBanCapNhatKhuyenMai = (cuaHangId, id, body) => {
   if (body?.loaiKhuyenMai === LOAI_KHUYEN_MAI.FLASH_SALE) throw taoLoi(403, 'Chỉ Quản trị viên được quản lý Flash Sale');
   return capNhatKhuyenMai(id, { cuaHangId }, body, cuaHangId);
 };
-const quanTriCapNhatKhuyenMai = async (id, body) => {
-  const khuyenMai = await layKhuyenMai(id);
-  if (khuyenMai.phamVi !== PHAM_VI_KHUYEN_MAI.TOAN_SAN) throw taoLoi(409, 'Chương trình của cửa hàng chỉ có thể vô hiệu hóa');
-  return capNhatKhuyenMai(id, { phamVi: PHAM_VI_KHUYEN_MAI.TOAN_SAN }, body);
-};
+const quanTriCapNhatKhuyenMai = (id, body) => capNhatKhuyenMai(id, boLocKhuyenMaiToanSan, body);
 
 const xoaKhuyenMai = async (id, dieuKien) => {
   await layKhuyenMai(id, dieuKien);
@@ -232,24 +231,20 @@ const xoaKhuyenMai = async (id, dieuKien) => {
   await KhuyenMai.deleteOne({ _id: id, ...dieuKien });
 };
 const nguoiBanXoaKhuyenMai = (cuaHangId, id) => xoaKhuyenMai(id, { cuaHangId });
-const quanTriXoaKhuyenMai = async (id) => {
-  const khuyenMai = await layKhuyenMai(id);
-  if (khuyenMai.phamVi !== PHAM_VI_KHUYEN_MAI.TOAN_SAN) throw taoLoi(409, 'Chương trình của cửa hàng chỉ có thể vô hiệu hóa');
-  return xoaKhuyenMai(id, { phamVi: PHAM_VI_KHUYEN_MAI.TOAN_SAN });
-};
+const quanTriXoaKhuyenMai = (id) => xoaKhuyenMai(id, boLocKhuyenMaiToanSan);
 
 const quanTriVoHieuHoaKhuyenMai = async (id) => {
   await dongBoTrangThaiKhuyenMai();
   if (!mongoose.isValidObjectId(id)) throw taoLoi(404, 'Không tìm thấy chương trình khuyến mãi');
   const ketQua = await KhuyenMai.findOneAndUpdate(
-    { _id: id, trangThai: { $ne: TRANG_THAI_KHUYEN_MAI.DA_KET_THUC } },
+    { _id: id, ...boLocKhuyenMaiToanSan, trangThai: { $ne: TRANG_THAI_KHUYEN_MAI.DA_KET_THUC } },
     { $set: { trangThai: TRANG_THAI_KHUYEN_MAI.DA_KET_THUC } }, { returnDocument: 'after' },
   );
   if (!ketQua) {
-    if (!await KhuyenMai.exists({ _id: id })) throw taoLoi(404, 'Không tìm thấy chương trình khuyến mãi');
+    if (!await KhuyenMai.exists({ _id: id, ...boLocKhuyenMaiToanSan })) throw taoLoi(404, 'Không tìm thấy chương trình khuyến mãi');
     throw taoLoi(409, 'Chương trình đã kết thúc, không thể vô hiệu hóa lần nữa');
   }
-  return layChiTiet(id, {});
+  return layChiTiet(id, boLocKhuyenMaiToanSan);
 };
 
 module.exports = {

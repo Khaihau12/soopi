@@ -6,7 +6,7 @@
 ## 1. Mục tiêu
 
 - **Người bán** tạo/sửa/xóa chương trình `Giảm giá` của cửa hàng mình cho một hoặc nhiều sản phẩm; không tạo Flash Sale.
-- **Quản trị viên** tạo chương trình **Toàn sàn** (kể cả Flash Sale) và **vô hiệu hóa** chương trình bất kỳ.
+- **Quản trị viên** tạo/sửa/xóa/vô hiệu hóa chương trình **Toàn sàn** (kể cả Flash Sale); không xem hoặc thao tác chương trình cửa hàng.
 - **Người dùng** xem các chương trình đang diễn ra; giá bán thực tế tự cập nhật nhờ hàm F09.
 
 ## 2. Nguồn nghiệp vụ
@@ -25,11 +25,11 @@
 | `POST /api/nguoi-ban/khuyen-mai` | Người bán | xem **Mẫu body** | **201** |
 | `PATCH /api/nguoi-ban/khuyen-mai/:id` | Người bán | như `POST` (các field cần đổi) | 200 |
 | `DELETE /api/nguoi-ban/khuyen-mai/:id` | Người bán | — | 200 |
-| `GET /api/quan-tri-vien/khuyen-mai` | Quản trị viên | `phamVi?`, `loaiKhuyenMai?`, `trangThai?`, `trang`, `gioiHan` | danh sách tất cả chương trình |
-| `GET /api/quan-tri-vien/khuyen-mai/:id` | Quản trị viên | — | chi tiết |
+| `GET /api/quan-tri-vien/khuyen-mai` | Quản trị viên | `loaiKhuyenMai?`, `trangThai?`, `trang`, `gioiHan` | chỉ chương trình Toàn sàn; lọc `phamVi=Cửa hàng` → 400 |
+| `GET /api/quan-tri-vien/khuyen-mai/:id` | Quản trị viên | — | chi tiết chương trình Toàn sàn; chương trình cửa hàng → 404 |
 | `POST /api/quan-tri-vien/khuyen-mai` | Quản trị viên | như Người bán (không có `phamVi`/`cuaHangId`) | **201**, `phamVi = Toàn sàn` |
 | `PATCH`, `DELETE /api/quan-tri-vien/khuyen-mai/:id` | Quản trị viên | — | chỉ với chương trình `Toàn sàn` |
-| `PATCH /api/quan-tri-vien/khuyen-mai/:id/vo-hieu-hoa` | Quản trị viên | — | 200 |
+| `PATCH /api/quan-tri-vien/khuyen-mai/:id/vo-hieu-hoa` | Quản trị viên | — | 200 với Toàn sàn; chương trình cửa hàng → 404 |
 
 **Mẫu body `POST`/`PATCH`:**
 ```json
@@ -66,10 +66,10 @@ Quản trị viên có thể đổi `loaiKhuyenMai` thành `Flash Sale` khi tạ
 7. Cho phép một sản phẩm thuộc nhiều chương trình cùng thời gian (giá thấp nhất thắng, đã xử lý ở F09). Mỗi giá khuyến mãi tính riêng từ `giaGoc`, không cộng dồn.
 
 ### 4.3 Sửa, xóa, vô hiệu hóa
-- **Sở hữu:** Người bán chỉ thao tác chương trình có `cuaHangId` của mình (khác → 404). Quản trị viên chỉ `PATCH`/`DELETE` chương trình `Toàn sàn`; chương trình của cửa hàng chỉ **vô hiệu hóa** được (thao tác khác → 409 "Chương trình của cửa hàng chỉ có thể vô hiệu hóa").
+- **Sở hữu:** Người bán chỉ xem và thao tác chương trình có `cuaHangId` của mình (khác → 404). Quản trị viên chỉ xem/sửa/xóa/vô hiệu hóa chương trình `Toàn sàn`; mọi thao tác theo ID với chương trình cửa hàng → 404.
 - **Sửa:** chương trình `Đã kết thúc` → 409 "Chương trình đã kết thúc, không thể chỉnh sửa". Cập nhật `chiTiet` theo thứ tự an toàn: tạo/cập nhật dòng mới **trước**, xóa dòng bị bỏ **sau cùng**.
 - **Xóa** (`QĐ-14`): xóa cứng chương trình và toàn bộ `ChiTietKhuyenMai` của nó (đơn hàng đã lưu snapshot giá nên không bị ảnh hưởng). Giá của sản phẩm quay về `giaGoc` hoặc chương trình khác.
-- **Vô hiệu hóa** (Quản trị viên) — **`QĐ-12` v2:** chỉ đặt `trangThai = 'Đã kết thúc'` bằng thao tác nguyên tử có điều kiện (`findOneAndUpdate({ _id, trangThai: { $ne: 'Đã kết thúc' } }, ...)`); **KHÔNG sửa `ngayBatDau`/`ngayKetThuc`** → không bao giờ tạo khoảng ngày sai (kể cả chương trình `Chưa bắt đầu`), giữ nguyên lịch sử. Áp dụng như nhau cho `Đang hoạt động` và `Chưa bắt đầu`. Đã `Đã kết thúc` → 409. Không có thao tác bật lại; muốn dùng tiếp thì tạo chương trình mới. Vì tra giá luôn loại trừ `trangThai = Đã kết thúc` (F09), giá quay về ngay.
+- **Vô hiệu hóa** (Quản trị viên, chỉ chương trình `Toàn sàn`) — **`QĐ-12` v2:** chỉ đặt `trangThai = 'Đã kết thúc'` bằng thao tác nguyên tử có điều kiện (`findOneAndUpdate({ _id, phamVi: 'Toàn sàn', cuaHangId: null, trangThai: { $ne: 'Đã kết thúc' } }, ...)`); **KHÔNG sửa `ngayBatDau`/`ngayKetThuc`** → không bao giờ tạo khoảng ngày sai (kể cả chương trình `Chưa bắt đầu`), giữ nguyên lịch sử. Áp dụng như nhau cho `Đang hoạt động` và `Chưa bắt đầu`. Đã `Đã kết thúc` → 409. Không có thao tác bật lại; muốn dùng tiếp thì tạo chương trình mới. Vì tra giá luôn loại trừ `trangThai = Đã kết thúc` (F09), giá quay về ngay.
 
 ### 4.4 Công khai
 - `GET /api/khuyen-mai`: chỉ chương trình đang hiệu lực (ngày trong khoảng, `trangThai ≠ Đã kết thúc`); sắp theo `ngayKetThuc` tăng dần. Với chương trình `Cửa hàng`, chỉ trả khi cửa hàng `Hoạt động`. Flash Sale chỉ lấy chương trình Toàn sàn; chương trình Flash Sale cửa hàng cũ được chuyển sang `Giảm giá`.
@@ -86,9 +86,9 @@ Quản trị viên có thể đổi `loaiKhuyenMai` thành `Flash Sale` khi tạ
 
 ### 6.1 Danh sách chương trình (Người bán / Quản trị viên)
 - `PageHeader` + nút chính **"Tạo chương trình"**.
-- `DataTable`: *Tên*, *Loại* (`Badge`), *Thời gian* (bắt đầu – kết thúc, `dinhDangNgayGio`), *Trạng thái* (`TrangThaiBadge`), *Số sản phẩm* (và *Phạm vi/Cửa hàng* ở bản Quản trị viên), *Thao tác*.
-- Người bán: "Sửa" (ẩn khi `Đã kết thúc`), "Xóa" (`ConfirmDialog`). Quản trị viên: "Sửa/Xóa" chỉ với `Toàn sàn`; "Vô hiệu hóa" (`ConfirmDialog`: "Chương trình sẽ dừng ngay và không thể bật lại") cho chương trình chưa kết thúc.
-- Bộ lọc (trạng thái; Quản trị viên thêm phạm vi, loại) lưu trên URL; `Pagination`; đủ 4 trạng thái.
+- `DataTable`: *Tên*, *Loại* (`Badge`), *Thời gian* (bắt đầu – kết thúc, `dinhDangNgayGio`), *Trạng thái* (`TrangThaiBadge`), *Số sản phẩm*, *Thao tác*. Trang Quản trị viên chỉ hiển thị chương trình Toàn sàn.
+- Người bán: "Sửa" (ẩn khi `Đã kết thúc`), "Xóa" (`ConfirmDialog`). Quản trị viên: "Sửa/Xóa" chương trình Toàn sàn; "Vô hiệu hóa" (`ConfirmDialog`: "Chương trình sẽ dừng ngay và không thể bật lại") cho chương trình Toàn sàn chưa kết thúc.
+- Bộ lọc (trạng thái; Quản trị viên thêm loại) lưu trên URL; `Pagination`; đủ 4 trạng thái.
 
 ### 6.2 `KhuyenMaiForm` (trang riêng, 2 `Card`)
 1. **Thông tin chương trình:** Tên, Loại (`Select` chỉ ở màn Quản trị viên; Người bán mặc định `Giảm giá`), Bắt đầu và Kết thúc (`<input type="datetime-local">`, ghi chú "Giờ Việt Nam"; khi gửi chuyển sang ISO).
@@ -112,7 +112,7 @@ Quản trị viên có thể đổi `loaiKhuyenMai` thành `Flash Sale` khi tạ
 - [ ] `giaKhuyenMai > giaGoc` → 400; `tyLeGiam = 0/100/150` → 400; có cả `tyLeGiam` lẫn `giaKhuyenMai` → 400; `chiTiet` rỗng → 400; `ngayKetThuc ≤ ngayBatDau` hoặc đã qua → 400; chọn sản phẩm cửa hàng khác → 400; không có dòng nào được ghi khi có lỗi.
 - [ ] Người bán A sửa/xóa chương trình của B → 404; `POST` kèm `phamVi: "Toàn sàn"` → vẫn lưu `Cửa hàng`.
 - [ ] Tạo chương trình đang hiệu lực → `GET /api/san-pham` (F09) trả `giaBanThucTe < giaGoc` đúng công thức; `giaGoc` trong DB không đổi. Chương trình chưa bắt đầu/hết hạn/bị vô hiệu hóa → giá quay về `giaGoc`.
-- [ ] Quản trị viên tạo Toàn sàn thành công; sửa/xóa chương trình của cửa hàng → 409; vô hiệu hóa chương trình của cửa hàng → giá quay về ngay; vô hiệu hóa lần hai → 409. **Ca góp ý (bắt buộc thử):** chương trình bắt đầu 20/10, kết thúc 25/10; vô hiệu hóa ngày 15/10 → `trangThai = Đã kết thúc`, **`ngayBatDau`/`ngayKetThuc` vẫn 20/10 và 25/10**; sau đó chạy `dongBoTrangThaiKhuyenMai()` và mở danh sách vào các ngày 15/10, 21/10, 26/10 (giả lập thời gian) → trạng thái **luôn** `Đã kết thúc`, **không** quay lại `Chưa bắt đầu`/`Đang hoạt động`, giá luôn là `giaGoc`.
+- [ ] Quản trị viên tạo Toàn sàn thành công; danh sách không có chương trình cửa hàng, xem/sửa/xóa/vô hiệu hóa chương trình cửa hàng theo ID → 404, giá shop giữ nguyên. Vô hiệu hóa chương trình Toàn sàn lần hai → 409. **Ca góp ý (bắt buộc thử):** chương trình Toàn sàn bắt đầu 20/10, kết thúc 25/10; vô hiệu hóa ngày 15/10 → `trangThai = Đã kết thúc`, **`ngayBatDau`/`ngayKetThuc` vẫn 20/10 và 25/10**; sau đó chạy `dongBoTrangThaiKhuyenMai()` và mở danh sách vào các ngày 15/10, 21/10, 26/10 (giả lập thời gian) → trạng thái **luôn** `Đã kết thúc`, **không** quay lại `Chưa bắt đầu`/`Đang hoạt động`, giá quay về giá của chương trình còn hiệu lực khác hoặc `giaGoc`.
 - [ ] Xóa chương trình xóa luôn `ChiTietKhuyenMai`.
 - [ ] `GET /api/khuyen-mai` không trả chương trình hết hạn/chưa bắt đầu/của cửa hàng `Ngừng hoạt động`.
 - [ ] `Người dùng` thường gọi API Người bán/Quản trị viên → 403.
