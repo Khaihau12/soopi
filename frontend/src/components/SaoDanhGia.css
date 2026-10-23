@@ -1,7 +1,8 @@
 .saoDanhGiaXem, .saoDanhGiaLuaChon { display: inline-flex; align-items: center; gap: var(--kc1); color: var(--canhBao); }
-.saoDanhGiaHinh { position: relative; display: inline-flex; }
-.saoDanhGiaPhu { position: absolute; top: 0; left: 0; overflow: hidden; }
-.saoDanhGiaPhu .icon { max-width: none; }
+.saoDanhGiaHinh { position: relative; display: block; width: 18px; height: 18px; line-height: 0; }
+.saoDanhGiaHinh > .icon { display: block; width: 18px; height: 18px; color: var(--vien); }
+.saoDanhGiaPhu { position: absolute; top: 0; left: 0; z-index: 1; display: block; height: 18px; overflow: hidden; }
+.saoDanhGiaPhu .icon { display: block; width: 18px; height: 18px; max-width: none; }
 .saoDanhGiaNhap { min-width: 0; padding: 0; margin: 0; border: 0; }
 .saoDanhGiaNhap legend { margin-bottom: var(--kc2); font-weight: 600; }
 .saoDanhGiaLuaChon { flex-wrap: wrap; gap: var(--kc2); }
