@@ -9,47 +9,48 @@ import QuanTriVienLayout from './layouts/QuanTriVienLayout.jsx';
 import KhongTimThayPage from './pages/KhongTimThayPage.jsx';
 import DangNhapPage from './pages/DangNhapPage.jsx';
 import DangKyPage from './pages/DangKyPage.jsx';
-import QuenMatKhauPage from './pages/QuenMatKhauPage.jsx';
-import DatLaiMatKhauPage from './pages/DatLaiMatKhauPage.jsx';
-import HoSoPage from './pages/HoSoPage.jsx';
 import TrangChuPage from './pages/TrangChuPage.jsx';
-import DanhSachSanPhamPage from './pages/DanhSachSanPhamPage.jsx';
-import ChiTietSanPhamPage from './pages/ChiTietSanPhamPage.jsx';
-import DangKyNguoiBanPage from './pages/DangKyNguoiBanPage.jsx';
-import DanhMucQuanTriPage from './pages/quanTriVien/DanhMucQuanTriPage.jsx';
-import DuyetNguoiBanPage from './pages/quanTriVien/DuyetNguoiBanPage.jsx';
-import CuaHangNguoiBanPage from './pages/nguoiBan/CuaHangNguoiBanPage.jsx';
+import { GioHangProvider } from './hooks/GioHangContext.jsx';
+import { DUONG_DAN, VAI_TRO } from './utils/hangSo.js';
+
+const QuenMatKhauPage = lazy(() => import('./pages/QuenMatKhauPage.jsx'));
+const DatLaiMatKhauPage = lazy(() => import('./pages/DatLaiMatKhauPage.jsx'));
+const HoSoPage = lazy(() => import('./pages/HoSoPage.jsx'));
+const DanhSachSanPhamPage = lazy(() => import('./pages/DanhSachSanPhamPage.jsx'));
+const ChiTietSanPhamPage = lazy(() => import('./pages/ChiTietSanPhamPage.jsx'));
+const DangKyNguoiBanPage = lazy(() => import('./pages/DangKyNguoiBanPage.jsx'));
+const DanhMucQuanTriPage = lazy(() => import('./pages/quanTriVien/DanhMucQuanTriPage.jsx'));
+const DuyetNguoiBanPage = lazy(() => import('./pages/quanTriVien/DuyetNguoiBanPage.jsx'));
+const CuaHangNguoiBanPage = lazy(() => import('./pages/nguoiBan/CuaHangNguoiBanPage.jsx'));
 const TongQuanNguoiBanPage = lazy(() => import('./pages/nguoiBan/TongQuanNguoiBanPage.jsx'));
 const BaoCaoNguoiBanPage = lazy(() => import('./pages/nguoiBan/BaoCaoNguoiBanPage.jsx'));
 const TongQuanQuanTriPage = lazy(() => import('./pages/quanTriVien/TongQuanQuanTriPage.jsx'));
 const BaoCaoQuanTriPage = lazy(() => import('./pages/quanTriVien/BaoCaoQuanTriPage.jsx'));
-import SanPhamNguoiBanPage from './pages/nguoiBan/SanPhamNguoiBanPage.jsx';
-import FormSanPhamPage from './pages/nguoiBan/FormSanPhamPage.jsx';
-import KhuyenMaiNguoiBanPage from './pages/nguoiBan/KhuyenMaiNguoiBanPage.jsx';
-import FormKhuyenMaiPage from './pages/nguoiBan/FormKhuyenMaiPage.jsx';
-import KhuyenMaiQuanTriPage from './pages/quanTriVien/KhuyenMaiQuanTriPage.jsx';
-import FormKhuyenMaiQuanTriPage from './pages/quanTriVien/FormKhuyenMaiQuanTriPage.jsx';
-import VoucherNguoiBanPage from './pages/nguoiBan/VoucherNguoiBanPage.jsx';
-import VoucherQuanTriPage from './pages/quanTriVien/VoucherQuanTriPage.jsx';
-import GioHangPage from './pages/GioHangPage.jsx';
-import ThanhToanPage from './pages/ThanhToanPage.jsx';
-import KetQuaThanhToanPage from './pages/KetQuaThanhToanPage.jsx';
-import DonHangPage from './pages/DonHangPage.jsx';
-import ChiTietDonHangPage from './pages/ChiTietDonHangPage.jsx';
-import DonHangNguoiBanPage from './pages/nguoiBan/DonHangNguoiBanPage.jsx';
-import ChiTietDonHangNguoiBanPage from './pages/nguoiBan/ChiTietDonHangNguoiBanPage.jsx';
-import DanhGiaNguoiBanPage from './pages/nguoiBan/DanhGiaNguoiBanPage.jsx';
-import DoiTraKhieuNaiPage from './pages/DoiTraKhieuNaiPage.jsx';
-import DoiTraKhieuNaiNguoiBanPage from './pages/nguoiBan/DoiTraKhieuNaiNguoiBanPage.jsx';
-import TroChuyenPage from './pages/TroChuyenPage.jsx';
-import TroChuyenNguoiBanPage from './pages/nguoiBan/TroChuyenNguoiBanPage.jsx';
-import TaiKhoanQuanTriPage from './pages/quanTriVien/TaiKhoanQuanTriPage.jsx';
-import CuaHangQuanTriPage from './pages/quanTriVien/CuaHangQuanTriPage.jsx';
-import GiaoDichQuanTriPage from './pages/quanTriVien/GiaoDichQuanTriPage.jsx';
-import SanPhamQuanTriPage from './pages/quanTriVien/SanPhamQuanTriPage.jsx';
-import BannerQuanTriPage from './pages/quanTriVien/BannerQuanTriPage.jsx';
-import { GioHangProvider } from './hooks/GioHangContext.jsx';
-import { DUONG_DAN, VAI_TRO } from './utils/hangSo.js';
+const SanPhamNguoiBanPage = lazy(() => import('./pages/nguoiBan/SanPhamNguoiBanPage.jsx'));
+const FormSanPhamPage = lazy(() => import('./pages/nguoiBan/FormSanPhamPage.jsx'));
+const KhuyenMaiNguoiBanPage = lazy(() => import('./pages/nguoiBan/KhuyenMaiNguoiBanPage.jsx'));
+const FormKhuyenMaiPage = lazy(() => import('./pages/nguoiBan/FormKhuyenMaiPage.jsx'));
+const KhuyenMaiQuanTriPage = lazy(() => import('./pages/quanTriVien/KhuyenMaiQuanTriPage.jsx'));
+const FormKhuyenMaiQuanTriPage = lazy(() => import('./pages/quanTriVien/FormKhuyenMaiQuanTriPage.jsx'));
+const VoucherNguoiBanPage = lazy(() => import('./pages/nguoiBan/VoucherNguoiBanPage.jsx'));
+const VoucherQuanTriPage = lazy(() => import('./pages/quanTriVien/VoucherQuanTriPage.jsx'));
+const GioHangPage = lazy(() => import('./pages/GioHangPage.jsx'));
+const ThanhToanPage = lazy(() => import('./pages/ThanhToanPage.jsx'));
+const KetQuaThanhToanPage = lazy(() => import('./pages/KetQuaThanhToanPage.jsx'));
+const DonHangPage = lazy(() => import('./pages/DonHangPage.jsx'));
+const ChiTietDonHangPage = lazy(() => import('./pages/ChiTietDonHangPage.jsx'));
+const DonHangNguoiBanPage = lazy(() => import('./pages/nguoiBan/DonHangNguoiBanPage.jsx'));
+const ChiTietDonHangNguoiBanPage = lazy(() => import('./pages/nguoiBan/ChiTietDonHangNguoiBanPage.jsx'));
+const DanhGiaNguoiBanPage = lazy(() => import('./pages/nguoiBan/DanhGiaNguoiBanPage.jsx'));
+const DoiTraKhieuNaiPage = lazy(() => import('./pages/DoiTraKhieuNaiPage.jsx'));
+const DoiTraKhieuNaiNguoiBanPage = lazy(() => import('./pages/nguoiBan/DoiTraKhieuNaiNguoiBanPage.jsx'));
+const TroChuyenPage = lazy(() => import('./pages/TroChuyenPage.jsx'));
+const TroChuyenNguoiBanPage = lazy(() => import('./pages/nguoiBan/TroChuyenNguoiBanPage.jsx'));
+const TaiKhoanQuanTriPage = lazy(() => import('./pages/quanTriVien/TaiKhoanQuanTriPage.jsx'));
+const CuaHangQuanTriPage = lazy(() => import('./pages/quanTriVien/CuaHangQuanTriPage.jsx'));
+const GiaoDichQuanTriPage = lazy(() => import('./pages/quanTriVien/GiaoDichQuanTriPage.jsx'));
+const SanPhamQuanTriPage = lazy(() => import('./pages/quanTriVien/SanPhamQuanTriPage.jsx'));
+const BannerQuanTriPage = lazy(() => import('./pages/quanTriVien/BannerQuanTriPage.jsx'));
 
 export default function App() {
   return (
@@ -59,8 +60,8 @@ export default function App() {
       <Routes>
         <Route path={DUONG_DAN.DANG_NHAP} element={<DangNhapPage />} />
         <Route path={DUONG_DAN.DANG_KY} element={<DangKyPage />} />
-        <Route path={DUONG_DAN.QUEN_MAT_KHAU} element={<QuenMatKhauPage />} />
-        <Route path={DUONG_DAN.DAT_LAI_MAT_KHAU} element={<DatLaiMatKhauPage />} />
+        <Route path={DUONG_DAN.QUEN_MAT_KHAU} element={<Suspense fallback={<p>Đang tải trang…</p>}><QuenMatKhauPage /></Suspense>} />
+        <Route path={DUONG_DAN.DAT_LAI_MAT_KHAU} element={<Suspense fallback={<p>Đang tải trang…</p>}><DatLaiMatKhauPage /></Suspense>} />
         <Route element={<UserLayout />}>
           <Route path={DUONG_DAN.TRANG_CHU} element={<TrangChuPage />} />
           <Route path={DUONG_DAN.SAN_PHAM} element={<DanhSachSanPhamPage />} />

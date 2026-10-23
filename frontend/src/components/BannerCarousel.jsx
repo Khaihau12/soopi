@@ -23,11 +23,12 @@ export default function BannerCarousel({ danhSach = [] }) {
   }, [danhSach.length, tamDung, giamChuyenDong]);
 
   if (!danhSach.length) return null;
-  const banner = danhSach[viTri % danhSach.length];
+  const viTriHienThi = viTri % danhSach.length;
+  const banner = danhSach[viTriHienThi];
   const hinhAnh = taoUrlAnh(banner.hinhAnh);
   const doiBanner = (buoc) => setViTri((hienTai) => (hienTai + buoc + danhSach.length) % danhSach.length);
   return <section className="bannerCarousel" aria-label="Banner Soopi" onMouseEnter={() => setTamDung(true)} onMouseLeave={() => setTamDung(false)} onFocusCapture={() => setTamDung(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setTamDung(false); }}>
     <div className="bannerSlide"><div className="bannerImage">{hinhAnh && !anhLoi.includes(hinhAnh) ? <img src={hinhAnh} alt={banner.tieuDe} onError={() => setAnhLoi((cu) => [...cu, hinhAnh])} /> : <span className="bannerImageTrong"><Icon name="image" size={44} /><span>Chưa có ảnh banner</span></span>}</div><div className="bannerContent"><h2>{banner.tieuDe}</h2>{banner.noiDung && <p>{banner.noiDung}</p>}</div></div>
-    {danhSach.length > 1 && <div className="bannerControls"><button type="button" aria-label="Banner trước" onClick={() => doiBanner(-1)}><Icon name="chevronLeft" /></button><div className="bannerDots">{danhSach.map((item, index) => <button key={item._id} type="button" aria-label={`Đến banner ${index + 1}`} aria-current={index === viTri ? 'true' : undefined} className={index === viTri ? 'bannerDotActive' : ''} onClick={() => setViTri(index)} />)}</div><button type="button" aria-label="Banner sau" onClick={() => doiBanner(1)}><Icon name="chevronRight" /></button></div>}
+    {danhSach.length > 1 && <div className="bannerControls"><button type="button" aria-label="Banner trước" onClick={() => doiBanner(-1)}><Icon name="chevronLeft" /></button><div className="bannerDots">{danhSach.map((item, index) => <button key={item._id} type="button" aria-label={`Đến banner ${index + 1}`} aria-current={index === viTriHienThi ? 'true' : undefined} className={index === viTriHienThi ? 'bannerDotActive' : ''} onClick={() => setViTri(index)} />)}</div><button type="button" aria-label="Banner sau" onClick={() => doiBanner(1)}><Icon name="chevronRight" /></button></div>}
   </section>;
 }

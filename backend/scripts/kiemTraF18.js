@@ -194,7 +194,14 @@ async function run() {
     let daQuet = false;
     for (let lan = 0; lan < 50; lan++) {
       if (tienTrinh.exitCode !== null) throw new Error('Server dừng trước khi quét giao dịch lúc khởi động');
-      if ((await GiaoDichThanhToan.findById(khoiDong.giaoDich._id)).trangThaiThanhToan === 'Hết hạn') {
+      const [giaoDich, don, sanPham, voucher] = await Promise.all([
+        GiaoDichThanhToan.findById(khoiDong.giaoDich._id),
+        DonHang.findById(khoiDong.donHang[0]._id),
+        SanPham.findById(khoiDong.sanPham[0]._id),
+        Voucher.findById(khoiDong.voucher._id),
+      ]);
+      if (giaoDich.trangThaiThanhToan === 'Hết hạn' && don.trangThaiXuLy === 'Đã hủy'
+          && sanPham.soLuongTon === 5 && voucher.soLuong === 3) {
         daQuet = true; break;
       }
       await new Promise((resolve) => setTimeout(resolve, 100));
