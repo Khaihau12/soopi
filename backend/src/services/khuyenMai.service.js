@@ -6,6 +6,7 @@ const CuaHang = require('../models/cuaHang.model');
 const { LOAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, TRANG_THAI_KHUYEN_MAI, TRANG_THAI_HOAT_DONG_CUA_HANG } = require('../constants/trangThai.constant');
 const { PHAN_TRANG } = require('../constants/cauHinh.constant');
 const { taoLoi } = require('../utils/taoLoi');
+const { thoatKyTuRegex } = require('../utils/thoatKyTuRegex');
 
 const tinhTrangThaiKhuyenMai = (khuyenMai, thoiDiem = new Date()) => {
   if (khuyenMai.trangThai === TRANG_THAI_KHUYEN_MAI.DA_KET_THUC) return TRANG_THAI_KHUYEN_MAI.DA_KET_THUC;
@@ -26,10 +27,11 @@ const docPhanTrang = (giaTri, macDinh, toiDa) => {
   return Number.isSafeInteger(so) && so > 0 ? Math.min(so, toiDa) : macDinh;
 };
 
-const kiemTraBoLoc = ({ phamVi, loaiKhuyenMai, trangThai } = {}) => {
+const kiemTraBoLoc = ({ phamVi, loaiKhuyenMai, trangThai, tuKhoa } = {}) => {
   if (phamVi && !Object.values(PHAM_VI_KHUYEN_MAI).includes(phamVi)) throw taoLoi(400, 'Phạm vi khuyến mãi không hợp lệ');
   if (loaiKhuyenMai && !Object.values(LOAI_KHUYEN_MAI).includes(loaiKhuyenMai)) throw taoLoi(400, 'Loại khuyến mãi không hợp lệ');
   if (trangThai && !Object.values(TRANG_THAI_KHUYEN_MAI).includes(trangThai)) throw taoLoi(400, 'Trạng thái khuyến mãi không hợp lệ');
+  if (tuKhoa !== undefined && (typeof tuKhoa !== 'string' || tuKhoa.trim().length > 100)) throw taoLoi(400, 'Từ khóa tối đa 100 ký tự');
 };
 
 const dinhDangDanhSach = async (chuongTrinh) => {
@@ -76,9 +78,11 @@ const layDanhSachKhuyenMaiDangDienRa = async ({ loaiKhuyenMai } = {}) => {
   return { danhSach: await dinhDangDanhSach(hienThi) };
 };
 
+const locTuKhoa = (tuKhoa) => tuKhoa?.trim() ? { tenKhuyenMai: { $regex: thoatKyTuRegex(tuKhoa.trim()), $options: 'i' } } : {};
+
 const nguoiBanLayDanhSachKhuyenMai = (cuaHangId, query = {}) => {
   kiemTraBoLoc(query);
-  return layDanhSach({ cuaHangId, ...(query.trangThai ? { trangThai: query.trangThai } : {}) }, query);
+  return layDanhSach({ cuaHangId, ...(query.trangThai ? { trangThai: query.trangThai } : {}), ...locTuKhoa(query.tuKhoa) }, query);
 };
 
 const quanTriLayDanhSachKhuyenMai = (query = {}) => {
@@ -89,6 +93,7 @@ const quanTriLayDanhSachKhuyenMai = (query = {}) => {
     cuaHangId: null,
     ...(query.loaiKhuyenMai ? { loaiKhuyenMai: query.loaiKhuyenMai } : {}),
     ...(query.trangThai ? { trangThai: query.trangThai } : {}),
+    ...locTuKhoa(query.tuKhoa),
   }, query);
 };
 
