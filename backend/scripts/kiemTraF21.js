@@ -44,7 +44,7 @@ async function run() {
   const taoDong = async (taiKhoanId, sanPhamId, trangThaiXuLy) => {
     const giaoDich = await GiaoDichThanhToan.create({ maGiaoDich: `F21${String(++stt).padStart(20, '0')}`, soTien: 100000,
       phuongThucThanhToan: 'COD', trangThaiThanhToan: 'Thành công' });
-    const don = await DonHang.create({ taiKhoanId, cuaHangId: sanPhamId.equals(sanA._id) ? shopA._id : shopB._id,
+    const don = await DonHang.create({ taiKhoanId, cuaHangId: sanPhamId.equals(sanB._id) ? shopB._id : shopA._id,
       giaoDichId: giaoDich._id, diaChiNhanHang: 'Địa chỉ F21', tongTienHang: 100000, tongThanhToan: 100000,
       phuongThucThanhToan: 'COD', trangThaiThanhToan: 'Đã thanh toán', trangThaiXuLy });
     const dong = await ChiTietDonHang.create({ donHangId: don._id, sanPhamId, soLuong: 1,
@@ -109,7 +109,49 @@ async function run() {
   finally { mongoose.set('debug', false); }
   await SanPham.updateOne({ _id: sanA._id }, { $set: { trangThaiKinhDoanh: 'Ngừng kinh doanh' } });
   assert.equal((await goi(`/nguoi-ban/danh-gia?sanPhamId=${sanA._id}`, banA._id))[1].data.phanTrang.tongSo, 2);
-  console.log('F21: xác thực, sở hữu, validation, chống gửi trùng, công khai, thống kê, phân trang, quyền Người bán đạt.');
+  const sanChuaDanhGia = await SanPham.create({ cuaHangId: shopA._id, danhMucId: danhMuc._id,
+    tenSanPham: 'Sản phẩm chưa đánh giá', giaGoc: 100000, soLuongTon: 1 });
+  const sanDanhGiaThap = await SanPham.create({ cuaHangId: shopA._id, danhMucId: danhMuc._id,
+    tenSanPham: 'Sản phẩm cần cải thiện', giaGoc: 100000, soLuongTon: 1 });
+  const dongThap = await taoDong(muaKhac._id, sanDanhGiaThap._id, 'Hoàn thành');
+  assert.equal((await gui(dongThap.dong._id, muaKhac._id, 1, 'Cần cải thiện'))[0], 201);
+  [status, ketQua] = await goi('/nguoi-ban/danh-gia', banA._id);
+  assert.equal(status, 200);
+  assert.equal(ketQua.data.thongKe.soDanhGia, 3);
+  assert.equal(ketQua.data.thongKe.diemTrungBinh, 3.3);
+  assert.equal(ketQua.data.thongKe.phanBoSao[1], 1);
+  assert.ok(ketQua.data.danhSach.every((item) => String(item.sanPham._id) !== String(sanB._id)));
+  [status, ketQua] = await goi('/nguoi-ban/danh-gia?soSao=1', banA._id);
+  assert.equal(ketQua.data.phanTrang.tongSo, 1);
+  assert.equal(ketQua.data.thongKe.soDanhGia, 3);
+  [status, ketQua] = await goi('/nguoi-ban/danh-gia?sapXep=saoThap', banA._id);
+  assert.deepEqual(ketQua.data.danhSach.map((item) => item.soSao), [1, 4, 5]);
+  assert.equal((await goi('/nguoi-ban/danh-gia?sapXep=sai', banA._id))[0], 400);
+  assert.equal((await goi('/nguoi-ban/danh-gia?soSao=0', banA._id))[0], 400);
+  assert.equal((await goi('/nguoi-ban/danh-gia/san-pham', mua._id))[0], 403);
+  [status, ketQua] = await goi('/nguoi-ban/danh-gia/san-pham', banA._id);
+  assert.equal(status, 200);
+  assert.equal(ketQua.data.phanTrang.tongSo, 3);
+  assert.ok(!ketQua.data.danhSach.some((item) => String(item._id) === String(sanB._id)));
+  assert.equal(ketQua.data.danhSach[0].soDanhGia, 2);
+  assert.equal(ketQua.data.danhSach.find((item) => String(item._id) === String(sanChuaDanhGia._id)).soDanhGia, 0);
+  assert.equal(ketQua.data.danhSach.find((item) => String(item._id) === String(sanDanhGiaThap._id)).soDanhGiaThap, 1);
+  [status, ketQua] = await goi('/nguoi-ban/danh-gia/san-pham?sapXep=diemThap', banA._id);
+  assert.equal(String(ketQua.data.danhSach[0]._id), String(sanDanhGiaThap._id));
+  [status, ketQua] = await goi('/nguoi-ban/danh-gia/san-pham?tuKhoa=chưa', banA._id);
+  assert.equal(ketQua.data.phanTrang.tongSo, 1);
+  assert.equal(String(ketQua.data.danhSach[0]._id), String(sanChuaDanhGia._id));
+  assert.equal((await goi('/nguoi-ban/danh-gia/san-pham?tuKhoa=.*', banA._id))[1].data.phanTrang.tongSo, 0);
+  [status, ketQua] = await goi('/nguoi-ban/danh-gia/san-pham?trang=2&gioiHan=2', banA._id);
+  assert.equal(ketQua.data.danhSach.length, 1);
+  assert.equal((await goi('/nguoi-ban/danh-gia/san-pham?sapXep=sai', banA._id))[0], 400);
+  assert.equal((await goi('/nguoi-ban/danh-gia/san-pham?gioiHan=0', banA._id))[0], 400);
+  await SanPham.insertMany(Array.from({ length: 51 }, (_, index) => ({ cuaHangId: shopA._id,
+    danhMucId: danhMuc._id, tenSanPham: `Sản phẩm bổ sung ${index + 1}`, giaGoc: 100000, soLuongTon: 1 })));
+  [status, ketQua] = await goi('/nguoi-ban/danh-gia/san-pham?trang=3&gioiHan=20', banA._id);
+  assert.equal(ketQua.data.phanTrang.tongSo, 54);
+  assert.equal(ketQua.data.danhSach.length, 14);
+  console.log('F21: đánh giá công khai, tổng quan cửa hàng, lọc/sắp xếp, danh sách sản phẩm quá 50 mục và quyền Người bán đạt.');
 }
 
 run().catch((loi) => { console.error(loi); process.exitCode = 1; }).finally(async () => {

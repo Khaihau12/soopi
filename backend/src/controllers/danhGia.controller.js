@@ -28,4 +28,12 @@ const nguoiBanLayDanhSachDanhGia = async (req, res, next) => {
   } catch (loi) { next(loi); }
 };
 
-module.exports = { layDanhSachDanhGia, layDongCoTheDanhGia, taoDanhGia, nguoiBanLayDanhSachDanhGia };
+const nguoiBanLayDanhSachSanPhamDanhGia = async (req, res, next) => {
+  try {
+    const data = await service.nguoiBanLayDanhSachSanPhamDanhGia(req.cuaHang._id, req.query);
+    res.json({ success: true, message: 'Lấy sản phẩm và thống kê đánh giá thành công', data });
+  } catch (loi) { next(loi); }
+};
+
+module.exports = { layDanhSachDanhGia, layDongCoTheDanhGia, taoDanhGia,
+  nguoiBanLayDanhSachDanhGia, nguoiBanLayDanhSachSanPhamDanhGia };

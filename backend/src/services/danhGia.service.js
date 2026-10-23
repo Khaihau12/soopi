@@ -7,6 +7,7 @@ const TaiKhoan = require('../models/taiKhoan.model');
 const { DO_DAI_TOI_DA, PHAN_TRANG } = require('../constants/cauHinh.constant');
 const { TRANG_THAI_XU_LY } = require('../constants/trangThai.constant');
 const { taoLoi } = require('../utils/taoLoi');
+const { thoatKyTuRegex } = require('../utils/thoatKyTuRegex');
 
 const kiemTraSanPhamId = (id) => {
   if (!mongoose.isValidObjectId(id)) throw taoLoi(400, 'ID sản phẩm không hợp lệ');
@@ -30,9 +31,11 @@ const kiemTraSoSao = (soSao) => {
 };
 
 const tinhThongKeDanhGia = async (sanPhamId) => {
+  const cacId = (Array.isArray(sanPhamId) ? sanPhamId : [sanPhamId])
+    .map((id) => new mongoose.Types.ObjectId(String(id)));
   // MongoDB nhóm trực tiếp theo sản phẩm, không tải toàn bộ đánh giá về ứng dụng.
   const [thongKe] = await DanhGia.aggregate([
-    { $match: { sanPhamId: new mongoose.Types.ObjectId(String(sanPhamId)) } },
+    { $match: { sanPhamId: { $in: cacId } } },
     { $group: {
       _id: null,
       soDanhGia: { $sum: 1 },
@@ -50,12 +53,13 @@ const tinhThongKeDanhGia = async (sanPhamId) => {
       4: thongKe?.sao4 || 0, 5: thongKe?.sao5 || 0 } };
 };
 
-const dungDanhSachDanhGia = async (dieuKien, phanTrang, hienSanPham = false) => {
+const dungDanhSachDanhGia = async (dieuKien, phanTrang, hienSanPham = false, sapXep = 'moiNhat') => {
   const { trang, gioiHan } = phanTrang;
+  const thuTu = { ...(sapXep === 'saoThap' ? { soSao: 1 } : sapXep === 'saoCao' ? { soSao: -1 } : {}), ngayDanhGia: -1, _id: -1 };
   const [tongSo, cacDanhGia] = await Promise.all([
     DanhGia.countDocuments(dieuKien),
     DanhGia.find(dieuKien).select('_id soSao noiDung ngayDanhGia taiKhoanId sanPhamId')
-      .sort({ ngayDanhGia: -1, _id: -1 }).skip((trang - 1) * gioiHan).limit(gioiHan).lean(),
+      .sort(thuTu).skip((trang - 1) * gioiHan).limit(gioiHan).lean(),
   ]);
   const [cacTaiKhoan, cacSanPham] = await Promise.all([
     TaiKhoan.find({ _id: { $in: cacDanhGia.map((item) => item.taiKhoanId) } }).select('_id hoTen').lean(),
@@ -124,10 +128,11 @@ const taoDanhGia = async (taiKhoanId, body = {}) => {
 };
 
 const nguoiBanLayDanhSachDanhGia = async (cuaHangId, query = {}) => {
-  const { sanPhamId, soSao } = query;
+  const { sanPhamId, soSao, sapXep = 'moiNhat' } = query;
   const phanTrang = docPhanTrang(query);
   if (sanPhamId && !mongoose.isValidObjectId(sanPhamId)) throw taoLoi(404, 'Không tìm thấy sản phẩm của cửa hàng');
   if (soSao !== undefined && (!/^[1-5]$/.test(String(soSao)))) throw taoLoi(400, 'Số sao lọc phải từ 1 đến 5');
+  if (!['moiNhat', 'saoThap', 'saoCao'].includes(sapXep)) throw taoLoi(400, 'Cách sắp xếp đánh giá không hợp lệ');
   let cacId;
   if (sanPhamId) {
     const sanPham = await SanPham.findOne({ _id: sanPhamId, cuaHangId }).select('_id').lean();
@@ -136,11 +141,39 @@ const nguoiBanLayDanhSachDanhGia = async (cuaHangId, query = {}) => {
   } else cacId = await SanPham.find({ cuaHangId }).distinct('_id');
   const dieuKien = { sanPhamId: { $in: cacId }, ...(soSao ? { soSao: Number(soSao) } : {}) };
   const [danhSach, thongKe] = await Promise.all([
-    dungDanhSachDanhGia(dieuKien, phanTrang, true),
-    sanPhamId ? tinhThongKeDanhGia(sanPhamId) : null,
+    dungDanhSachDanhGia(dieuKien, phanTrang, true, sapXep),
+    tinhThongKeDanhGia(cacId),
   ]);
-  return { ...danhSach, ...(thongKe ? { thongKe } : {}) };
+  return { ...danhSach, thongKe };
+};
+
+const nguoiBanLayDanhSachSanPhamDanhGia = async (cuaHangId, query = {}) => {
+  const { tuKhoa = '', sapXep = 'nhieuDanhGia' } = query;
+  if (typeof tuKhoa !== 'string' || tuKhoa.trim().length > 100) throw taoLoi(400, 'Từ khóa tìm sản phẩm không hợp lệ');
+  if (!['nhieuDanhGia', 'diemThap', 'ten'].includes(sapXep)) throw taoLoi(400, 'Cách sắp xếp sản phẩm không hợp lệ');
+  const { trang, gioiHan } = docPhanTrang({ ...query, gioiHan: query.gioiHan === undefined ? 20 : query.gioiHan });
+  const dieuKien = { cuaHangId, ...(tuKhoa.trim() ? { tenSanPham: { $regex: thoatKyTuRegex(tuKhoa.trim()), $options: 'i' } } : {}) };
+  const cacSanPham = await SanPham.find(dieuKien).select('_id tenSanPham hinhAnh').lean();
+  // Nhóm đánh giá một lần cho các sản phẩm của cửa hàng, kể cả khi có sản phẩm chưa được đánh giá.
+  const cacThongKe = await DanhGia.aggregate([
+    { $match: { sanPhamId: { $in: cacSanPham.map((sanPham) => sanPham._id) } } },
+    { $group: { _id: '$sanPhamId', soDanhGia: { $sum: 1 }, tongSoSao: { $sum: '$soSao' },
+      soDanhGiaThap: { $sum: { $cond: [{ $lte: ['$soSao', 2] }, 1, 0] } } } },
+  ]);
+  const theoId = new Map(cacThongKe.map((item) => [String(item._id), item]));
+  const danhSach = cacSanPham.map((sanPham) => {
+    const thongKe = theoId.get(String(sanPham._id));
+    return { ...sanPham, soDanhGia: thongKe?.soDanhGia || 0,
+      diemTrungBinh: thongKe ? Math.round(thongKe.tongSoSao / thongKe.soDanhGia * 10) / 10 : 0,
+      soDanhGiaThap: thongKe?.soDanhGiaThap || 0 };
+  });
+  const soTen = (a, b) => a.tenSanPham.localeCompare(b.tenSanPham, 'vi');
+  danhSach.sort((a, b) => sapXep === 'ten' ? soTen(a, b)
+    : sapXep === 'diemThap' ? ((a.soDanhGia ? a.diemTrungBinh : 6) - (b.soDanhGia ? b.diemTrungBinh : 6) || b.soDanhGia - a.soDanhGia || soTen(a, b))
+      : b.soDanhGia - a.soDanhGia || soTen(a, b));
+  return { danhSach: danhSach.slice((trang - 1) * gioiHan, trang * gioiHan),
+    phanTrang: { trang, gioiHan, tongSo: danhSach.length, tongTrang: Math.ceil(danhSach.length / gioiHan) } };
 };
 
 module.exports = { layDanhSachDanhGia, layDongCoTheDanhGia, taoDanhGia,
-  nguoiBanLayDanhSachDanhGia, tinhThongKeDanhGia };
+  nguoiBanLayDanhSachDanhGia, nguoiBanLayDanhSachSanPhamDanhGia, tinhThongKeDanhGia };

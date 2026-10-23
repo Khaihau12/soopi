@@ -4,6 +4,7 @@ const { batBuocNguoiBan } = require('../middlewares/role.middleware');
 
 const router = express.Router();
 router.use(...batBuocNguoiBan);
+router.get('/san-pham', controller.nguoiBanLayDanhSachSanPhamDanhGia);
 router.get('/', controller.nguoiBanLayDanhSachDanhGia);
 
 module.exports = router;
