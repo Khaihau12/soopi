@@ -7,6 +7,7 @@ const app = require('../app');
 const TaiKhoan = require('../src/models/taiKhoan.model');
 const CuaHang = require('../src/models/cuaHang.model');
 const DanhMuc = require('../src/models/danhMuc.model');
+const BannerQuangCao = require('../src/models/bannerQuangCao.model');
 const SanPham = require('../src/models/sanPham.model');
 const GiaoDichThanhToan = require('../src/models/giaoDichThanhToan.model');
 const DonHang = require('../src/models/donHang.model');
@@ -97,6 +98,29 @@ async function run() {
   assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: '', hinhAnh: '/uploads/hop-le.png' }))[0], 400);
   assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: 'Sai', hinhAnh: 'javascript:alert(1)' }))[0], 400);
   assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: 'Banner thiếu đích', hinhAnh: '/uploads/hop-le.png' }))[0], 400);
+  await assert.rejects(new BannerQuangCao({ tieuDe: 'Thiếu danh mục', hinhAnh: '/uploads/hop-le.png' }).validate());
+  const danhMucBanner = await DanhMuc.create({ tenDanhMuc: 'Danh mục chỉ dùng cho banner F25' });
+  const [maBannerRieng, bannerRieng] = await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', {
+    tieuDe: 'Banner danh mục riêng', hinhAnh: '/uploads/hop-le.png', danhMucId: danhMucBanner._id,
+  });
+  assert.equal(maBannerRieng, 201);
+  assert.equal((await goi(`${dau}/danh-muc/${danhMucBanner._id}`, admin._id, 'DELETE'))[0], 409);
+  assert.equal((await goi(`${dau}/banner-quang-cao/${bannerRieng.data.banner._id}`, admin._id, 'DELETE'))[0], 200);
+  assert.equal((await goi(`${dau}/danh-muc/${danhMucBanner._id}`, admin._id, 'DELETE'))[0], 200);
+  const bannerCu = await BannerQuangCao.collection.insertOne({
+    tieuDe: 'Banner dữ liệu cũ', hinhAnh: '/uploads/hop-le.png', trangThai: 'Kích hoạt',
+  });
+  const bannerMoCoi = await BannerQuangCao.collection.insertOne({
+    tieuDe: 'Banner trỏ danh mục không tồn tại', hinhAnh: '/uploads/hop-le.png',
+    danhMucId: new mongoose.Types.ObjectId(), trangThai: 'Kích hoạt',
+  });
+  assert.equal((await goi('/banner-quang-cao', null))[1].data.danhSach.length, 0);
+  assert.equal((await goi(`${dau}/banner-quang-cao/${bannerCu.insertedId}`, admin._id, 'PATCH', { noiDung: 'Sửa nội dung' }))[0], 400);
+  assert.equal((await goi(`${dau}/banner-quang-cao/${bannerCu.insertedId}/trang-thai`, admin._id, 'PATCH', { trangThai: 'Kích hoạt' }))[0], 400);
+  assert.equal((await goi(`${dau}/banner-quang-cao/${bannerCu.insertedId}`, admin._id, 'PATCH', { danhMucId: danhMuc._id }))[0], 200);
+  assert.equal((await goi('/banner-quang-cao', null))[1].data.danhSach[0].danhMucId, String(danhMuc._id));
+  assert.equal((await goi(`${dau}/banner-quang-cao/${bannerCu.insertedId}`, admin._id, 'DELETE'))[0], 200);
+  assert.equal((await goi(`${dau}/banner-quang-cao/${bannerMoCoi.insertedId}`, admin._id, 'DELETE'))[0], 200);
   const [maTao, tao] = await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: ' Banner F25 ', hinhAnh: '/uploads/hop-le.png', danhMucId: danhMuc._id });
   assert.equal(maTao, 201); assert.equal(tao.data.banner.tieuDe, 'Banner F25');
   assert.equal(String(tao.data.banner.danhMucId), String(danhMuc._id));

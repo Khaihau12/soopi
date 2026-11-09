@@ -27,7 +27,7 @@ export default function BannerCarousel({ danhSach = [] }) {
   const viTriHienThi = viTri % danhSach.length;
   const banner = danhSach[viTriHienThi];
   const hinhAnh = taoUrlAnh(banner.hinhAnh);
-  const duongDan = banner.danhMucId ? `${DUONG_DAN.SAN_PHAM}?danhMucId=${encodeURIComponent(banner.danhMucId)}` : DUONG_DAN.SAN_PHAM;
+  const duongDan = `${DUONG_DAN.SAN_PHAM}?danhMucId=${encodeURIComponent(banner.danhMucId)}`;
   const doiBanner = (buoc) => setViTri((hienTai) => (hienTai + buoc + danhSach.length) % danhSach.length);
   return <section className="bannerCarousel" aria-label="Banner Soopi" onMouseEnter={() => setTamDung(true)} onMouseLeave={() => setTamDung(false)} onFocusCapture={() => setTamDung(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setTamDung(false); }}>
     <div className="bannerSlide"><div className="bannerImage">{hinhAnh && !anhLoi.includes(hinhAnh) ? <img src={hinhAnh} alt="" onError={() => setAnhLoi((cu) => [...cu, hinhAnh])} /> : <span className="bannerImageTrong"><Icon name="image" size={44} /><span>Chưa có ảnh banner</span></span>}</div><div className="bannerContent"><span className="bannerEyebrow">Khám phá trên Soopi</span><h2>{banner.tieuDe}</h2>{banner.noiDung && <p>{banner.noiDung}</p>}<Link className="bannerCta" to={duongDan}>Xem sản phẩm <Icon name="chevronRight" size={18} /></Link></div></div>

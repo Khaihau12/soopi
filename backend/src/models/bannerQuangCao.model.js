@@ -5,7 +5,7 @@ const bannerQuangCaoSchema = new mongoose.Schema({
   tieuDe: { type: String, required: true },
   hinhAnh: { type: String, required: true },
   noiDung: { type: String },
-  danhMucId: { type: mongoose.Schema.Types.ObjectId, ref: 'DanhMuc' },
+  danhMucId: { type: mongoose.Schema.Types.ObjectId, ref: 'DanhMuc', required: true },
   trangThai: { type: String, enum: Object.values(TRANG_THAI_BANNER), default: TRANG_THAI_BANNER.KICH_HOAT },
 }, { collection: 'BannerQuangCao' });
 

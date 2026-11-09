@@ -149,7 +149,7 @@ Dựa vào biểu đồ lớp (Hình 3.72) gồm 19 lớp, cơ sở dữ liệu 
 | tieuDe | String | Tiêu đề banner |
 | hinhAnh | String | Hình ảnh của banner (đường dẫn ảnh) |
 | noiDung | String | Nội dung banner |
-| danhMucId | ObjectId | Danh mục đích khi người mua nhấn banner (bổ sung theo giao diện trang chủ) |
+| danhMucId | ObjectId, bắt buộc | Danh mục đích khi người mua nhấn banner; mỗi banner phải thuộc đúng một danh mục hợp lệ |
 | trangThai | String | Trạng thái hiển thị của banner (Kích hoạt, Vô hiệu hóa) |
 
 **l. Thiết kế Collection Giỏ hàng**
@@ -277,7 +277,7 @@ Dựa vào biểu đồ lớp (Hình 3.72) gồm 19 lớp, cơ sở dữ liệu 
 
 ---
 
-**Bảng tổng hợp các trường tham chiếu giữa các Collection (đối chiếu với 26 quan hệ trong Hình 3.72)**
+**Bảng tổng hợp các trường tham chiếu giữa các Collection (27 quan hệ, gồm quan hệ BannerQuangCao–DanhMuc trong biểu đồ lớp mới)**
 
 **Bảng 3.44 - Tổng hợp quan hệ và trường tham chiếu**
 
@@ -309,6 +309,7 @@ Dựa vào biểu đồ lớp (Hình 3.72) gồm 19 lớp, cơ sở dữ liệu 
 | 24 | CuaHang 1 - 0..* CuocTroChuyen | CuocTroChuyen.cuaHangId | |
 | 25 | CuocTroChuyen 1 - 1..* TinNhan | TinNhan.cuocTroChuyenId | Quan hệ thành phần |
 | 26 | TaiKhoan 1 - 0..* TinNhan | TinNhan.nguoiGuiId | Người gửi tin nhắn |
+| 27 | DanhMuc 1 - 0..* BannerQuangCao | BannerQuangCao.danhMucId | Mỗi banner phải có một danh mục; không xóa danh mục đang được banner sử dụng |
 
 **Bảng 3.45 - Chỉ mục và ràng buộc dữ liệu đề xuất**
 

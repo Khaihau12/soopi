@@ -7,7 +7,12 @@ const { laDuongDanAnhHopLe } = require('../utils/kiemTra');
 const { taoLoi } = require('../utils/taoLoi');
 const { donAnhCu } = require('./anhCloudinary.service');
 
-const layDanhSachBanner = () => BannerQuangCao.find({ trangThai: TRANG_THAI_BANNER.KICH_HOAT }, '_id tieuDe hinhAnh noiDung danhMucId').sort({ _id: -1 }).lean();
+const layDanhSachBanner = async () => {
+  const danhSach = await BannerQuangCao.find({ trangThai: TRANG_THAI_BANNER.KICH_HOAT }, '_id tieuDe hinhAnh noiDung danhMucId')
+    .sort({ _id: -1 }).populate('danhMucId', '_id').lean();
+  return danhSach.filter((banner) => banner.danhMucId)
+    .map((banner) => ({ ...banner, danhMucId: banner.danhMucId._id }));
+};
 
 const docPhanTrang = (query) => {
   const trang = Number(query.trang ?? 1);
@@ -56,12 +61,14 @@ const quanTriTaoBanner = async (body = {}) => {
 };
 const quanTriCapNhatBanner = async (id, body = {}) => {
   kiemTraId(id);
-  const banCu = await BannerQuangCao.findById(id).select('hinhAnh').lean();
+  const banCu = await BannerQuangCao.findById(id).select('hinhAnh danhMucId').lean();
+  if (!banCu) throw taoLoi(404, 'Không tìm thấy banner.');
+  const danhMucId = await kiemTraDanhMuc(Object.hasOwn(body, 'danhMucId') ? body.danhMucId : banCu.danhMucId);
   const capNhat = {};
   if (Object.hasOwn(body, 'tieuDe')) capNhat.tieuDe = kiemTraChuoi(body.tieuDe, 'Tiêu đề banner', 200, true);
   if (Object.hasOwn(body, 'hinhAnh')) capNhat.hinhAnh = kiemTraHinhAnh(body.hinhAnh);
   if (Object.hasOwn(body, 'noiDung')) capNhat.noiDung = kiemTraChuoi(body.noiDung, 'Nội dung banner', DO_DAI_TOI_DA.NOI_DUNG);
-  if (Object.hasOwn(body, 'danhMucId')) capNhat.danhMucId = await kiemTraDanhMuc(body.danhMucId);
+  if (Object.hasOwn(body, 'danhMucId')) capNhat.danhMucId = danhMucId;
   if (!Object.keys(capNhat).length) throw taoLoi(400, 'Vui lòng chọn thông tin banner cần cập nhật.');
   const banner = await BannerQuangCao.findByIdAndUpdate(id, { $set: capNhat }, { returnDocument: 'after', runValidators: true });
   if (!banner) throw taoLoi(404, 'Không tìm thấy banner.');
@@ -70,6 +77,11 @@ const quanTriCapNhatBanner = async (id, body = {}) => {
 };
 const quanTriCapNhatTrangThaiBanner = async (id, trangThai) => {
   kiemTraId(id); kiemTraTrangThai(trangThai);
+  if (trangThai === TRANG_THAI_BANNER.KICH_HOAT) {
+    const bannerHienTai = await BannerQuangCao.findById(id).select('danhMucId').lean();
+    if (!bannerHienTai) throw taoLoi(404, 'Không tìm thấy banner.');
+    await kiemTraDanhMuc(bannerHienTai.danhMucId);
+  }
   const banner = await BannerQuangCao.findByIdAndUpdate(id, { $set: { trangThai } }, { returnDocument: 'after', runValidators: true });
   if (!banner) throw taoLoi(404, 'Không tìm thấy banner.');
   return banner;
