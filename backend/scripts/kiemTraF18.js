@@ -33,8 +33,14 @@ const guiKetQua = async (thamSo) => {
   assert.equal(response.status, 302);
   return new URL(response.headers.get('location'));
 };
+const guiIpn = async (thamSo) => {
+  const response = await fetch(`${diaChiApi()}/vnpay/ipn?${new URLSearchParams(thamSo)}`);
+  assert.equal(response.status, 200);
+  return response.json();
+};
 const kyKetQua = (giaoDich, overrides = {}) => {
   const thamSo = {
+    vnp_TmnCode: process.env.VNP_TMN_CODE,
     vnp_TxnRef: `${giaoDich.maGiaoDich}R1234`,
     vnp_Amount: String(giaoDich.soTien * 100),
     vnp_ResponseCode: '00', vnp_TransactionStatus: '00', ...overrides,
@@ -97,6 +103,18 @@ async function run() {
   await trangThai(thanhCong, 'Thành công', 'Đã thanh toán', 4, 2);
   await guiKetQua(kyDung);
   await trangThai(thanhCong, 'Thành công', 'Đã thanh toán', 4, 2);
+
+  const tuIpn = await taoBo();
+  const ipnDung = kyKetQua(tuIpn.giaoDich);
+  assert.equal((await guiIpn({ ...ipnDung, vnp_Amount: '1' })).RspCode, '97');
+  assert.equal((await guiIpn(kyKetQua(tuIpn.giaoDich, { vnp_TmnCode: 'SAIMACODE' }))).RspCode, '97');
+  assert.equal((await guiIpn(kyKetQua(tuIpn.giaoDich, { vnp_Amount: '1' }))).RspCode, '04');
+  await trangThaiChuaXuLy(tuIpn);
+  assert.equal((await guiIpn(ipnDung)).RspCode, '00');
+  await trangThai(tuIpn, 'Thành công', 'Đã thanh toán', 4, 2);
+  assert.equal((await guiIpn(ipnDung)).RspCode, '02');
+  assert.equal((await guiKetQua(ipnDung)).searchParams.get('giaoDichId'), String(tuIpn.giaoDich._id));
+  await trangThai(tuIpn, 'Thành công', 'Đã thanh toán', 4, 2);
 
   const chiTietUrl = `${diaChiApi()}/${thanhCong.giaoDich._id}`;
   assert.equal((await fetch(chiTietUrl)).status, 401);

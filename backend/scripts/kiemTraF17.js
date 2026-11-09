@@ -177,8 +177,10 @@ async function run() {
   assert.equal((await goi('/giao-dich-thanh-toan/vnpay/tao-thanh-toan', cod.nguoiMua[0]._id, { giaoDichId }))[0], 404);
   assert.equal((await goi('/giao-dich-thanh-toan/vnpay/tao-thanh-toan', cod.nguoiMua[0]._id, { giaoDichId: (await DonHang.findOne({ taiKhoanId: cod.nguoiMua[0]._id })).giaoDichId }))[0], 409);
   assert.equal((await goi('/giao-dich-thanh-toan/vnpay/tao-thanh-toan', zeroVn.nguoiMua[0]._id, { giaoDichId: (await DonHang.findOne({ taiKhoanId: zeroVn.nguoiMua[0]._id })).giaoDichId }))[0], 409);
-  assert.equal((await goi('/giao-dich-thanh-toan/vnpay/tao-thanh-toan', vn.nguoiMua[0]._id, { giaoDichId }))[0], 500);
   const oldEnv = Object.fromEntries(['VNP_TMN_CODE', 'VNP_HASH_SECRET', 'VNP_URL', 'VNP_RETURN_URL'].map((key) => [key, process.env[key]]));
+  delete process.env.VNP_TMN_CODE;
+  try { assert.equal((await goi('/giao-dich-thanh-toan/vnpay/tao-thanh-toan', vn.nguoiMua[0]._id, { giaoDichId }))[0], 500); }
+  finally { if (oldEnv.VNP_TMN_CODE === undefined) delete process.env.VNP_TMN_CODE; else process.env.VNP_TMN_CODE = oldEnv.VNP_TMN_CODE; }
   Object.assign(process.env, { VNP_TMN_CODE: 'TEST', VNP_HASH_SECRET: 'test-secret', VNP_URL: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', VNP_RETURN_URL: 'http://localhost:5173/thanh-toan/ket-qua' });
   try {
     const [ma1, url1] = await goi('/giao-dich-thanh-toan/vnpay/tao-thanh-toan', vn.nguoiMua[0]._id, { giaoDichId });
@@ -190,9 +192,9 @@ async function run() {
     assert.equal(tachMaGiaoDichTuTxnRef(q1.vnp_TxnRef), (await GiaoDichThanhToan.findById(giaoDichId)).maGiaoDich);
     assert.notEqual(q1.vnp_TxnRef, q2.vnp_TxnRef);
     assert.equal(q1.vnp_ExpireDate.length, 14);
-    const hetHan = new Date((await GiaoDichThanhToan.findById(giaoDichId)).thoiGianTao.getTime() + 86400000);
+    const hetHanUrl = new Date(q1.vnp_CreateDate.slice(0, 4) + '-' + q1.vnp_CreateDate.slice(4, 6) + '-' + q1.vnp_CreateDate.slice(6, 8) + 'T' + q1.vnp_CreateDate.slice(8, 10) + ':' + q1.vnp_CreateDate.slice(10, 12) + ':' + q1.vnp_CreateDate.slice(12, 14) + '+07:00');
     const { dinhDangGioVietNam } = require('../src/utils/vnpay');
-    assert.equal(q1.vnp_ExpireDate, dinhDangGioVietNam(hetHan));
+    assert.equal(q1.vnp_ExpireDate, dinhDangGioVietNam(new Date(hetHanUrl.getTime() + 15 * 60000)));
     assert.equal(await DonHang.countDocuments({ giaoDichId }), 2);
   } finally { for (const [key, value] of Object.entries(oldEnv)) { if (value === undefined) delete process.env[key]; else process.env[key] = value; } }
   console.log('F17: các ca tạo đơn, hoàn tác, tranh chấp kho và URL ký cục bộ đạt.');

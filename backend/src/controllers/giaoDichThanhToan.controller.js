@@ -24,6 +24,18 @@ const xuLyKetQuaVnpay = async (req, res, next) => {
   } catch (loi) { next(loi); }
 };
 
+const xuLyIpnVnpay = async (req, res) => {
+  try {
+    const ketQua = await service.xuLyKetQuaVnpay(req.query);
+    const maLoi = { chuKy: ['97', 'Invalid signature'], khongTimThay: ['01', 'Order not found'], saiSoTien: ['04', 'Invalid amount'] };
+    const [RspCode, Message] = ketQua.loi ? maLoi[ketQua.loi] : ketQua.daXuLy ? ['02', 'Order already confirmed'] : ['00', 'Confirm Success'];
+    res.json({ RspCode, Message });
+  } catch (loi) {
+    console.error('Không thể xử lý IPN VNPay:', loi);
+    res.json({ RspCode: '99', Message: 'Unknown error' });
+  }
+};
+
 const layChiTietGiaoDich = async (req, res, next) => {
   try {
     const data = await service.layChiTietGiaoDich(req.taiKhoan._id, req.params.id);
@@ -44,4 +56,4 @@ const quanTriLayChiTietGiaoDich = async (req, res, next) => {
   } catch (loi) { next(loi); }
 };
 
-module.exports = { taoThanhToanVnpay, xuLyKetQuaVnpay, layChiTietGiaoDich, quanTriLayDanhSachGiaoDich, quanTriLayChiTietGiaoDich };
+module.exports = { taoThanhToanVnpay, xuLyKetQuaVnpay, xuLyIpnVnpay, layChiTietGiaoDich, quanTriLayDanhSachGiaoDich, quanTriLayChiTietGiaoDich };

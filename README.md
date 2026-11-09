@@ -62,7 +62,9 @@ Khuyến mãi chỉ do Người bán tạo cho sản phẩm cửa hàng mình. Q
 
 ## VNPay sandbox và kiểm thử
 
-Đăng ký môi trường thử nghiệm trên [cổng VNPay](https://sandbox.vnpayment.vn/) để lấy `VNP_TMN_CODE` và `VNP_HASH_SECRET`, điền vào `backend/.env`; cấu hình URL nhận kết quả trỏ về API local. Chưa có tài khoản sandbox vẫn thử được luồng COD. Không gửi khóa qua chat hoặc đưa `.env` vào Git.
+Đăng ký môi trường thử nghiệm trên [cổng VNPay](https://sandbox.vnpayment.vn/) để lấy `VNP_TMN_CODE` và `VNP_HASH_SECRET`, điền vào `backend/.env`; đặt `VNP_RETURN_URL=http://localhost:3000/api/giao-dich-thanh-toan/vnpay/ket-qua` khi thử trên cùng máy. Lab 10 đã có khóa sandbox; máy khác phải tự điền `.env`. Không gửi khóa qua chat hoặc đưa `.env` vào Git.
+
+Soopi tạo URL thanh toán trên backend từ giao dịch đã lưu, chuyển người mua sang VNPay và xác minh chữ ký, mã merchant, số tiền khi VNPay trả về. URL thanh toán hết hạn sau 15 phút; đơn vẫn theo thời hạn 24 giờ và có thể tạo URL mới khi còn chờ thanh toán. Endpoint IPN là `GET /api/giao-dich-thanh-toan/vnpay/ipn`. Khi chạy local, Return URL trong trình duyệt hoạt động; để VNPay gọi IPN cần một địa chỉ HTTPS công khai chuyển tiếp tới cổng backend 3000 và đăng ký URL IPN đó với VNPay. Return và IPN dùng cùng xử lý để không cập nhật lặp. Chạy `npm --prefix backend run test:f18` để kiểm tra callback ký giả lập; thử thanh toán thật bằng thẻ test trong Lab 10 qua giao diện để kiểm tra sandbox.
 
 ```powershell
 npm --prefix frontend run build
@@ -75,13 +77,15 @@ Các script `test:f12` đến `test:f30` nằm trong `backend/package.json`; m�
 
 Voucher Cửa hàng và Toàn sàn có thể giới hạn vào một danh mục. Form tạo/sửa cho phép chọn danh mục; khi thanh toán, backend chỉ tính điều kiện và mức giảm trên sản phẩm thuộc danh mục đó. Không chọn danh mục thì voucher áp dụng theo phạm vi cũ. Freeship chỉ giảm phí vận chuyển, không chọn danh mục.
 
+Dữ liệu tạo từ phiên bản cũ có thể thiếu `TaiKhoan.phienBanToken` và `Voucher.danhMucId`. Chạy `npm --prefix backend run migrate:data-defaults` để xem số lượng, rồi `npm --prefix backend run migrate:data-defaults -- --apply` để chỉ bổ sung giá trị mặc định còn thiếu (`0` và `null`). Script chạy lại an toàn và không sửa mật khẩu, vai trò hay voucher đã có danh mục.
+
 Chat dùng Socket.IO để báo tin mới sau khi MongoDB lưu thành công. REST vẫn dùng để gửi tin, lấy danh sách/lịch sử và đồng bộ sau khi mất kết nối. Ảnh mới được tải lên Cloudinary; ảnh cũ trong `backend/uploads` tiếp tục hiển thị. Khi thay/xóa ảnh sản phẩm hoặc banner, hệ thống xóa ảnh Cloudinary chỉ nếu không còn bản ghi nào tham chiếu. Ảnh tải lên rồi bỏ dở biểu mẫu được quét sau 24 giờ, mỗi ngày một lần; cần giữ backend chạy để quét.
 
 ## Giới hạn đã biết
 
 - Vận chuyển chỉ mô phỏng; không có giao hàng hay hoàn tiền tự động. Đơn đã thanh toán cần hoàn tiền được đánh dấu để xử lý thủ công.
 - MongoDB local không có transaction nhiều tài liệu: hai lần đặt cùng giỏ hoặc tiến trình dừng giữa các bước hoàn tác kho/voucher cần kiểm tra và đối soát thủ công.
-- VNPay local chưa có IPN; thanh toán đến sau khi giao dịch hết hạn cần xử lý thủ công. Cần tài khoản sandbox để kiểm tra thật qua cổng.
+- VNPay đã có endpoint IPN nhưng localhost không thể nhận IPN từ máy chủ VNPay nếu chưa cấu hình HTTPS công khai và đăng ký URL. Thanh toán đến sau khi giao dịch hết hạn cần đối soát thủ công.
 - Người mua được hủy đơn còn chờ xác nhận. Hủy giao dịch VNPay chưa trả tiền sẽ hủy mọi đơn cùng giao dịch và hoàn lượt voucher; hủy đơn đã thanh toán hoặc COD chỉ hủy đơn đó, không hoàn voucher. Tiền đã thanh toán cần Quản trị viên hoàn thủ công.
 - Nếu tiến trình dừng sau khi chiếm quyền hủy nhưng trước khi hoàn tất cập nhật kho/giao dịch/voucher, cần đối soát thủ công. Thanh toán VNPay đến sau khi giao dịch đã hủy cũng cần đối soát và hoàn tiền thủ công.
 - Người bán có thể bật lại sản phẩm bị Admin ngừng do dữ liệu chưa lưu người ra quyết định. Chưa lọc/sắp xếp chính xác theo giá sau khuyến mãi. Ảnh `/uploads` cũ chưa được tự chuyển sang Cloudinary hoặc dọn khỏi ổ đĩa.

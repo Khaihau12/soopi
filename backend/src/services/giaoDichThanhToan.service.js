@@ -57,13 +57,14 @@ const taoThanhToanVnpay = async (taiKhoanId, giaoDichId, ip) => {
     console.error(`Thiếu cấu hình VNPay: ${thieu.join(', ')}`);
     throw taoLoi(500, 'Cổng thanh toán chưa được cấu hình. Vui lòng thử lại sau.');
   }
+  const hetHanUrl = new Date(Math.min(Date.now() + 15 * 60000, hetHan.getTime()));
   const thamSo = {
     vnp_Version: '2.1.0', vnp_Command: 'pay', vnp_TmnCode: process.env.VNP_TMN_CODE,
     vnp_Amount: giaoDich.soTien * 100, vnp_CreateDate: dinhDangGioVietNam(new Date()),
     vnp_CurrCode: 'VND', vnp_IpAddr: ip, vnp_Locale: 'vn',
     vnp_OrderInfo: `Thanh toan don hang ${giaoDich.maGiaoDich}`, vnp_OrderType: 'other',
     vnp_ReturnUrl: process.env.VNP_RETURN_URL, vnp_TxnRef: taoTxnRef(giaoDich.maGiaoDich),
-    vnp_ExpireDate: dinhDangGioVietNam(hetHan),
+    vnp_ExpireDate: dinhDangGioVietNam(hetHanUrl),
   };
   return { duongDanThanhToan: taoDuongDanThanhToan(process.env.VNP_URL, thamSo, process.env.VNP_HASH_SECRET) };
 };
@@ -96,6 +97,7 @@ const huyGiaoDichVaHoanKho = async (giaoDich, lyDo) => {
 
 const xuLyKetQuaVnpay = async (query) => {
   if (!xacThucChuKy(query, process.env.VNP_HASH_SECRET)) return { loi: 'chuKy' };
+  if (query.vnp_TmnCode !== process.env.VNP_TMN_CODE) return { loi: 'chuKy' };
   const maGiaoDich = tachMaGiaoDichTuTxnRef(query.vnp_TxnRef);
   const giaoDich = maGiaoDich && await GiaoDichThanhToan.findOne({ maGiaoDich });
   if (!giaoDich || giaoDich.phuongThucThanhToan !== PHUONG_THUC_THANH_TOAN.VNPAY) return { loi: 'khongTimThay' };
@@ -108,7 +110,7 @@ const xuLyKetQuaVnpay = async (query) => {
     if (thanhCong && [TRANG_THAI_GIAO_DICH.HET_HAN, TRANG_THAI_GIAO_DICH.THAT_BAI].includes(giaoDich.trangThaiThanhToan)) {
       console.warn('VNPay báo thanh toán đến muộn, cần đối soát và hoàn tiền thủ công:', giaoDich.maGiaoDich, query.vnp_Amount);
     }
-    return { giaoDichId: giaoDich._id };
+    return { giaoDichId: giaoDich._id, daXuLy: true };
   }
   const trangThai = thanhCong ? TRANG_THAI_GIAO_DICH.THANH_CONG : TRANG_THAI_GIAO_DICH.THAT_BAI;
   const daChiemQuyen = await GiaoDichThanhToan.findOneAndUpdate(
@@ -122,7 +124,7 @@ const xuLyKetQuaVnpay = async (query) => {
         console.warn('VNPay báo thanh toán đến muộn, cần đối soát và hoàn tiền thủ công:', giaoDich.maGiaoDich, query.vnp_Amount);
       }
     }
-    return { giaoDichId: giaoDich._id };
+    return { giaoDichId: giaoDich._id, daXuLy: true };
   }
   if (thanhCong) {
     await DonHang.updateMany(
