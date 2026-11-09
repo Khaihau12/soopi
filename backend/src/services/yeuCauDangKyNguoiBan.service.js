@@ -6,6 +6,7 @@ const { VAI_TRO } = require('../constants/vaiTro.constant');
 const { TRANG_THAI_YEU_CAU_NGUOI_BAN, TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_TAI_KHOAN } = require('../constants/trangThai.constant');
 const { DO_DAI_TOI_DA, PHAN_TRANG } = require('../constants/cauHinh.constant');
 const { taoLoi } = require('../utils/taoLoi');
+const { taoThongBao } = require('./thongBao.service');
 
 const kiemTraChuoi = (giaTri, tenTruong, toiDa, batBuoc = true) => {
   if (giaTri === undefined && !batBuoc) return undefined;
@@ -79,7 +80,13 @@ const quanTriXetDuyetYeuCau = async (id, trangThai) => {
     if (!await YeuCauDangKyNguoiBan.exists({ _id: id })) throw taoLoi(404, 'Không tìm thấy yêu cầu đăng ký Người bán.');
     throw taoLoi(409, 'Yêu cầu đã được xử lý.');
   }
-  if (trangThai === DA_TU_CHOI) return yeuCau;
+  if (trangThai === DA_TU_CHOI) {
+    await taoThongBao({ taiKhoanId: yeuCau.taiKhoanId, loai: 'Đăng ký bán hàng',
+      tieuDe: 'Yêu cầu đăng ký bán hàng đã bị từ chối',
+      noiDung: 'Bạn có thể xem trạng thái yêu cầu và gửi lại khi đã bổ sung thông tin.',
+      duongDan: '/dang-ky-nguoi-ban', maSuKien: `dang-ky-ban-hang:${id}:tu-choi` });
+    return yeuCau;
+  }
 
   let cuaHangMoi = null;
   try {
@@ -103,6 +110,9 @@ const quanTriXetDuyetYeuCau = async (id, trangThai) => {
       { $addToSet: { vaiTro: VAI_TRO.NGUOI_BAN } },
     );
     if (capNhat.matchedCount !== 1) throw taoLoi(409, 'Tài khoản đang bị khóa nên chưa thể phê duyệt.');
+    await taoThongBao({ taiKhoanId: yeuCau.taiKhoanId, loai: 'Đăng ký bán hàng',
+      tieuDe: 'Bạn đã trở thành Người bán', noiDung: `Cửa hàng ${yeuCau.tenCuaHang} đã được phê duyệt.`,
+      duongDan: '/nguoi-ban', maSuKien: `dang-ky-ban-hang:${id}:phe-duyet` });
     return yeuCau;
   } catch (loi) {
     // MongoDB local không có transaction; chỉ xóa cửa hàng được tạo trong lần duyệt này.

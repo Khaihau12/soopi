@@ -9,6 +9,7 @@ const {
 
 const donHangSchema = new mongoose.Schema({
   diaChiNhanHang: { type: String, required: true, maxlength: DO_DAI_TOI_DA.DIA_CHI },
+  loiNhanChoCuaHang: { type: String, trim: true, maxlength: DO_DAI_TOI_DA.LOI_NHAN_CHO_CUA_HANG, default: '' },
   tongTienHang: { type: Number, required: true, min: 0, validate: { validator: laSoNguyen, message: 'Tổng tiền hàng phải là số nguyên' } },
   tongGiamVoucher: { type: Number, min: 0, default: 0, validate: { validator: laSoNguyen, message: 'Tổng giảm voucher phải là số nguyên' } },
   phiVanChuyen: { type: Number, min: 0, default: 0, validate: { validator: laSoNguyen, message: 'Phí vận chuyển phải là số nguyên' } },

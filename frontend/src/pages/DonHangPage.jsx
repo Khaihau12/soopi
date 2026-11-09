@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import DonHangCard from '../components/DonHangCard.jsx';
+import KetQuaMuaLai from '../components/KetQuaMuaLai.jsx';
 import ConfirmDialog from '../components/ui/ConfirmDialog.jsx';
 import EmptyState from '../components/ui/EmptyState.jsx';
 import ErrorState from '../components/ui/ErrorState.jsx';
@@ -9,6 +10,7 @@ import Pagination from '../components/ui/Pagination.jsx';
 import Skeleton from '../components/ui/Skeleton.jsx';
 import Tabs from '../components/ui/Tabs.jsx';
 import useThanhToanVnpay from '../hooks/useThanhToanVnpay.js';
+import useMuaLai from '../hooks/useMuaLai.js';
 import useThongBao from '../hooks/useThongBao.js';
 import { huyDonHang, layDanhSachDonHang } from '../services/donHang.api.js';
 import { DON_HANG_TABS, DUONG_DAN } from '../utils/hangSo.js';
@@ -27,6 +29,7 @@ export default function DonHangPage() {
   const [dangHuy, setDangHuy] = useState(false);
   const thongBao = useThongBao();
   const { thanhToan, dangChuyen, loi: loiThanhToan } = useThanhToanVnpay();
+  const { dangMuaLaiId, ketQuaMuaLai, dongKetQua, muaLai } = useMuaLai();
 
   useEffect(() => {
     let daHuy = false;
@@ -63,12 +66,13 @@ export default function DonHangPage() {
     {dangChuyen && <div className="donHangLopPhu" role="status" aria-live="polite">Đang chuyển tới VNPay…</div>}
     {dangTai ? <Skeleton variant="block" count={3} /> : loi ? <ErrorState message={loi} taiLai={() => setLanTai((lan) => lan + 1)} /> :
       duLieu?.danhSach.length ? <>
-        <div className="donHangDanhSach">{duLieu.danhSach.map((don) => <DonHangCard key={don._id} donHang={don} onThanhToan={thanhToan} dangChuyen={dangChuyen} onHuy={setDonCanHuy} dangHuy={dangHuy} />)}</div>
+        <div className="donHangDanhSach">{duLieu.danhSach.map((don) => <DonHangCard key={don._id} donHang={don} onThanhToan={thanhToan} dangChuyen={dangChuyen} onHuy={setDonCanHuy} dangHuy={dangHuy} onMuaLai={muaLai} dangMuaLai={dangMuaLaiId === don._id} />)}</div>
         <Pagination trang={duLieu.phanTrang.trang} tongTrang={duLieu.phanTrang.tongTrang} onChange={chonTrang} />
       </> : <EmptyState icon="package" title={tab.value === 'tat-ca' ? 'Bạn chưa có đơn hàng nào' : 'Chưa có đơn hàng ở trạng thái này'}
         description="Khám phá các sản phẩm đang bán trên Soopi." actionLabel="Xem sản phẩm" actionTo={DUONG_DAN.SAN_PHAM} />}
     <ConfirmDialog open={Boolean(donCanHuy)} onClose={() => setDonCanHuy(null)} onConfirm={xacNhanHuy}
       title="Xác nhận hủy đơn" message={donCanHuy ? noiDungXacNhanHuyDon(donCanHuy) : ''}
       confirmLabel="Hủy đơn" cancelLabel="Giữ đơn" danger loading={dangHuy} />
+    <KetQuaMuaLai ketQua={ketQuaMuaLai} onClose={dongKetQua} />
   </div>;
 }

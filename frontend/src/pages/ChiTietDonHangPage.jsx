@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import TienTrinhDonHang from '../components/TienTrinhDonHang.jsx';
 import DanhGiaForm from '../components/DanhGiaForm.jsx';
 import DoiTraKhieuNaiForm from '../components/DoiTraKhieuNaiForm.jsx';
+import KetQuaMuaLai from '../components/KetQuaMuaLai.jsx';
 import Badge from '../components/ui/Badge.jsx';
 import Button from '../components/ui/Button.jsx';
 import ConfirmDialog from '../components/ui/ConfirmDialog.jsx';
@@ -10,6 +11,7 @@ import ErrorState from '../components/ui/ErrorState.jsx';
 import Icon from '../components/ui/Icon.jsx';
 import Skeleton from '../components/ui/Skeleton.jsx';
 import useThanhToanVnpay from '../hooks/useThanhToanVnpay.js';
+import useMuaLai from '../hooks/useMuaLai.js';
 import useThongBao from '../hooks/useThongBao.js';
 import { huyDonHang, layChiTietDonHang } from '../services/donHang.api.js';
 import { dinhDangNgayGio, dinhDangTien, maDonHangHienThi, taoUrlAnh } from '../utils/dinhDang.js';
@@ -30,6 +32,7 @@ export default function ChiTietDonHangPage() {
   const [dangHuy, setDangHuy] = useState(false);
   const thongBao = useThongBao();
   const { thanhToan, dangChuyen, loi: loiThanhToan } = useThanhToanVnpay();
+  const { dangMuaLaiId, ketQuaMuaLai, dongKetQua, muaLai } = useMuaLai();
 
   useEffect(() => {
     let daHuy = false;
@@ -69,6 +72,7 @@ export default function ChiTietDonHangPage() {
       <div className="donHangChiTietBadge"><Badge variant={MAU_TRANG_THAI[donHang.trangThaiXuLy] || 'neutral'}>{donHang.trangThaiXuLy}</Badge>
         <Badge variant={MAU_TRANG_THAI[donHang.trangThaiThanhToan] || 'neutral'}>{donHang.trangThaiThanhToan}</Badge></div></header>
     <TienTrinhDonHang trangThaiXuLy={donHang.trangThaiXuLy} trangThaiThanhToan={donHang.trangThaiThanhToan} />
+    {['Hoàn thành', 'Đã hủy'].includes(donHang.trangThaiXuLy) && <div className="donHangChiTietMuaLai"><Button variant="secondary" loading={dangMuaLaiId === donHang._id} onClick={() => muaLai(donHang._id)}>Mua lại sản phẩm trong đơn</Button><small>Giá, khuyến mãi và tồn kho sẽ theo thời điểm mua mới.</small></div>}
     {donHang.coTheHuy && <Button variant="secondary" className="donHangNutHuy donHangNutHuyChiTiet" disabled={dangHuy} onClick={() => setMoXacNhanHuy(true)}>Hủy đơn</Button>}
     {donHang.trangThaiXuLy === TRANG_THAI_XU_LY.DA_HUY && <section className="donHangDaHuy" aria-label="Thông tin hủy đơn"><strong>{lyDoDonDaHuy(donHang)}</strong>
       {donHang.canHoanTienThuCong && <p>Đơn đã hủy sau khi thanh toán. Khoản {dinhDangTien(donHang.tongThanhToan)} đang chờ hoàn tiền thủ công.</p>}</section>}
@@ -103,6 +107,7 @@ export default function ChiTietDonHangPage() {
           state={{ tenCuaHang: donHang.cuaHang.tenCuaHang }}>Nhắn tin cho cửa hàng</Button>}
         <dl className="donHangThongTin"><div><dt>Cửa hàng</dt><dd>{donHang.cuaHang?.tenCuaHang || 'Cửa hàng không còn hiển thị'}</dd></div>
           <div><dt>Địa chỉ nhận hàng</dt><dd>{donHang.diaChiNhanHang}</dd></div>
+          {donHang.loiNhanChoCuaHang && <div className="donHangThongTinLoiNhan"><dt>Ghi chú gửi cửa hàng</dt><dd>{donHang.loiNhanChoCuaHang}</dd></div>}
           <div><dt>Phương thức thanh toán</dt><dd>{laVnpay ? 'VNPay' : `Thanh toán khi nhận hàng: ${dinhDangTien(donHang.tongThanhToan)}`}</dd></div>
           {laVnpay && <div><dt>Mã giao dịch</dt><dd>{donHang.giaoDich?.maGiaoDich || 'Chưa có'}</dd></div>}
           <div><dt>Trạng thái thanh toán</dt><dd>{donHang.trangThaiThanhToan}</dd></div>
@@ -123,5 +128,6 @@ export default function ChiTietDonHangPage() {
     <ConfirmDialog open={moXacNhanHuy} onClose={() => setMoXacNhanHuy(false)} onConfirm={xacNhanHuy}
       title="Xác nhận hủy đơn" message={noiDungXacNhanHuyDon(donHang)}
       confirmLabel="Hủy đơn" cancelLabel="Giữ đơn" danger loading={dangHuy} />
+    <KetQuaMuaLai ketQua={ketQuaMuaLai} onClose={dongKetQua} />
   </div>;
 }

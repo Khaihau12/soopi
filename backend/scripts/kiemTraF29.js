@@ -37,8 +37,11 @@ function phamVi({ method, duongDan }) {
   if (duongDan.startsWith('/api/tep-tin/')) return 'nguoiBanHoacAdmin';
   if (duongDan.startsWith('/api/xac-thuc/')) return duongDan === '/api/xac-thuc/toi' ? 'taiKhoan' : 'congKhai';
   if (duongDan === '/api/giao-dich-thanh-toan/vnpay/ket-qua') return 'congKhai';
-  if (duongDan.startsWith('/api/danh-gia')) return method === 'GET' && duongDan === '/api/danh-gia' ? 'congKhai' : 'taiKhoan';
-  if (['/api/kiem-tra', '/api/danh-muc', '/api/san-pham', '/api/banner-quang-cao', '/api/khuyen-mai', '/api/voucher'].some((dau) => duongDan === dau || duongDan.startsWith(dau + '/'))) return 'congKhai';
+  if (duongDan.startsWith('/api/danh-gia')) return method === 'GET' && duongDan === '/api/danh-gia' ? 'congKhai' : 'nguoiDung';
+  if (['/api/kiem-tra', '/api/danh-muc', '/api/san-pham', '/api/cua-hang', '/api/banner-quang-cao', '/api/khuyen-mai', '/api/voucher'].some((dau) => duongDan === dau || duongDan.startsWith(dau + '/'))) return 'congKhai';
+  // Quản trị viên có hồ sơ riêng nhưng không tham gia luồng mua hàng hay đăng ký bán.
+  if (['/api/yeu-cau-dang-ky-nguoi-ban', '/api/gio-hang', '/api/don-hang', '/api/giao-dich-thanh-toan',
+    '/api/doi-tra-khieu-nai', '/api/cuoc-tro-chuyen'].some((dau) => duongDan === dau || duongDan.startsWith(dau + '/'))) return 'nguoiDung';
   return 'taiKhoan';
 }
 
@@ -146,6 +149,10 @@ async function main() {
       await thu(vaiTro.nguoiDung, 403, 'Người dùng');
       await thu(vaiTro.nguoiBan, 'choPhep', 'Người bán');
       await thu(vaiTro.admin, 'choPhep', 'Quản trị viên');
+    } else if (quyen === 'nguoiDung') {
+      await thu(vaiTro.nguoiDung, 'choPhep', 'Người dùng');
+      await thu(vaiTro.nguoiBan, 'choPhep', 'Người bán');
+      await thu(vaiTro.admin, 403, 'Quản trị viên');
     } else {
       await thu(vaiTro.nguoiDung, 'choPhep', 'Người dùng');
       await thu(vaiTro.nguoiBan, 'choPhep', 'Người bán');

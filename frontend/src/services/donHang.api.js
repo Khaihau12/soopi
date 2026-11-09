@@ -4,6 +4,7 @@ export const xemTruocDonHang = (body = {}) => goiApi('/don-hang/xem-truoc', { me
 export const datHang = (body = {}) => goiApi('/don-hang', { method: 'POST', body });
 export const layDanhSachDonHang = (query = {}) => goiApi('/don-hang', { query });
 export const layChiTietDonHang = (id) => goiApi(`/don-hang/${encodeURIComponent(id)}`);
+export const muaLaiDonHang = (id) => goiApi(`/don-hang/${encodeURIComponent(id)}/mua-lai`, { method: 'POST' });
 export const huyDonHang = (id) => goiApi(`/don-hang/${encodeURIComponent(id)}/huy`, { method: 'PATCH' });
 export const nguoiBanLayDanhSachDonHang = (query = {}) => goiApi('/nguoi-ban/don-hang', { query });
 export const nguoiBanLayChiTietDonHang = (id) => goiApi(`/nguoi-ban/don-hang/${encodeURIComponent(id)}`);

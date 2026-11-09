@@ -9,6 +9,7 @@ const { TRANG_THAI_XU_LY, TRANG_THAI_THANH_TOAN_DON, PHUONG_THUC_THANH_TOAN, TRA
 const { VAI_TRO } = require('../constants/vaiTro.constant');
 const { taoLoi } = require('../utils/taoLoi');
 const { layKhoangThongKe, dienMocTrong } = require('../utils/mocThongKe');
+const { NGUONG_CANH_BAO_MAC_DINH } = require('../constants/tonKho.constant');
 
 const idCuaHang = (cuaHang) => new mongoose.Types.ObjectId(String(cuaHang._id));
 const locHoanThanh = (cuaHang, khoang) => [
@@ -25,14 +26,17 @@ const noiChiTiet = [
 
 const nguoiBanLayTongQuan = async (cuaHang, query) => {
   const { tuNgay, denNgay, khoang } = layKhoangThongKe(query);
-  const [tong, sanPham, choXacNhan] = await Promise.all([
+  const [tong, sanPham, choXacNhan, canNhapThem] = await Promise.all([
     DonHang.aggregate([...locHoanThanh(cuaHang, khoang), { $group: { _id: null, tongDoanhThu: { $sum: '$tongThanhToan' }, soDonHoanThanh: { $sum: 1 } } }]),
     DonHang.aggregate([...locHoanThanh(cuaHang, khoang), ...noiChiTiet, { $group: { _id: null, soSanPhamDaBan: { $sum: '$chiTiet.soLuong' } } }]),
     DonHang.countDocuments({ cuaHangId: idCuaHang(cuaHang), trangThaiXuLy: TRANG_THAI_XU_LY.CHO_XAC_NHAN,
       $or: [{ trangThaiThanhToan: TRANG_THAI_THANH_TOAN_DON.DA_THANH_TOAN }, { phuongThucThanhToan: PHUONG_THUC_THANH_TOAN.COD, trangThaiThanhToan: TRANG_THAI_THANH_TOAN_DON.CHO_THANH_TOAN }] }),
+    SanPham.countDocuments({ cuaHangId: idCuaHang(cuaHang), trangThaiKinhDoanh: TRANG_THAI_KINH_DOANH.DANG_KINH_DOANH,
+      $expr: { $lte: ['$soLuongTon', { $ifNull: ['$nguongCanhBaoTon', NGUONG_CANH_BAO_MAC_DINH] }] } }),
   ]);
   return { khoangThoiGian: { tuNgay, denNgay }, tongDoanhThu: tong[0]?.tongDoanhThu || 0,
-    soDonHoanThanh: tong[0]?.soDonHoanThanh || 0, soSanPhamDaBan: sanPham[0]?.soSanPhamDaBan || 0, soDonChoXacNhan: choXacNhan };
+    soDonHoanThanh: tong[0]?.soDonHoanThanh || 0, soSanPhamDaBan: sanPham[0]?.soSanPhamDaBan || 0,
+    soDonChoXacNhan: choXacNhan, soSanPhamCanNhap: canNhapThem };
 };
 
 const nguoiBanLayDoanhThu = async (cuaHang, query) => {

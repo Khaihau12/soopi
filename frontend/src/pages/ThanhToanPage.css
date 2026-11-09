@@ -8,9 +8,21 @@
 .thanhToanLuaChon { display: flex; align-items: flex-start; gap: var(--kc3); padding: var(--kc2) 0; min-height: 44px; cursor: pointer; }
 .thanhToanLuaChon input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--mauChinh); }
 .thanhToanLuaChon small, .thanhToanSanPham small { display: block; color: var(--chuPhu); }
+.thanhToanLuaChon > span { min-width: 0; overflow-wrap: anywhere; }
+.thanhToanDiaChiMacDinh { margin-left: var(--kc2); padding: var(--kc1) var(--kc2); border-radius: var(--boGocTron); background: var(--mauChinhNhat); color: var(--mauChinhDam); font-size: .75rem; font-style: normal; }
 .thanhToanNhan { display: grid; gap: var(--kc2); margin-top: var(--kc3); font-weight: 600; }
 .thanhToanNhan textarea { width: 100%; border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); padding: var(--kc3); color: var(--chu); background: var(--beMat); }
 .thanhToanNhan textarea { min-height: 96px; resize: vertical; font-weight: 400; }
+.thanhToanGhiChuCuaHang { margin-top: var(--kc3); padding-top: var(--kc3); border-top: var(--doDayVien) solid var(--vien); }
+.thanhToanNutGhiChu { width: 100%; min-height: 44px; display: flex; justify-content: space-between; align-items: center; gap: var(--kc3); padding: 0; border: 0; background: transparent; color: var(--chu); font: inherit; font-weight: 600; text-align: left; cursor: pointer; }
+.thanhToanNutGhiChu span:last-child { color: var(--mauChinh); }
+.thanhToanNutGhiChu:focus-visible { outline: 2px solid var(--mauChinh); outline-offset: 2px; }
+.thanhToanNutGhiChu:disabled { opacity: .6; cursor: not-allowed; }
+.thanhToanLoiNhan { display: grid; gap: var(--kc2); margin-top: var(--kc2); }
+.thanhToanLoiNhan textarea { width: 100%; min-height: 72px; padding: var(--kc3); border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); background: var(--beMat); color: var(--chu); font: inherit; resize: vertical; }
+.thanhToanLoiNhan textarea:focus-visible { outline: 2px solid var(--mauChinh); outline-offset: 2px; }
+.thanhToanLoiNhanPhu { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--kc2); color: var(--chuPhu); font-size: .8125rem; }
+.thanhToanLoiNhanTomTat { margin: var(--kc1) 0 0; color: var(--chuPhu); white-space: pre-wrap; overflow-wrap: anywhere; }
 .thanhToanGhiChu { margin: var(--kc3) 0 0; color: var(--chuPhu); font-size: .875rem; }
 .thanhToanCanhBao { padding: var(--kc3); border-radius: var(--boGocNho); color: var(--canhBao); background: var(--canhBaoNen); font-size: .9rem; }
 .thanhToanCanhBao ul { margin: var(--kc2) 0 0; padding-left: var(--kc5); }

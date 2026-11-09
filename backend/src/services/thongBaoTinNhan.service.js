@@ -36,4 +36,14 @@ const phatTinNhanMoi = async (cuocTroChuyen, tinNhan) => {
   } catch (loi) { console.error('Không thể phát thông báo tin nhắn mới:', loi); }
 };
 
-module.exports = { khoiTaoSocket, phatTinNhanMoi };
+const phatThongBaoMoi = async (taiKhoanId) => {
+  if (!io) return;
+  try {
+    const taiKhoan = await TaiKhoan.findById(taiKhoanId).select('_id phienBanToken trangThaiTaiKhoan').lean();
+    if (taiKhoan && taiKhoan.trangThaiTaiKhoan !== TRANG_THAI_TAI_KHOAN.BI_KHOA) {
+      io.to(phongTaiKhoan(taiKhoan)).emit('thong-bao-moi');
+    }
+  } catch (loi) { console.error('Không thể phát thông báo mới:', loi); }
+};
+
+module.exports = { khoiTaoSocket, phatTinNhanMoi, phatThongBaoMoi };

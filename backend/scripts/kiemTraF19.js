@@ -40,7 +40,7 @@ async function run() {
   const danhMuc = await DanhMuc.create({ tenDanhMuc: 'Danh mục F19' });
   const shop = await CuaHang.create({ taiKhoanId: khac._id, tenCuaHang: 'Cửa hàng F19' });
   const sanPham = await SanPham.create({ tenSanPham: 'Sản phẩm F19', giaGoc: 100000, soLuongTon: 20,
-    cuaHangId: shop._id, danhMucId: danhMuc._id, hinhAnh: ['/uploads/f19.png'] });
+    cuaHangId: shop._id, danhMucId: danhMuc._id, hinhAnh: [] });
   const voucher = await Voucher.create({ maVoucher: 'F19SALE', tenVoucher: 'Voucher F19', loaiVoucher: 'Toàn sàn',
     kieuGiam: 'Số tiền cố định', giaTriGiam: 10000, soLuong: 10, ngayBatDau: new Date(Date.now() - 86400000),
     ngayKetThuc: new Date(Date.now() + 86400000) });

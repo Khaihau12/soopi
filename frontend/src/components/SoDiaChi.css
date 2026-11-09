@@ -1,0 +1,16 @@
+.soDiaChiDau { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--kc4); flex-wrap: wrap; }
+.soDiaChiDau h2 { margin-bottom: var(--kc1); }
+.soDiaChiDau p { margin: 0; color: var(--chuPhu); }
+.soDiaChiDanhSach { margin-top: var(--kc4); border-top: var(--doDayVien) solid var(--vien); }
+.soDiaChiDong { display: flex; justify-content: space-between; gap: var(--kc4); padding: var(--kc4) 0; border-bottom: var(--doDayVien) solid var(--vien); }
+.soDiaChiDong > div:first-child { min-width: 0; }
+.soDiaChiDong p { margin: var(--kc2) 0 0; overflow-wrap: anywhere; }
+.soDiaChiTieuDe, .soDiaChiHanhDong { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc2); }
+.soDiaChiTieuDe span { padding: var(--kc1) var(--kc2); border-radius: var(--boGocTron); background: var(--mauChinhNhat); color: var(--mauChinhDam); font-size: .8125rem; }
+.soDiaChiHanhDong { justify-content: flex-end; align-content: start; flex-shrink: 0; }
+.soDiaChiTrong { margin: var(--kc4) 0 0; color: var(--chuPhu); }
+.soDiaChiForm { display: grid; gap: var(--kc4); }
+.soDiaChiChonMacDinh { display: flex; align-items: center; gap: var(--kc2); min-height: 44px; }
+.soDiaChiChonMacDinh input { width: 20px; height: 20px; accent-color: var(--mauChinh); }
+.soDiaChiFormActions { display: flex; justify-content: flex-end; gap: var(--kc2); }
+@media (max-width: 639px) { .soDiaChiDong { flex-direction: column; } .soDiaChiHanhDong { justify-content: flex-start; } .soDiaChiDau > .button { width: 100%; } .soDiaChiFormActions .button { flex: 1; } }

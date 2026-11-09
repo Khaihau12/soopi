@@ -94,10 +94,11 @@ async function run() {
   assert.equal((await DonHang.findOne({ giaoDichId: giaoDich._id })).tongThanhToan, 100000);
   assert.equal((await goi(`${dau}/san-pham/${sanPham._id}/trang-thai`, admin._id, 'PATCH', { trangThaiKinhDoanh: 'Đang kinh doanh' }))[0], 200);
   assert.equal((await goi('/san-pham', null))[1].data.phanTrang.tongSo, 1);
-  assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: '', hinhAnh: '/uploads/hop-le.png' }))[0], 400);
+  const anhKiemTra = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/v1/kiem-tra-f25.png`;
+  assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: '', hinhAnh: anhKiemTra }))[0], 400);
   assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: 'Sai', hinhAnh: 'javascript:alert(1)' }))[0], 400);
-  assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: 'Banner thiếu đích', hinhAnh: '/uploads/hop-le.png' }))[0], 400);
-  const [maTao, tao] = await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: ' Banner F25 ', hinhAnh: '/uploads/hop-le.png', danhMucId: danhMuc._id });
+  assert.equal((await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: 'Banner thiếu đích', hinhAnh: anhKiemTra }))[0], 400);
+  const [maTao, tao] = await goi(`${dau}/banner-quang-cao`, admin._id, 'POST', { tieuDe: ' Banner F25 ', hinhAnh: anhKiemTra, danhMucId: danhMuc._id });
   assert.equal(maTao, 201); assert.equal(tao.data.banner.tieuDe, 'Banner F25');
   assert.equal(String(tao.data.banner.danhMucId), String(danhMuc._id));
   const idBanner = tao.data.banner._id;

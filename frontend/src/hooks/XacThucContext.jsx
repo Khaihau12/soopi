@@ -54,9 +54,15 @@ export function XacThucProvider({ children }) {
     setTaiKhoan(null);
   }, []);
 
+  const lamMoiTaiKhoan = useCallback(async () => {
+    const { taiKhoan: moi } = await xacThucApi.layThongTinToi();
+    setTaiKhoan(moi);
+    return moi;
+  }, []);
+
   const coVaiTro = useCallback((vaiTro) => taiKhoan?.vaiTro?.includes(vaiTro) ?? false, [taiKhoan]);
 
-  return <XacThucContext.Provider value={{ taiKhoan, dangTai, dangNhap, dangXuat, capNhatTaiKhoan: setTaiKhoan, coVaiTro }}>
+  return <XacThucContext.Provider value={{ taiKhoan, dangTai, dangNhap, dangXuat, lamMoiTaiKhoan, capNhatTaiKhoan: setTaiKhoan, coVaiTro }}>
     {children}
   </XacThucContext.Provider>;
 }

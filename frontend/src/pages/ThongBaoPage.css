@@ -1,0 +1,14 @@
+.thongBaoPage { display: grid; gap: var(--kc5); min-width: 0; }
+.thongBaoCongCu { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--kc3); }
+.thongBaoTabs { display: flex; gap: var(--kc2); }
+.thongBaoTabs button { min-height: var(--chieuCaoCham); padding: var(--kc2) var(--kc3); border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocTron); background: var(--beMat); color: var(--chu); font: inherit; }
+.thongBaoTabs button[aria-pressed="true"] { border-color: var(--mauChinh); background: var(--mauChinhNhat); color: var(--mauChinhDam); font-weight: 600; }
+.thongBaoDanhSach { display: grid; gap: var(--kc2); }
+.thongBaoDong { display: grid; gap: var(--kc2); width: 100%; min-height: var(--chieuCaoCham); padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); color: var(--chu); text-align: left; font: inherit; cursor: pointer; }
+.thongBaoDong:hover { border-color: var(--mauChinh); }
+.thongBaoDongMoi { border-left: 4px solid var(--mauChinh); background: var(--mauChinhNhat); }
+.thongBaoDongDau { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--kc2); }
+.thongBaoDongDau strong { overflow-wrap: anywhere; }
+.thongBaoDongDau time, .thongBaoDongLoai, .thongBaoDongNoiDung { color: var(--chuPhu); font-size: .875rem; }
+.thongBaoDauMoi { margin-left: var(--kc2); color: var(--mauChinhDam); font-weight: 600; }
+.thongBaoDong:focus-visible, .thongBaoTabs button:focus-visible { outline: 2px solid var(--mauChinh); outline-offset: 2px; }

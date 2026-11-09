@@ -52,6 +52,7 @@ export default function ChiTietDonHangNguoiBanPage() {
         <div><dt>Họ tên</dt><dd>{donHang.nguoiMua.hoTen}</dd></div>
         <div><dt>Số điện thoại</dt><dd>{donHang.nguoiMua.soDienThoai || 'Chưa có'}</dd></div>
         <div><dt>Địa chỉ nhận hàng</dt><dd>{donHang.diaChiNhanHang}</dd></div>
+        {donHang.loiNhanChoCuaHang && <div className="donHangThongTinLoiNhan"><dt>Ghi chú của người mua</dt><dd>{donHang.loiNhanChoCuaHang}</dd></div>}
       </dl></section>
       <section className="donHangKhung"><h2>Sản phẩm</h2><div className="donHangChiTietSanPham">{donHang.danhSachChiTiet.map((dong) => {
         const anh = taoUrlAnh(dong.sanPham.hinhAnh?.[0]);

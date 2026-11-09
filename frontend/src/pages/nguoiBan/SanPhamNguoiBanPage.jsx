@@ -16,9 +16,10 @@ import Select from '../../components/ui/Select.jsx';
 import Skeleton from '../../components/ui/Skeleton.jsx';
 import useThongBao from '../../hooks/useThongBao.js';
 import { layDanhSachDanhMuc } from '../../services/danhMuc.api.js';
-import { nguoiBanLayDanhSachSanPham, nguoiBanCapNhatTonKho, nguoiBanXoaSanPham } from '../../services/sanPham.api.js';
+import { nguoiBanLayDanhSachSanPham, nguoiBanLayChiTietSanPham, nguoiBanCapNhatTonKho, nguoiBanXoaSanPham } from '../../services/sanPham.api.js';
 import { taoUrlAnh } from '../../utils/dinhDang.js';
 import { DUONG_DAN, TRANG_THAI_KINH_DOANH } from '../../utils/hangSo.js';
+import LichSuTonKhoModal from './LichSuTonKhoModal.jsx';
 import './SanPhamNguoiBanPage.css';
 
 export default function SanPhamNguoiBanPage() {
@@ -29,10 +30,13 @@ export default function SanPhamNguoiBanPage() {
   const [danhMuc, setDanhMuc] = useState([]);
   const [danhSach, setDanhSach] = useState([]);
   const [phanTrang, setPhanTrang] = useState({ trang: 1, tongTrang: 0 });
+  const [tongCanhBaoTon, setTongCanhBaoTon] = useState(null);
   const [dangTai, setDangTai] = useState(true);
   const [loiTai, setLoiTai] = useState('');
   const [sanPhamKho, setSanPhamKho] = useState(null);
   const [soLuongTon, setSoLuongTon] = useState('');
+  const [nguongCanhBaoTon, setNguongCanhBaoTon] = useState('5');
+  const [sanPhamLichSu, setSanPhamLichSu] = useState(null);
   const [loiKho, setLoiKho] = useState('');
   const [sanPhamXoa, setSanPhamXoa] = useState(null);
   const [loiXoa, setLoiXoa] = useState('');
@@ -42,8 +46,8 @@ export default function SanPhamNguoiBanPage() {
   const taiLai = async () => {
     setDangTai(true); setLoiTai('');
     try {
-      const { danhSach: moi, phanTrang: phanTrangMoi } = await nguoiBanLayDanhSachSanPham(Object.fromEntries(params));
-      setDanhSach(moi); setPhanTrang(phanTrangMoi);
+      const { danhSach: moi, phanTrang: phanTrangMoi, tongCanhBaoTon: tongCanhBao } = await nguoiBanLayDanhSachSanPham(Object.fromEntries(params));
+      setDanhSach(moi); setPhanTrang(phanTrangMoi); setTongCanhBaoTon(Number.isSafeInteger(tongCanhBao) ? tongCanhBao : null);
     } catch (loi) { setLoiTai(loi.message); }
     finally { setDangTai(false); }
   };
@@ -51,16 +55,24 @@ export default function SanPhamNguoiBanPage() {
   useEffect(() => { layDanhSachDanhMuc().then((duLieu) => setDanhMuc(duLieu.danhSach || [])).catch(() => {}); }, []);
   useEffect(() => { setTuKhoaNhap(params.get('tuKhoa') || ''); }, [params]);
 
-  const moKho = (sanPham) => { setSanPhamKho(sanPham); setSoLuongTon(String(sanPham.soLuongTon)); setLoiKho(''); };
+  const moKho = (sanPham) => { setSanPhamKho(sanPham); setSoLuongTon(String(sanPham.soLuongTon)); setNguongCanhBaoTon(String(sanPham.nguongCanhBaoTon ?? 5)); setLoiKho(''); };
   const luuKho = async (event) => {
     event.preventDefault();
     const so = Number(soLuongTon);
+    const nguong = Number(nguongCanhBaoTon);
     if (soLuongTon === '' || !Number.isSafeInteger(so) || so < 0) { setLoiKho('Số lượng tồn kho phải là số nguyên từ 0.'); return; }
+    if (nguongCanhBaoTon === '' || !Number.isSafeInteger(nguong) || nguong < 0 || nguong > 1000000) { setLoiKho('Ngưỡng cảnh báo phải là số nguyên từ 0 đến 1.000.000.'); return; }
     setDangGui(true); setLoiKho('');
     try {
-      await nguoiBanCapNhatTonKho(sanPhamKho._id, so);
+      await nguoiBanCapNhatTonKho(sanPhamKho._id, { soLuongTon: so, soLuongTonTruoc: sanPhamKho.soLuongTon, nguongCanhBaoTon: nguong });
       setSanPhamKho(null); thongBao.thanhCong('Cập nhật tồn kho thành công'); await taiLai();
-    } catch (loi) { setLoiKho(loi.message); }
+    } catch (loi) {
+      setLoiKho(loi.message);
+      if (loi.status === 409) {
+        try { const { sanPham } = await nguoiBanLayChiTietSanPham(sanPhamKho._id); setSanPhamKho(sanPham); }
+        catch { /* Giữ số lượng cũ để người bán thử tải lại trang. */ }
+      }
+    }
     finally { setDangGui(false); }
   };
   const xoa = async () => {
@@ -71,17 +83,21 @@ export default function SanPhamNguoiBanPage() {
     } catch (loi) { setLoiXoa(loi.message); }
     finally { setDangGui(false); }
   };
-  const coLoc = ['tuKhoa', 'trangThaiKinhDoanh', 'danhMucId'].some((ten) => params.get(ten));
+  const coLoc = ['tuKhoa', 'trangThaiKinhDoanh', 'danhMucId', 'canhBaoTon'].some((ten) => params.get(ten));
+  const chenhLech = soLuongTon !== '' && Number.isSafeInteger(Number(soLuongTon)) && sanPhamKho ? Number(soLuongTon) - sanPhamKho.soLuongTon : null;
   const cot = [
     { khoa: 'tenSanPham', tieuDe: 'Sản phẩm', render: (_, sanPham) => <div className="sanPhamBanTen">{taoUrlAnh(sanPham.hinhAnh?.[0]) ? <img src={taoUrlAnh(sanPham.hinhAnh[0])} alt="" /> : <span className="sanPhamBanAnhTrong">Chưa có ảnh</span>}<div><strong>{sanPham.tenSanPham}</strong><small>{sanPham.danhMuc?.tenDanhMuc || 'Chưa có danh mục'}</small></div></div> },
     { khoa: 'giaGoc', tieuDe: 'Giá', render: (_, sanPham) => <GiaTien giaGoc={sanPham.giaGoc} giaBanThucTe={sanPham.giaBanThucTe} kichThuoc="nho" /> },
-    { khoa: 'soLuongTon', tieuDe: 'Tồn kho', render: (_, sanPham) => <div className="sanPhamBanKho"><span>{sanPham.soLuongTon}{sanPham.soLuongTon === 0 && <small>Hết hàng</small>}</span><Button variant="ghost" size="sm" onClick={() => moKho(sanPham)}>Cập nhật</Button></div> },
+    { khoa: 'soLuongTon', tieuDe: 'Tồn kho', render: (_, sanPham) => <div className="sanPhamBanKho"><strong>{sanPham.soLuongTon}</strong>{sanPham.trangThaiKinhDoanh === TRANG_THAI_KINH_DOANH.DANG_KINH_DOANH && sanPham.soLuongTon <= (sanPham.nguongCanhBaoTon ?? 5) && <span className="sanPhamBanCanhBao">{sanPham.soLuongTon === 0 ? 'Hết hàng' : 'Sắp hết'}</span>}<div className="sanPhamBanKhoActions"><Button variant="ghost" size="sm" onClick={() => moKho(sanPham)}>Cập nhật</Button><Button variant="ghost" size="sm" onClick={() => setSanPhamLichSu(sanPham)}>Lịch sử</Button></div></div> },
     { khoa: 'trangThaiKinhDoanh', tieuDe: 'Trạng thái', render: (giaTri) => <TrangThaiBadge trangThai={giaTri} /> },
     { khoa: 'thaoTac', tieuDe: 'Thao tác', render: (_, sanPham) => <div className="sanPhamBanActions"><Button variant="ghost" size="sm" to={`${DUONG_DAN.NGUOI_BAN.DANH_GIA}?sanPhamId=${sanPham._id}`}>Xem đánh giá</Button><Button variant="ghost" size="sm" to={DUONG_DAN.NGUOI_BAN.suaSanPham(sanPham._id)}>Sửa</Button><Button variant="danger" size="sm" onClick={() => { setSanPhamXoa(sanPham); setLoiXoa(''); }}>Xóa</Button></div> },
   ];
 
   return <div className="sanPhamBanPage">
     <PageHeader title="Sản phẩm" description="Quản lý sản phẩm, giá và tồn kho của cửa hàng bạn." actions={<Button to={DUONG_DAN.NGUOI_BAN.THEM_SAN_PHAM}>Thêm sản phẩm</Button>} />
+    {!dangTai && !loiTai && tongCanhBaoTon !== null && <button type="button" className={'sanPhamBanTomTatKho' + (params.get('canhBaoTon') ? ' sanPhamBanTomTatKhoActive' : '') + (tongCanhBaoTon ? ' sanPhamBanCoCanhBao' : '')} aria-pressed={Boolean(params.get('canhBaoTon'))} onClick={() => doiLoc('canhBaoTon', params.get('canhBaoTon') ? '' : '1')}>
+      <strong>{tongCanhBaoTon ? `${tongCanhBaoTon} sản phẩm cần nhập thêm` : 'Tồn kho ổn định'}</strong><span>{params.get('canhBaoTon') ? 'Đang lọc · Bấm để bỏ lọc tồn kho' : tongCanhBaoTon ? 'Bấm để xem sản phẩm đã chạm ngưỡng cảnh báo' : 'Chưa có sản phẩm đang bán nào chạm ngưỡng cảnh báo'}</span>
+    </button>}
     <form className="sanPhamBanFilters" onSubmit={(event) => { event.preventDefault(); doiLoc('tuKhoa', tuKhoaNhap.trim()); }}>
       <Field label="Tìm theo tên"><Input value={tuKhoaNhap} maxLength={100} onChange={(event) => setTuKhoaNhap(event.target.value)} placeholder="Tên sản phẩm" /></Field>
       <Button type="submit" variant="secondary">Tìm</Button>
@@ -90,7 +106,15 @@ export default function SanPhamNguoiBanPage() {
       {coLoc && <Button variant="ghost" onClick={() => setParams(new URLSearchParams())}>Xóa bộ lọc</Button>}
     </form>
     {dangTai ? <Skeleton variant="block" count={3} /> : loiTai ? <ErrorState message={loiTai} taiLai={taiLai} /> : !danhSach.length ? <EmptyState title={coLoc ? 'Không có sản phẩm phù hợp' : 'Cửa hàng chưa có sản phẩm'} description={coLoc ? 'Thử thay đổi hoặc xóa bộ lọc.' : 'Thêm sản phẩm đầu tiên để bắt đầu bán hàng.'} actionLabel={coLoc ? 'Xóa bộ lọc' : 'Thêm sản phẩm'} onAction={coLoc ? () => setParams(new URLSearchParams()) : () => navigate(DUONG_DAN.NGUOI_BAN.THEM_SAN_PHAM)} /> : <><DataTable cot={cot} hang={danhSach} khoaHang="_id" /><Pagination trang={phanTrang.trang} tongTrang={phanTrang.tongTrang} onChange={(trang) => { const moi = new URLSearchParams(params); moi.set('trang', trang); setParams(moi); }} /></>}
-    <Modal open={Boolean(sanPhamKho)} onClose={dangGui ? undefined : () => setSanPhamKho(null)} title="Cập nhật tồn kho"><form className="sanPhamBanModal" onSubmit={luuKho}><p>{sanPhamKho?.tenSanPham}</p><Field label="Số lượng tồn kho" required error={loiKho}><Input type="number" min="0" step="1" value={soLuongTon} onChange={(event) => { setSoLuongTon(event.target.value); setLoiKho(''); }} /></Field><div><Button variant="secondary" onClick={() => setSanPhamKho(null)} disabled={dangGui}>Hủy</Button><Button type="submit" loading={dangGui}>Lưu</Button></div></form></Modal>
+    <Modal open={Boolean(sanPhamKho)} onClose={dangGui ? undefined : () => setSanPhamKho(null)} title="Cập nhật tồn kho"><form className="sanPhamBanModal" onSubmit={luuKho}>
+      <strong>{sanPhamKho?.tenSanPham}</strong>
+      <p className="sanPhamBanGhiChu">Hiện có {sanPhamKho?.soLuongTon} sản phẩm. Số lượng thay đổi sẽ được ghi vào lịch sử.</p>
+      <Field label="Số lượng tồn kho" required error={loiKho}><Input type="number" min="0" step="1" value={soLuongTon} onChange={(event) => { setSoLuongTon(event.target.value); setLoiKho(''); }} /></Field>
+      {chenhLech !== null && <p className="sanPhamBanChenhLech">{chenhLech > 0 ? `Nhập thêm ${chenhLech}` : chenhLech < 0 ? `Giảm ${Math.abs(chenhLech)}` : 'Số lượng không đổi'}</p>}
+      <Field label="Cảnh báo khi tồn kho từ mức này trở xuống" hint="Đặt 0 nếu chỉ muốn cảnh báo khi hết hàng."><Input type="number" min="0" max="1000000" step="1" value={nguongCanhBaoTon} onChange={(event) => { setNguongCanhBaoTon(event.target.value); setLoiKho(''); }} /></Field>
+      <div><Button variant="secondary" onClick={() => setSanPhamKho(null)} disabled={dangGui}>Hủy</Button><Button type="submit" loading={dangGui}>Lưu</Button></div>
+    </form></Modal>
+    {sanPhamLichSu && <LichSuTonKhoModal sanPham={sanPhamLichSu} onClose={() => setSanPhamLichSu(null)} />}
     <ConfirmDialog open={Boolean(sanPhamXoa)} onClose={() => setSanPhamXoa(null)} onConfirm={xoa} title="Xóa sản phẩm" message={loiXoa || `Xóa “${sanPhamXoa?.tenSanPham}”? Nếu đã phát sinh dữ liệu, sản phẩm sẽ chuyển sang Ngừng kinh doanh.`} confirmLabel="Xóa sản phẩm" danger loading={dangGui} />
   </div>;
 }

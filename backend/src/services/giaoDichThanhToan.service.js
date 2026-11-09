@@ -14,6 +14,21 @@ const { PHUONG_THUC_THANH_TOAN, TRANG_THAI_GIAO_DICH, TRANG_THAI_THANH_TOAN_DON,
 const { SO_TIEN_VNPAY_TOI_THIEU, THOI_HAN_THANH_TOAN_GIO, THOI_GIAN_GIA_HAN_PHUT, TIEN_TO_MA_GIAO_DICH } = require('../constants/cauHinh.constant');
 const { dinhDangGioVietNam, taoDuongDanThanhToan, xacThucChuKy } = require('../utils/vnpay');
 const { taoLoi } = require('../utils/taoLoi');
+const { taoThongBao } = require('./thongBao.service');
+const { taoCapNhatBienDong } = require('./tonKho.service');
+const { LOAI_BIEN_DONG_TON_KHO } = require('../constants/tonKho.constant');
+
+const baoKetQuaGiaoDich = async (giaoDichId, trangThai) => {
+  const danhSachDon = await DonHang.find({ giaoDichId }).select('_id taiKhoanId').lean();
+  for (const don of danhSachDon) {
+    await taoThongBao({ taiKhoanId: don.taiKhoanId, loai: 'Đơn hàng',
+      tieuDe: trangThai === 'Đã thanh toán' ? 'Thanh toán đơn hàng thành công' : `Đơn hàng ${trangThai.toLocaleLowerCase('vi')}`,
+      noiDung: trangThai === 'Đã thanh toán' ? 'Đơn đã thanh toán. Người bán sẽ tiếp tục xử lý đơn hàng.'
+        : `Giao dịch ${trangThai.toLocaleLowerCase('vi')}; đơn hàng đã hủy và tồn kho được hoàn lại.`,
+      duongDan: `/don-hang/${don._id}`,
+      maSuKien: `don-hang:${don._id}:${trangThai === 'Đã thanh toán' ? 'da-thanh-toan' : 'da-huy'}` });
+  }
+};
 
 const taoMaGiaoDich = () => `${TIEN_TO_MA_GIAO_DICH}${dinhDangGioVietNam(new Date())}${crypto.randomInt(0, 1000000).toString().padStart(6, '0')}`;
 
@@ -84,7 +99,8 @@ const huyGiaoDichVaHoanKho = async (giaoDich, lyDo) => {
     const chiTiet = await ChiTietDonHang.find({ donHangId: don._id }).select('sanPhamId soLuong').lean();
     if (chiTiet.length) {
       await SanPham.bulkWrite(chiTiet.map((dong) => ({
-        updateOne: { filter: { _id: dong.sanPhamId }, update: { $inc: { soLuongTon: dong.soLuong } } },
+        updateOne: { filter: { _id: dong.sanPhamId },
+          update: taoCapNhatBienDong(dong.soLuong, LOAI_BIEN_DONG_TON_KHO.HOAN_KHO, { donHangId: don._id }) },
       })));
     }
   }
@@ -92,6 +108,7 @@ const huyGiaoDichVaHoanKho = async (giaoDich, lyDo) => {
   for (const voucherId of voucherIds) {
     await Voucher.updateOne({ _id: voucherId }, { $inc: { soLuong: 1 } });
   }
+  await baoKetQuaGiaoDich(giaoDich._id, lyDo);
 };
 
 const xuLyKetQuaVnpay = async (query) => {
@@ -129,6 +146,7 @@ const xuLyKetQuaVnpay = async (query) => {
       { giaoDichId: giaoDich._id },
       { $set: { trangThaiThanhToan: TRANG_THAI_THANH_TOAN_DON.DA_THANH_TOAN } },
     );
+    await baoKetQuaGiaoDich(giaoDich._id, 'Đã thanh toán');
   } else {
     await huyGiaoDichVaHoanKho(giaoDich, TRANG_THAI_GIAO_DICH.THAT_BAI);
   }

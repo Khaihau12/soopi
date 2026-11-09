@@ -83,7 +83,7 @@ async function run() {
   assert.equal(ketQua.data.phanTrang.tongSo, 2);
   assert.equal(ketQua.data.thongKe.diemTrungBinh, 4.5);
   assert.deepEqual(ketQua.data.thongKe.phanBoSao, { 1: 0, 2: 0, 3: 0, 4: 1, 5: 1 });
-  assert.deepEqual(Object.keys(ketQua.data.danhSach[0]).sort(), ['_id', 'ngayDanhGia', 'noiDung', 'soSao', 'taiKhoan'].sort());
+  assert.deepEqual(Object.keys(ketQua.data.danhSach[0]).sort(), ['_id', 'ngayDanhGia', 'noiDung', 'soSao', 'taiKhoan', 'phanHoiNguoiBan', 'ngayPhanHoi'].sort());
   assert.deepEqual(Object.keys(ketQua.data.danhSach[0].taiKhoan), ['hoTen']);
   assert.ok(!JSON.stringify(ketQua).includes('f21-mua@example.com'));
   assert.ok(!JSON.stringify(ketQua).includes('0901234567'));

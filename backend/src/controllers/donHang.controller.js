@@ -28,6 +28,12 @@ const layChiTietDonHangCuaToi = async (req, res, next) => {
   } catch (loi) { next(loi); }
 };
 
+const muaLaiDonHang = async (req, res, next) => {
+  try { const data = await service.muaLaiDonHang(req.taiKhoan._id, req.params.id);
+    res.json({ success: true, message: data.daThem.length ? 'Đã thêm sản phẩm còn mua được vào giỏ hàng' : 'Không có sản phẩm nào có thể thêm vào giỏ', data }); }
+  catch (loi) { next(loi); }
+};
+
 const huyDonHangCuaToi = async (req, res, next) => {
   try {
     const data = await service.huyDonHangCuaToi(req.taiKhoan._id, req.params.id);
@@ -56,5 +62,5 @@ const capNhatTrangThaiXuLyDonHang = async (req, res, next) => {
   } catch (loi) { next(loi); }
 };
 
-module.exports = { xemTruocDonHang, datHang, layDanhSachDonHangCuaToi, layChiTietDonHangCuaToi, huyDonHangCuaToi,
+module.exports = { xemTruocDonHang, datHang, layDanhSachDonHangCuaToi, layChiTietDonHangCuaToi, muaLaiDonHang, huyDonHangCuaToi,
   nguoiBanLayDanhSachDonHang, nguoiBanLayChiTietDonHang, capNhatTrangThaiXuLyDonHang };

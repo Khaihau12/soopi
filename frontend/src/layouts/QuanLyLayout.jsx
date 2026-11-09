@@ -8,6 +8,7 @@ import { useXacThuc } from '../hooks/XacThucContext.jsx';
 import useThongBao from '../hooks/useThongBao.js';
 import DoiMatKhauForm from '../components/DoiMatKhauForm.jsx';
 import Skeleton from '../components/ui/Skeleton.jsx';
+import NutThongBao from '../components/NutThongBao.jsx';
 import './QuanLyLayout.css';
 
 const FOCUS = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -20,6 +21,7 @@ export default function QuanLyLayout({ tieuDe, menu, veMuaSam = false, noiDungSi
   const { taiKhoan, dangXuat } = useXacThuc();
   const thongBao = useThongBao();
   const navigate = useNavigate();
+  const duongDanThongBao = veMuaSam ? DUONG_DAN.NGUOI_BAN.THONG_BAO : DUONG_DAN.QUAN_TRI_VIEN.THONG_BAO;
 
   const xuLyDangXuat = async () => {
     try { await dangXuat(); navigate(DUONG_DAN.TRANG_CHU); }
@@ -48,5 +50,5 @@ export default function QuanLyLayout({ tieuDe, menu, veMuaSam = false, noiDungSi
 
   const sidebar = <aside ref={sidebarRef} className={'quanLySidebar' + (mo ? ' quanLySidebarOpen' : '')} aria-label={'Điều hướng ' + tieuDe}><div className="quanLyBrand"><Link to={menu[0].duongDan} onClick={() => setMo(false)}><img src="/logo-soopi.svg" alt="Soopi" /></Link><span>{tieuDe}</span><button type="button" className="quanLyClose" aria-label="Đóng menu" onClick={() => setMo(false)}><Icon name="close" /></button></div>{noiDungSidebar}<nav aria-label={'Menu ' + tieuDe}>{menu.map((muc) => <NavLink key={muc.duongDan} to={muc.duongDan} end={muc.duongDan === menu[0].duongDan} onClick={() => setMo(false)} className={({ isActive }) => 'quanLyLink' + (isActive ? ' quanLyLinkActive' : '')}><Icon name={muc.bieuTuong} /><span>{muc.nhan}</span></NavLink>)}</nav>{veMuaSam && <Link className="quanLyVeMuaSam" to={DUONG_DAN.TRANG_CHU} onClick={() => setMo(false)}>Về trang mua sắm</Link>}</aside>;
 
-  return <div className="quanLyLayout">{mo && <button type="button" className="quanLyBackdrop" aria-label="Đóng menu" onClick={() => setMo(false)} />}{sidebar}<div className="quanLyMain"><header className="quanLyTopbar"><button ref={nutMoRef} className="quanLyMenuButton" type="button" aria-label="Mở menu" aria-expanded={mo} onClick={() => setMo(true)}><Icon name="menu" /></button><span>{tieuDe}</span><div className="quanLyTopbarAccount"><DropdownMenu label={<><Avatar hoTen={taiKhoan?.hoTen || ''} /><span>{taiKhoan?.hoTen}</span></>}><button role="menuitem" type="button" onClick={() => setMoDoiMatKhau(true)}>Đổi mật khẩu</button><button role="menuitem" type="button" onClick={xuLyDangXuat}>Đăng xuất</button></DropdownMenu></div></header>{canhBao}<main className="quanLyContent"><Suspense fallback={<Skeleton variant="block" count={2} />}><Outlet context={outletContext} /></Suspense></main></div><DoiMatKhauForm open={moDoiMatKhau} onClose={() => setMoDoiMatKhau(false)} /></div>;
+  return <div className="quanLyLayout">{mo && <button type="button" className="quanLyBackdrop" aria-label="Đóng menu" onClick={() => setMo(false)} />}{sidebar}<div className="quanLyMain"><header className="quanLyTopbar"><button ref={nutMoRef} className="quanLyMenuButton" type="button" aria-label="Mở menu" aria-expanded={mo} onClick={() => setMo(true)}><Icon name="menu" /></button><span>{tieuDe}</span><div className="quanLyTopbarAccount"><NutThongBao to={duongDanThongBao} /><DropdownMenu label={<><Avatar hoTen={taiKhoan?.hoTen || ''} /><span>{taiKhoan?.hoTen}</span></>}><button role="menuitem" type="button" onClick={() => setMoDoiMatKhau(true)}>Đổi mật khẩu</button><button role="menuitem" type="button" onClick={xuLyDangXuat}>Đăng xuất</button></DropdownMenu></div></header>{canhBao}<main className="quanLyContent"><Suspense fallback={<Skeleton variant="block" count={2} />}><Outlet context={outletContext} /></Suspense></main></div><DoiMatKhauForm open={moDoiMatKhau} onClose={() => setMoDoiMatKhau(false)} /></div>;
 }

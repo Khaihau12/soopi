@@ -6,5 +6,6 @@ const router = express.Router();
 router.use(...batBuocNguoiBan);
 router.get('/san-pham', controller.nguoiBanLayDanhSachSanPhamDanhGia);
 router.get('/', controller.nguoiBanLayDanhSachDanhGia);
+router.post('/:id/phan-hoi', controller.nguoiBanPhanHoiDanhGia);
 
 module.exports = router;

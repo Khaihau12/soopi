@@ -12,7 +12,10 @@ const GiaoDichThanhToan = require('../models/giaoDichThanhToan.model');
 const DanhGia = require('../models/danhGia.model');
 const YeuCauDoiTraKhieuNai = require('../models/yeuCauDoiTraKhieuNai.model');
 const { taoGiaoDich, huyGiaoDichVaHoanKho } = require('./giaoDichThanhToan.service');
-const { dungTrangThaiGioHang } = require('./gioHang.service');
+const { dungTrangThaiGioHang, themSanPhamVaoGio, chonDongGio } = require('./gioHang.service');
+const { taoThongBao } = require('./thongBao.service');
+const { taoCapNhatBienDong } = require('./tonKho.service');
+const { LOAI_BIEN_DONG_TON_KHO } = require('../constants/tonKho.constant');
 const { kiemTraDieuKienVoucher, tinhMucGiamVoucher } = require('./voucher.service');
 const { phanBoTheoTyLe } = require('../utils/phanBoTheoTyLe');
 const { taoLoi } = require('../utils/taoLoi');
@@ -55,11 +58,25 @@ const goiYVoucherChoGioHang = async (danhSachDonHang, tongTienHangToanBo, thoiDi
   });
 };
 
-const tinhToanDonHang = async (taiKhoan, { diaChiNhanHang, danhSachMaVoucher = [], phuongThucThanhToan = PHUONG_THUC_THANH_TOAN.VNPAY } = {}) => {
+const tinhToanDonHang = async (taiKhoan, { diaChiNhanHang, danhSachMaVoucher = [], phuongThucThanhToan = PHUONG_THUC_THANH_TOAN.VNPAY, loiNhanTheoCuaHang = {} } = {}) => {
   if (!Object.values(PHUONG_THUC_THANH_TOAN).includes(phuongThucThanhToan)) throw taoLoi(400, 'Phương thức thanh toán không hợp lệ; vui lòng chọn VNPay hoặc COD');
   if (diaChiNhanHang !== undefined && diaChiNhanHang !== null && typeof diaChiNhanHang !== 'string') throw taoLoi(400, 'Địa chỉ nhận hàng phải là chuỗi');
   const diaChi = (diaChiNhanHang ?? taiKhoan.diaChiNhanHang ?? '').trim();
   if (diaChi.length > DO_DAI_TOI_DA.DIA_CHI) throw taoLoi(400, `Địa chỉ nhận hàng không được quá ${DO_DAI_TOI_DA.DIA_CHI} ký tự`);
+  if (!loiNhanTheoCuaHang || typeof loiNhanTheoCuaHang !== 'object' || Array.isArray(loiNhanTheoCuaHang)) {
+    throw taoLoi(400, 'Danh sách lời nhắn cho cửa hàng không hợp lệ');
+  }
+  const loiNhanDaChuanHoa = new Map();
+  for (const [cuaHangId, loiNhan] of Object.entries(loiNhanTheoCuaHang)) {
+    if (!mongoose.isValidObjectId(cuaHangId) || typeof loiNhan !== 'string') {
+      throw taoLoi(400, 'Lời nhắn cho cửa hàng không hợp lệ');
+    }
+    const noiDung = loiNhan.trim();
+    if (noiDung.length > DO_DAI_TOI_DA.LOI_NHAN_CHO_CUA_HANG) {
+      throw taoLoi(400, `Lời nhắn cho cửa hàng không được quá ${DO_DAI_TOI_DA.LOI_NHAN_CHO_CUA_HANG} ký tự`);
+    }
+    loiNhanDaChuanHoa.set(cuaHangId.toLowerCase(), noiDung);
+  }
   if (!Array.isArray(danhSachMaVoucher) || danhSachMaVoucher.some((ma) => typeof ma !== 'string' || ma.trim().length > 100)) {
     throw taoLoi(400, 'Danh sách mã voucher không hợp lệ');
   }
@@ -80,6 +97,7 @@ const tinhToanDonHang = async (taiKhoan, { diaChiNhanHang, danhSachMaVoucher = [
     const id = String(dong.cuaHang._id);
     if (!theoCuaHang.has(id)) theoCuaHang.set(id, {
       cuaHang: { _id: dong.cuaHang._id, tenCuaHang: dong.cuaHang.tenCuaHang },
+      loiNhanChoCuaHang: loiNhanDaChuanHoa.get(id) || '',
       danhSachSanPham: [], tongTienHang: 0, phiVanChuyen: PHI_VAN_CHUYEN_MAC_DINH,
       giamVoucherCuaHang: 0, giamVoucherToanSan: 0, tongGiamVoucher: 0,
       giamPhiVanChuyen: 0, tongThanhToan: 0, tuDongDaThanhToan: false, voucherApDung: [],
@@ -185,7 +203,10 @@ const hoanTacTaoDon = async ({ daTruKho, daTruVoucher, giaoDichIds, donHangIds, 
   await thu(() => DonHang.deleteMany({ _id: { $in: donHangIds } }));
   await thu(() => GiaoDichThanhToan.deleteMany({ _id: { $in: giaoDichIds } }));
   for (const voucherId of daTruVoucher) await thu(() => Voucher.updateOne({ _id: voucherId }, { $inc: { soLuong: 1 } }));
-  for (const { sanPhamId, soLuong } of daTruKho) await thu(() => SanPham.updateOne({ _id: sanPhamId }, { $inc: { soLuongTon: soLuong } }));
+  for (const { sanPhamId, soLuong, donHangId } of daTruKho) {
+    await thu(() => SanPham.updateOne({ _id: sanPhamId },
+      taoCapNhatBienDong(soLuong, LOAI_BIEN_DONG_TON_KHO.HOAN_TAC_DAT_HANG, { donHangId })));
+  }
   if (dongGioDaChon.length) {
     for (const dong of dongGioDaChon) {
       await thu(() => ChiTietGioHang.updateOne({ _id: dong._id }, { $setOnInsert: dong }, { upsert: true }));
@@ -220,17 +241,20 @@ const datHang = async (taiKhoan, body = {}) => {
     return !dong || dong.soLuong !== item.soLuong || String(dong.sanPhamId) !== String(item.sanPham._id);
   }))) throw taoLoi(409, 'Giỏ hàng vừa thay đổi. Vui lòng xem lại đơn hàng');
   const daTruKho = []; const daTruVoucher = []; const giaoDichIds = []; const donHangIds = [];
+  const idDonTheoCuaHang = new Map(danhSachDonHang.map((don) =>
+    [String(don.cuaHang._id), new mongoose.Types.ObjectId()]));
   const hoanTac = () => hoanTacTaoDon({ daTruKho, daTruVoucher, giaoDichIds, donHangIds, taiKhoanId: taiKhoan._id, dongGioDaChon });
   try {
     for (const don of danhSachDonHang) {
+      const donHangId = idDonTheoCuaHang.get(String(don.cuaHang._id));
       const shop = await CuaHang.findOne({ _id: don.cuaHang._id, trangThaiHoatDong: TRANG_THAI_HOAT_DONG_CUA_HANG.HOAT_DONG }).lean();
       if (!shop) throw taoLoi(409, `Cửa hàng ${don.cuaHang.tenCuaHang} đã ngừng hoạt động. Vui lòng xem lại giỏ hàng`);
       for (const item of don.danhSachSanPham) {
         const ketQua = await SanPham.updateOne({ _id: item.sanPham._id, cuaHangId: don.cuaHang._id,
           trangThaiKinhDoanh: TRANG_THAI_KINH_DOANH.DANG_KINH_DOANH, soLuongTon: { $gte: item.soLuong } },
-        { $inc: { soLuongTon: -item.soLuong } });
+        taoCapNhatBienDong(-item.soLuong, LOAI_BIEN_DONG_TON_KHO.DAT_HANG, { donHangId }));
         if (ketQua.modifiedCount !== 1) throw taoLoi(409, `Sản phẩm '${item.sanPham.tenSanPham}' không đủ số lượng hoặc đã ngừng bán. Vui lòng điều chỉnh giỏ hàng`);
-        daTruKho.push({ sanPhamId: item.sanPham._id, soLuong: item.soLuong });
+        daTruKho.push({ sanPhamId: item.sanPham._id, soLuong: item.soLuong, donHangId });
       }
     }
     const cacMaVoucher = [...new Set((body.danhSachMaVoucher || []).map((ma) => ma.trim().toUpperCase()))];
@@ -259,7 +283,9 @@ const datHang = async (taiKhoan, body = {}) => {
       const giaoDich = giaoDichChung || await taoMotGiaoDich(don.tongThanhToan);
       if (!giaoDichChung) danhSachGiaoDich.push(giaoDich);
       const banGhi = await DonHang.create({
-        diaChiNhanHang, tongTienHang: don.tongTienHang, tongGiamVoucher: don.tongGiamVoucher,
+        _id: idDonTheoCuaHang.get(String(don.cuaHang._id)),
+        diaChiNhanHang, loiNhanChoCuaHang: don.loiNhanChoCuaHang,
+        tongTienHang: don.tongTienHang, tongGiamVoucher: don.tongGiamVoucher,
         phiVanChuyen: don.phiVanChuyen, giamPhiVanChuyen: don.giamPhiVanChuyen,
         tongThanhToan: don.tongThanhToan, phuongThucThanhToan,
         trangThaiThanhToan: don.tuDongDaThanhToan ? TRANG_THAI_THANH_TOAN_DON.DA_THANH_TOAN : TRANG_THAI_THANH_TOAN_DON.CHO_THANH_TOAN,
@@ -325,7 +351,8 @@ const canHoanTienThuCong = (donHang) => Boolean(
 const hoanTonKhoTheoDonHang = async (donHangId) => {
   const chiTiet = await ChiTietDonHang.find({ donHangId }).select('sanPhamId soLuong').lean();
   if (chiTiet.length) await SanPham.bulkWrite(chiTiet.map((dong) => ({
-    updateOne: { filter: { _id: dong.sanPhamId }, update: { $inc: { soLuongTon: dong.soLuong } } },
+    updateOne: { filter: { _id: dong.sanPhamId },
+      update: taoCapNhatBienDong(dong.soLuong, LOAI_BIEN_DONG_TON_KHO.HOAN_KHO, { donHangId }) },
   })));
 };
 
@@ -391,6 +418,9 @@ const huyDonHangCuaToi = async (taiKhoanId, id) => {
     throw taoLoi(500, 'Hủy đơn chưa hoàn tất đồng bộ. Vui lòng liên hệ Quản trị viên để kiểm tra.');
   }
   const chiTiet = await layChiTietDonHangCuaToi(taiKhoanId, id);
+  await taoThongBao({ taiKhoanId, loai: 'Đơn hàng', tieuDe: 'Đơn hàng đã hủy',
+    noiDung: `Đơn hàng ${id} đã hủy. ${thongBao}`,
+    duongDan: `/don-hang/${id}`, maSuKien: `don-hang:${id}:da-huy` });
   return { donHang: chiTiet, ketQua: { kieuHuy, soDonBiHuy,
     canHoanTienThuCong: chiTiet.canHoanTienThuCong, thongBao } };
 };
@@ -500,7 +530,8 @@ const dungChiTietDonHang = async (donHang) => {
     ? await DonHang.countDocuments({ giaoDichId: donHang.giaoDichId }) : 1;
   return {
     _id: donHang._id, ngayTao: donHang.ngayTao, ngayHoanThanh: donHang.ngayHoanThanh || null,
-    diaChiNhanHang: donHang.diaChiNhanHang, tongTienHang: donHang.tongTienHang,
+    diaChiNhanHang: donHang.diaChiNhanHang, loiNhanChoCuaHang: donHang.loiNhanChoCuaHang || '',
+    tongTienHang: donHang.tongTienHang,
     tongGiamVoucher: donHang.tongGiamVoucher, phiVanChuyen: donHang.phiVanChuyen,
     giamPhiVanChuyen: donHang.giamPhiVanChuyen, tongThanhToan: donHang.tongThanhToan,
     phuongThucThanhToan: donHang.phuongThucThanhToan,
@@ -536,6 +567,38 @@ const layChiTietDonHangCuaToi = async (taiKhoanId, id) => {
   const donHang = await DonHang.findOne({ _id: id, taiKhoanId }).lean();
   if (!donHang) throw taoLoi(404, 'Không tìm thấy đơn hàng');
   return dungChiTietDonHang(donHang);
+};
+
+const muaLaiDonHang = async (taiKhoanId, id) => {
+  if (!mongoose.isValidObjectId(id)) throw taoLoi(404, 'Không tìm thấy đơn hàng');
+  const donHang = await DonHang.findOne({ _id: id, taiKhoanId }).lean();
+  if (!donHang) throw taoLoi(404, 'Không tìm thấy đơn hàng');
+  if (![TRANG_THAI_XU_LY.HOAN_THANH, TRANG_THAI_XU_LY.DA_HUY].includes(donHang.trangThaiXuLy)) {
+    throw taoLoi(409, 'Chỉ có thể mua lại đơn đã hoàn thành hoặc đã hủy');
+  }
+  const cacDong = await ChiTietDonHang.find({ donHangId: id }).select('sanPhamId soLuong').lean();
+  const cacSanPham = await SanPham.find({ _id: { $in: cacDong.map((dong) => dong.sanPhamId) } })
+    .select('_id tenSanPham').lean();
+  const theoId = new Map(cacSanPham.map((sanPham) => [String(sanPham._id), sanPham]));
+  const daThem = [];
+  const boQua = [];
+  const dongGioDaThem = [];
+  for (const dong of cacDong) {
+    const sanPham = theoId.get(String(dong.sanPhamId));
+    const tenSanPham = sanPham?.tenSanPham || 'Sản phẩm không còn hiển thị';
+    if (!sanPham) { boQua.push({ tenSanPham, lyDo: 'Sản phẩm không còn tồn tại' }); continue; }
+    try {
+      const gioHang = await themSanPhamVaoGio(taiKhoanId, { sanPhamId: sanPham._id, soLuong: dong.soLuong });
+      const dongMoi = gioHang.danhSach.find((item) => String(item.sanPham._id) === String(sanPham._id));
+      if (dongMoi) dongGioDaThem.push(dongMoi._id);
+      daThem.push({ tenSanPham, soLuong: dong.soLuong });
+    } catch (loi) {
+      if (![404, 409].includes(loi.statusCode)) throw loi;
+      boQua.push({ tenSanPham, lyDo: loi.message });
+    }
+  }
+  if (dongGioDaThem.length) await chonDongGio(taiKhoanId, { duocChon: true, chiTietGioHangIds: dongGioDaThem });
+  return { daThem, boQua };
 };
 
 const trangThaiTiepTheo = (donHang) => {
@@ -637,6 +700,10 @@ const capNhatTrangThaiXuLyDonHang = async (cuaHang, id, trangThaiMoi) => {
     ],
   }, { $set: capNhat }, { returnDocument: 'after' }).lean();
   if (!daCapNhat) throw taoLoi(409, 'Trạng thái đơn vừa thay đổi, vui lòng tải lại');
+  await taoThongBao({ taiKhoanId: daCapNhat.taiKhoanId, loai: 'Đơn hàng',
+    tieuDe: `Đơn hàng ${trangThaiMoi.toLocaleLowerCase('vi')}`,
+    noiDung: `Người bán đã cập nhật đơn hàng của bạn sang trạng thái ${trangThaiMoi}.`,
+    duongDan: `/don-hang/${id}`, maSuKien: `don-hang:${id}:xu-ly:${trangThaiMoi}` });
   if (thuTienCod) {
     const dongBo = () => GiaoDichThanhToan.findOneAndUpdate({ _id: donHang.giaoDichId,
       phuongThucThanhToan: PHUONG_THUC_THANH_TOAN.COD,
@@ -651,5 +718,6 @@ const capNhatTrangThaiXuLyDonHang = async (cuaHang, id, trangThaiMoi) => {
 
 module.exports = { xemTruocDonHang, tinhToanDonHang, goiYVoucherChoGioHang, datHang, hoanTacTaoDon,
   tinhHanGuiYeuCau, dungChiTietDonHang, layDanhSachDonHangCuaToi, layChiTietDonHangCuaToi,
+  muaLaiDonHang,
   huyDonHangCuaToi, hoanTonKhoTheoDonHang,
   nguoiBanLayDanhSachDonHang, nguoiBanLayChiTietDonHang, capNhatTrangThaiXuLyDonHang };

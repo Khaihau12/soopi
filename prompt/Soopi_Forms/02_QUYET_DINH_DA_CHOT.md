@@ -181,7 +181,8 @@
 
 ### QĐ-21 — Tìm kiếm và lọc sản phẩm
 - **Nguồn:** Bảng 3.4; chỉ mục Text trên `tenSanPham` (Bảng 3.45).
-- **Quyết định:** Hỗ trợ `tuKhoa` (dùng `$text`; nếu không ra kết quả thì thử lại bằng regex đã **escape**, không dùng input thô làm regex), lọc `danhMucId`, lọc theo chương trình khuyến mãi, sắp xếp mới nhất. **Chưa làm** lọc/sắp xếp theo khoảng giá (giá hiển thị là giá sau khuyến mãi tính động nên không lọc/sắp xếp chính xác bằng truy vấn đơn giản) — ghi nhận hướng phát triển.
+- **Quyết định:** Hỗ trợ `tuKhoa` (dùng `$text`; nếu không ra kết quả thì thử lại bằng regex đã **escape**, không dùng input thô làm regex), lọc `danhMucId`, lọc theo chương trình khuyến mãi, sắp xếp mới nhất.
+- **Cập nhật theo yêu cầu mới:** Có trang công khai cho từng cửa hàng đang hoạt động. Danh sách sản phẩm hỗ trợ lọc theo cửa hàng, khoảng **giá bán thực tế sau khuyến mãi**, số sao đánh giá; sắp xếp theo giá bán thực tế hoặc điểm đánh giá. Backend tính giá và điểm đánh giá trước khi lọc/sắp xếp/phân trang, không dùng `giaGoc` thay cho giá hiển thị. URL giữ trạng thái bộ lọc để người dùng chia sẻ hoặc quay lại.
 - **Trạng thái: ĐÃ CHỐT** — làm theo quyết định trên.
 
 ### QĐ-22 — Quy tắc kiểm tra dữ liệu nhỏ (chưa có trong tài liệu)
@@ -263,4 +264,4 @@ Các bất biến của `AGENTS.md` Mục 8 được điều chỉnh tương ứ
 
 ## D. Những thứ **cố ý chưa làm** (hướng phát triển, AI không tự thêm)
 
-Lọc/sắp xếp theo khoảng giá • trang riêng của cửa hàng • dark mode • socket thời gian thực • đếm tin chưa đọc • rate limiting đăng nhập • lý do từ chối đơn/đăng ký/đổi trả (không có field) • **hoàn tiền tự động** (đơn đã thanh toán bị hủy chỉ được đánh dấu cần hoàn tiền thủ công) • Admin phân xử đổi trả/khiếu nại bị từ chối • ghi lại ai là người ngừng kinh doanh sản phẩm (cần thêm field) • IPN của VNPay (môi trường local không nhận được) • thống kê hiệu quả từng chương trình khuyến mãi.
+Dark mode • đếm tin chưa đọc • rate limiting đăng nhập • lý do từ chối đơn/đăng ký/đổi trả (không có field) • **hoàn tiền tự động** (đơn đã thanh toán bị hủy chỉ được đánh dấu cần hoàn tiền thủ công) • Admin phân xử đổi trả/khiếu nại bị từ chối • ghi lại ai là người ngừng kinh doanh sản phẩm (cần thêm field) • IPN của VNPay (môi trường local không nhận được) • thống kê hiệu quả từng chương trình khuyến mãi.

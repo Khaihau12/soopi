@@ -31,7 +31,12 @@
     "test:f29": "node scripts/kiemTraF29.js",
     "test:f30": "node scripts/kiemTraF30.js",
     "test:realtime": "node scripts/kiemTraRealtime.js",
-    "test:cloudinary": "node scripts/kiemTraCloudinary.js"
+    "test:cloudinary": "node scripts/kiemTraCloudinary.js",
+    "test:kham-pha": "node scripts/kiemTraKhamPhaSanPham.js",
+    "test:tinh-nang-moi": "node scripts/kiemTraYeuThichThongBaoPhanHoi.js",
+    "test:so-dia-chi-mua-lai": "node scripts/kiemTraSoDiaChiMuaLai.js",
+    "test:ton-kho": "node scripts/kiemTraTonKho.js",
+    "test:san-pham-da-xem": "node scripts/kiemTraSanPhamDaXem.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

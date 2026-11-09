@@ -8,6 +8,7 @@ const { TRANG_THAI_HOAT_DONG_CUA_HANG } = require('../constants/trangThai.consta
 const { VAI_TRO } = require('../constants/vaiTro.constant');
 const { taoLoi } = require('../utils/taoLoi');
 const { phatTinNhanMoi } = require('./thongBaoTinNhan.service');
+const { taoThongBao } = require('./thongBao.service');
 
 const docSoNguyenDuong = (giaTri, macDinh, toiDa) => {
   if (giaTri !== undefined && (!/^\d+$/.test(String(giaTri)) || !Number.isSafeInteger(Number(giaTri)) || Number(giaTri) < 1)) {
@@ -46,6 +47,19 @@ const guiTinChoCuocTroChuyen = async (cuocTroChuyen, nguoiGuiId, noiDung) => {
   } catch (loi) { console.error('Không cập nhật được thời gian cuộc trò chuyện:', loi); }
   const tinDaLuu = dungTinNhan(tinNhan);
   await phatTinNhanMoi(cuocTroChuyen, tinDaLuu);
+  const cuaHang = await CuaHang.findById(cuocTroChuyen.cuaHangId).select('taiKhoanId tenCuaHang').lean();
+  if (cuaHang) {
+    const nguoiMuaGui = String(nguoiGuiId) === String(cuocTroChuyen.taiKhoanId);
+    await taoThongBao({
+      taiKhoanId: nguoiMuaGui ? cuaHang.taiKhoanId : cuocTroChuyen.taiKhoanId,
+      loai: 'Tin nhắn', tieuDe: 'Bạn có tin nhắn mới',
+      noiDung: nguoiMuaGui ? 'Khách hàng đã gửi tin nhắn cho cửa hàng.' : `${cuaHang.tenCuaHang} đã gửi tin nhắn cho bạn.`,
+      duongDan: nguoiMuaGui
+        ? `/nguoi-ban/tro-chuyen?cuocTroChuyenId=${cuocTroChuyen._id}`
+        : `/tro-chuyen?cuaHangId=${cuocTroChuyen.cuaHangId}`,
+      maSuKien: `tin-nhan:${tinNhan._id}`,
+    });
+  }
   return tinDaLuu;
 };
 
@@ -160,7 +174,12 @@ const layDanhSachCuocTroChuyenCuaToi = (taiKhoanId, query = {}) => {
   if (query.cuaHangId && !mongoose.isValidObjectId(query.cuaHangId)) throw taoLoi(400, 'ID cửa hàng không hợp lệ');
   return layDanhSach({ taiKhoanId, ...(query.cuaHangId ? { cuaHangId: query.cuaHangId } : {}) }, query);
 };
-const nguoiBanLayDanhSachCuocTroChuyen = (cuaHangId, query = {}) => layDanhSach({ cuaHangId }, query);
+const nguoiBanLayDanhSachCuocTroChuyen = (cuaHangId, query = {}) => {
+  if (query.cuocTroChuyenId && !mongoose.isValidObjectId(query.cuocTroChuyenId)) {
+    throw taoLoi(400, 'ID cuộc trò chuyện không hợp lệ');
+  }
+  return layDanhSach({ cuaHangId, ...(query.cuocTroChuyenId ? { _id: query.cuocTroChuyenId } : {}) }, query);
+};
 
 module.exports = { layDanhSachCuocTroChuyenCuaToi, taoCuocTroChuyenVaGuiTinNhan,
   layTinNhan, guiTinNhan, nguoiBanLayDanhSachCuocTroChuyen, kiemTraThanhVien };

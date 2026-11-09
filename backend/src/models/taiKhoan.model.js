@@ -3,6 +3,12 @@ const { VAI_TRO } = require('../constants/vaiTro.constant');
 const { GIOI_TINH, TRANG_THAI_TAI_KHOAN } = require('../constants/trangThai.constant');
 const { REGEX_SO_DIEN_THOAI, DO_DAI_TOI_DA } = require('../constants/cauHinh.constant');
 
+const diaChiDaLuuSchema = new mongoose.Schema({
+  tenGoi: { type: String, required: true, trim: true, maxlength: 40 },
+  diaChi: { type: String, required: true, trim: true, maxlength: DO_DAI_TOI_DA.DIA_CHI },
+  macDinh: { type: Boolean, default: false },
+}, { _id: true });
+
 const taiKhoanSchema = new mongoose.Schema({
   email: { type: String, required: true, trim: true, lowercase: true },
   matKhau: { type: String, required: true, select: false },
@@ -12,6 +18,8 @@ const taiKhoanSchema = new mongoose.Schema({
   gioiTinh: { type: String, enum: Object.values(GIOI_TINH) },
   soDienThoai: { type: String, match: REGEX_SO_DIEN_THOAI },
   diaChiNhanHang: { type: String, maxlength: DO_DAI_TOI_DA.DIA_CHI },
+  diaChiDaLuu: { type: [diaChiDaLuuSchema], default: [] },
+  sanPhamDaXem: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SanPham' }], default: [], select: false },
   vaiTro: {
     type: [{ type: String, enum: Object.values(VAI_TRO) }],
     required: true,

@@ -7,11 +7,11 @@ import TongKetThanhToan from '../components/TongKetThanhToan.jsx';
 import ErrorState from '../components/ui/ErrorState.jsx';
 import Button from '../components/ui/Button.jsx';
 import Skeleton from '../components/ui/Skeleton.jsx';
-import { useXacThuc } from '../hooks/XacThucContext.jsx';
 import { useGioHang } from '../hooks/GioHangContext.jsx';
 import useThongBao from '../hooks/useThongBao.js';
 import { xemTruocDonHang, datHang } from '../services/donHang.api.js';
 import { taoThanhToanVnpay } from '../services/giaoDichThanhToan.api.js';
+import { laySoDiaChi } from '../services/taiKhoan.api.js';
 import { DUONG_DAN } from '../utils/hangSo.js';
 import './ThanhToanPage.css';
 
@@ -19,11 +19,13 @@ export default function ThanhToanPage() {
   const navigate = useNavigate();
   const thongBao = useThongBao();
   const { taiLai: taiLaiGio } = useGioHang();
-  const { taiKhoan } = useXacThuc();
-  const diaChiHoSo = taiKhoan?.diaChiNhanHang?.trim() || '';
-  const [kieuDiaChi, setKieuDiaChi] = useState(diaChiHoSo ? 'ho-so' : 'khac');
+  const [kieuDiaChi, setKieuDiaChi] = useState('khac');
+  const [danhSachDiaChi, setDanhSachDiaChi] = useState([]);
+  const [dangTaiDiaChi, setDangTaiDiaChi] = useState(true);
+  const [loiDiaChi, setLoiDiaChi] = useState('');
   const [diaChiKhac, setDiaChiKhac] = useState('');
   const [maDaChon, setMaDaChon] = useState([]);
+  const [loiNhanTheoCuaHang, setLoiNhanTheoCuaHang] = useState({});
   const [phuongThuc, setPhuongThuc] = useState('VNPay');
   const [duLieu, setDuLieu] = useState(null);
   const [dangTai, setDangTai] = useState(true);
@@ -36,7 +38,7 @@ export default function ThanhToanPage() {
   const dangGuiRef = useRef(false);
   const textareaRef = useRef(null);
   const lanYeuCau = useRef(0);
-  const hienTai = useRef({ diaChiNhanHang: undefined, danhSachMaVoucher: [], phuongThucThanhToan: 'VNPay' });
+  const hienTai = useRef({ diaChiNhanHang: undefined, danhSachMaVoucher: [], phuongThucThanhToan: 'VNPay', loiNhanTheoCuaHang: {} });
 
   const taiLai = async (body = hienTai.current) => {
     hienTai.current = body;
@@ -50,15 +52,34 @@ export default function ThanhToanPage() {
         const maSai = new Set(data.voucherKhongHopLe.map((voucher) => voucher.maVoucher));
         const conHopLe = body.danhSachMaVoucher.filter((ma) => !maSai.has(ma));
         setMaDaChon(conHopLe);
-        hienTai.current = { ...body, danhSachMaVoucher: conHopLe };
+        hienTai.current = { ...hienTai.current, danhSachMaVoucher: conHopLe };
       }
     } catch (loiApi) { if (lanYeuCau.current === lan) { setDuLieu(null); setLoi(loiApi.message); setMaLoi(loiApi.status); } }
     finally { if (lanYeuCau.current === lan) setDangTai(false); }
   };
   useEffect(() => { taiLai(); return () => { lanYeuCau.current += 1; }; }, []);
+  const taiLaiDiaChi = async () => {
+    setDangTaiDiaChi(true); setLoiDiaChi('');
+    try {
+      const { danhSach } = await laySoDiaChi();
+      setDanhSachDiaChi(danhSach);
+      const macDinh = danhSach.find((item) => item.macDinh);
+      if (macDinh && kieuDiaChi === 'khac' && !diaChiKhac.trim()) {
+        setKieuDiaChi(macDinh._id);
+        taiLai({ ...hienTai.current, diaChiNhanHang: macDinh.diaChi });
+      }
+    } catch (loiApi) { setLoiDiaChi(loiApi.message); }
+    finally { setDangTaiDiaChi(false); }
+  };
+  useEffect(() => { taiLaiDiaChi(); }, []);
   const doiDiaChi = (giaTri) => taiLai({ ...hienTai.current, diaChiNhanHang: giaTri });
   const doiVoucher = (danhSachMaVoucher) => { setMaDaChon(danhSachMaVoucher); taiLai({ ...hienTai.current, danhSachMaVoucher }); };
   const doiPhuongThuc = (phuongThucThanhToan) => { setPhuongThuc(phuongThucThanhToan); taiLai({ ...hienTai.current, phuongThucThanhToan }); };
+  const doiLoiNhan = (cuaHangId, loiNhan) => {
+    const moi = { ...hienTai.current.loiNhanTheoCuaHang, [cuaHangId]: loiNhan };
+    setLoiNhanTheoCuaHang(moi);
+    hienTai.current = { ...hienTai.current, loiNhanTheoCuaHang: moi };
+  };
 
   const thuMoVnpay = async (giaoDichId) => {
     try {
@@ -74,14 +95,16 @@ export default function ThanhToanPage() {
 
   const guiDatHang = async () => {
     if (dangGuiRef.current || dangTai || !duLieu || giaoDichCanThuLai) return;
-    if (!(kieuDiaChi === 'khac' ? diaChiKhac.trim() : diaChiHoSo)) { setKieuDiaChi('khac'); requestAnimationFrame(() => textareaRef.current?.focus()); return; }
+    const diaChiDangChon = kieuDiaChi === 'khac' ? diaChiKhac.trim() : danhSachDiaChi.find((item) => item._id === kieuDiaChi)?.diaChi;
+    if (!diaChiDangChon) { setKieuDiaChi('khac'); requestAnimationFrame(() => textareaRef.current?.focus()); return; }
     dangGuiRef.current = true;
     setDangGui(true);
     try {
       const ketQua = await datHang({
-        diaChiNhanHang: kieuDiaChi === 'khac' ? diaChiKhac : undefined,
+        diaChiNhanHang: diaChiDangChon,
         danhSachMaVoucher: maDaChon,
         phuongThucThanhToan: phuongThuc,
+        loiNhanTheoCuaHang,
       });
       setKetQuaDaTao(ketQua);
       taiLaiGio().catch(() => {});
@@ -106,7 +129,8 @@ export default function ThanhToanPage() {
     }
   };
 
-  const khongTheDat = dangTai || dangGui || dangChuyenVnpay || !!giaoDichCanThuLai || !duLieu || !(kieuDiaChi === 'khac' ? diaChiKhac.trim() : diaChiHoSo)
+  const diaChiDangChon = kieuDiaChi === 'khac' ? diaChiKhac.trim() : danhSachDiaChi.find((item) => item._id === kieuDiaChi)?.diaChi;
+  const khongTheDat = dangTai || dangTaiDiaChi || dangGui || dangChuyenVnpay || !!giaoDichCanThuLai || !duLieu || !diaChiDangChon
     || duLieu.voucherKhongHopLe.length > 0
     || duLieu.canhBao.some((noiDung) => noiDung.includes('không thể thanh toán bằng VNPay'));
 
@@ -116,9 +140,10 @@ export default function ThanhToanPage() {
     {dangTai && !duLieu ? <Skeleton variant="block" count={3} /> : loi && !duLieu ? <div className="thanhToanTrangLoi"><ErrorState message={loi} />{[400, 409].includes(maLoi) ? <Button to={DUONG_DAN.GIO_HANG} variant="secondary">Quay lại giỏ hàng</Button> : <Button variant="secondary" onClick={() => taiLai()}>Thử lại</Button>}</div> : duLieu && <div className="thanhToanBoCuc">
       <div className="thanhToanCotChinh">
         {loi && <div className="thanhToanCanhBao" role="alert">{loi} <button type="button" onClick={() => taiLai()}>Thử lại</button></div>}
-        <KhoiDiaChiNhanHang diaChiHoSo={diaChiHoSo} kieuDiaChi={kieuDiaChi} setKieuDiaChi={setKieuDiaChi} diaChiKhac={diaChiKhac} setDiaChiKhac={setDiaChiKhac} onThayDoi={doiDiaChi} thieuDiaChi={duLieu.thieuDiaChi} textareaRef={textareaRef} />
+        <KhoiDiaChiNhanHang danhSachDiaChi={danhSachDiaChi} dangTaiDiaChi={dangTaiDiaChi} loiDiaChi={loiDiaChi} taiLaiDiaChi={taiLaiDiaChi} kieuDiaChi={kieuDiaChi} setKieuDiaChi={setKieuDiaChi} diaChiKhac={diaChiKhac} setDiaChiKhac={setDiaChiKhac} onThayDoi={doiDiaChi} thieuDiaChi={duLieu.thieuDiaChi} textareaRef={textareaRef} />
         {duLieu.danhSachDonHang.length > 1 && <p className="thanhToanGhiChu">Giỏ có nhiều cửa hàng nên được tách thành nhiều đơn.</p>}
-        {duLieu.danhSachDonHang.map((don) => <KhoiDonHangCuaHang key={don.cuaHang._id} donHang={don} duLieu={duLieu} maDaChon={maDaChon} onThayDoi={doiVoucher} dangTai={dangTai} />)}
+        {duLieu.danhSachDonHang.map((don) => <KhoiDonHangCuaHang key={don.cuaHang._id} donHang={don} duLieu={duLieu} maDaChon={maDaChon} onThayDoi={doiVoucher}
+          loiNhan={loiNhanTheoCuaHang[don.cuaHang._id] || ''} onDoiLoiNhan={(giaTri) => doiLoiNhan(don.cuaHang._id, giaTri)} dangTai={dangTai} dangGui={dangGui} />)}
         <section className="thanhToanCard"><h2>Phương thức thanh toán</h2>
           <label className="thanhToanLuaChon"><input type="radio" name="phuongThuc" checked={phuongThuc === 'VNPay'} onChange={() => doiPhuongThuc('VNPay')} /><span>Thanh toán qua VNPay</span></label>
           <label className="thanhToanLuaChon"><input type="radio" name="phuongThuc" checked={phuongThuc === 'COD'} onChange={() => doiPhuongThuc('COD')} /><span>Thanh toán khi nhận hàng (COD)</span></label>

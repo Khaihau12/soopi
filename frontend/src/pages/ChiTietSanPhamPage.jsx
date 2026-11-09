@@ -10,12 +10,14 @@ import SaoDanhGia from '../components/SaoDanhGia.jsx';
 import ErrorState from '../components/ui/ErrorState.jsx';
 import Skeleton from '../components/ui/Skeleton.jsx';
 import { layChiTietSanPham } from '../services/sanPham.api.js';
+import { ghiNhanSanPhamDaXem } from '../services/taiKhoan.api.js';
 import { layDanhSachVoucherDangDung } from '../services/voucher.api.js';
 import { dinhDangNgayGio } from '../utils/dinhDang.js';
-import { DUONG_DAN } from '../utils/hangSo.js';
+import { DUONG_DAN, VAI_TRO } from '../utils/hangSo.js';
 import { useXacThuc } from '../hooks/XacThucContext.jsx';
 import { useGioHang } from '../hooks/GioHangContext.jsx';
 import useThongBao from '../hooks/useThongBao.js';
+import NutYeuThich from '../components/NutYeuThich.jsx';
 import './ChiTietSanPhamPage.css';
 
 export default function ChiTietSanPhamPage() {
@@ -49,6 +51,7 @@ export default function ChiTietSanPhamPage() {
   useEffect(() => {
     let conHieuLuc = true;
     setDangTai(true);
+    setSanPham(null);
     setLoi('');
     layChiTietSanPham(id).then((data) => {
       if (conHieuLuc) setSanPham(data.sanPham);
@@ -59,6 +62,11 @@ export default function ChiTietSanPhamPage() {
     });
     return () => { conHieuLuc = false; };
   }, [id, lanTai]);
+
+  useEffect(() => {
+    if (sanPham?._id !== id || !taiKhoan || taiKhoan.vaiTro?.includes(VAI_TRO.QUAN_TRI_VIEN)) return;
+    ghiNhanSanPhamDaXem(id).catch(() => {});
+  }, [id, sanPham?._id, taiKhoan?._id]);
 
   useEffect(() => {
     if (!sanPham?.cuaHang?._id) { setVoucher([]); return undefined; }
@@ -88,8 +96,9 @@ export default function ChiTietSanPhamPage() {
         {voucher.length > 0 && <section className="chiTietSanPhamVoucher" aria-label="Voucher đang dùng được"><h2>Voucher</h2><div className="chiTietSanPhamVoucherScroll">{voucher.map((muc) => <VoucherChip key={muc.maVoucher} voucher={muc} />)}</div></section>}
         {loiVoucher && <p role="alert" className="chiTietSanPhamVoucherLoi">{loiVoucher} <button type="button" onClick={() => setLanTaiVoucher((lan) => lan + 1)}>Thử lại</button></p>}
         <p className={sanPham.soLuongTon === 0 ? 'chiTietSanPhamHetHang' : 'chiTietSanPhamConHang'}>{sanPham.soLuongTon === 0 ? 'Hết hàng' : `Còn ${sanPham.soLuongTon} sản phẩm`}</p>
-        <div className="chiTietSanPhamMua"><QuantityInput value={soLuongMua} max={Math.max(1, sanPham.soLuongTon)} disabled={sanPham.soLuongTon === 0 || dangThem} onChange={setSoLuongMua} /><Button disabled={sanPham.soLuongTon === 0} loading={dangThem} onClick={themGio}>{sanPham.soLuongTon === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}</Button>{daThem && <Link to={DUONG_DAN.GIO_HANG}>Xem giỏ hàng</Link>}</div>
-        <div className="chiTietSanPhamCuaHang"><h2>Cửa hàng</h2><strong>{sanPham.cuaHang?.tenCuaHang}</strong>{sanPham.cuaHang?.diaChi && <p>{sanPham.cuaHang.diaChi}</p>}
+        <div className="chiTietSanPhamMua"><QuantityInput value={soLuongMua} max={Math.max(1, sanPham.soLuongTon)} disabled={sanPham.soLuongTon === 0 || dangThem} onChange={setSoLuongMua} /><Button disabled={sanPham.soLuongTon === 0} loading={dangThem} onClick={themGio}>{sanPham.soLuongTon === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}</Button><NutYeuThich sanPhamId={sanPham._id} />{daThem && <Link to={DUONG_DAN.GIO_HANG}>Xem giỏ hàng</Link>}</div>
+        <div className="chiTietSanPhamCuaHang"><h2>Cửa hàng</h2>{sanPham.cuaHang?._id && <Link className="chiTietSanPhamTenCuaHang" to={DUONG_DAN.chiTietCuaHang(sanPham.cuaHang._id)}>{sanPham.cuaHang.tenCuaHang}</Link>}{sanPham.cuaHang?.diaChi && <p>{sanPham.cuaHang.diaChi}</p>}
+          {sanPham.cuaHang?._id && <Link to={DUONG_DAN.chiTietCuaHang(sanPham.cuaHang._id)}>Xem cửa hàng và sản phẩm khác</Link>}
           {sanPham.cuaHang?._id && !laCuaHangCuaToi && <Button variant="secondary" to={taiKhoan ? duongDanChat : DUONG_DAN.DANG_NHAP}
             state={taiKhoan ? { tenCuaHang: sanPham.cuaHang.tenCuaHang } : { quayLai: duongDanChat }}>Chat với cửa hàng</Button>}</div>
       </div>

@@ -32,6 +32,8 @@
 .donHangDaHuy { padding: var(--kc4); border-radius: var(--boGocVua); background: var(--loiNen); color: var(--loi); }
 .donHangDaHuy p { margin: var(--kc2) 0 0; }
 .donHangNutHuyChiTiet { justify-self: start; }
+.donHangChiTietMuaLai { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc3); }
+.donHangChiTietMuaLai small { color: var(--chuPhu); }
 .donHangCanThanhToan { display: flex; justify-content: space-between; align-items: center; gap: var(--kc4); flex-wrap: wrap; padding: var(--kc4); border-radius: var(--boGocVua); background: var(--canhBaoNen); }
 .donHangCanThanhToan p { margin: var(--kc1) 0 0; }
 .donHangChiTietLuoi, .donHangChiTietChinh { display: grid; gap: var(--kc4); min-width: 0; align-content: start; }
@@ -47,6 +49,8 @@
 .donHangThongTin div { display: flex; justify-content: space-between; gap: var(--kc3); border-bottom: var(--doDayVien) solid var(--vien); padding-bottom: var(--kc2); }
 .donHangThongTin dt { color: var(--chuPhu); }
 .donHangThongTin dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+.donHangThongTin .donHangThongTinLoiNhan { display: grid; }
+.donHangThongTinLoiNhan dd { text-align: left; white-space: pre-wrap; }
 .donHangTongKet { align-self: start; }
 .donHangTongKet > div { display: flex; justify-content: space-between; gap: var(--kc3); margin-top: var(--kc3); }
 .donHangTongKet > div strong { text-align: right; }

@@ -9,6 +9,7 @@ router.use(batBuocDangNhap, camQuanTriMuaSam);
 router.post('/xem-truoc', controller.xemTruocDonHang);
 router.post('/', controller.datHang);
 router.get('/', controller.layDanhSachDonHangCuaToi);
+router.post('/:id/mua-lai', controller.muaLaiDonHang);
 router.patch('/:id/huy', controller.huyDonHangCuaToi);
 router.patch('/:id/trang-thai', batBuocVaiTro(VAI_TRO.NGUOI_BAN), batBuocCuaHang, controller.capNhatTrangThaiXuLyDonHang);
 router.get('/:id', controller.layChiTietDonHangCuaToi);

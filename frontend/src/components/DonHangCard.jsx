@@ -5,7 +5,7 @@ import { dinhDangNgayGio, dinhDangTien, maDonHangHienThi, taoUrlAnh } from '../u
 import { DUONG_DAN, MAU_TRANG_THAI, TRANG_THAI_THANH_TOAN_DON } from '../utils/hangSo.js';
 import { lyDoDonDaHuy } from '../utils/huyDonHang.js';
 
-export default function DonHangCard({ donHang, onThanhToan, dangChuyen, onHuy, dangHuy }) {
+export default function DonHangCard({ donHang, onThanhToan, dangChuyen, onHuy, dangHuy, onMuaLai, dangMuaLai }) {
   const trangThai = donHang.trangThaiThanhToan === TRANG_THAI_THANH_TOAN_DON.CHO_THANH_TOAN
     && donHang.phuongThucThanhToan === 'VNPay' ? donHang.trangThaiThanhToan : donHang.trangThaiXuLy;
   const sanPham = donHang.sanPhamDau;
@@ -27,6 +27,7 @@ export default function DonHangCard({ donHang, onThanhToan, dangChuyen, onHuy, d
       <p>Tổng thanh toán <strong>{dinhDangTien(donHang.tongThanhToan)}</strong></p>
       <div className="donHangCardHanhDong">
         <Button variant="secondary" to={DUONG_DAN.chiTietDonHang(donHang._id)}>Xem chi tiết</Button>
+        {['Hoàn thành', 'Đã hủy'].includes(donHang.trangThaiXuLy) && <Button variant="secondary" loading={dangMuaLai} onClick={() => onMuaLai(donHang._id)}>Mua lại</Button>}
         {donHang.coTheThanhToanLai && <Button disabled={dangChuyen} onClick={() => onThanhToan(donHang.giaoDichId)}>Thanh toán</Button>}
         {donHang.coTheHuy && <Button variant="secondary" className="donHangNutHuy" disabled={Boolean(dangHuy)} onClick={() => onHuy(donHang)}>Hủy đơn</Button>}
       </div>

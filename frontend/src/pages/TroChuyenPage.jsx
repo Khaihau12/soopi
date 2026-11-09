@@ -14,12 +14,13 @@ export default function TroChuyenPage({ nguoiBan = false }) {
   const location = useLocation();
   const [params, setParams] = useSearchParams();
   const cuaHangId = nguoiBan ? '' : params.get('cuaHangId') || '';
+  const cuocTroChuyenId = nguoiBan ? params.get('cuocTroChuyenId') || '' : '';
   const [duLieu, setDuLieu] = useState(null);
   const [dangTai, setDangTai] = useState(true);
   const [loi, setLoi] = useState('');
   const [trang, setTrang] = useState(1);
   const [cuocDaChon, setCuocDaChon] = useState(null);
-  const [moKhungTin, setMoKhungTin] = useState(Boolean(cuaHangId));
+  const [moKhungTin, setMoKhungTin] = useState(Boolean(cuaHangId || cuocTroChuyenId));
   const [lanTai, setLanTai] = useState(0);
   const [tinMoi, setTinMoi] = useState(null);
   const [lanDongBo, setLanDongBo] = useState(0);
@@ -62,11 +63,19 @@ export default function TroChuyenPage({ nguoiBan = false }) {
       .catch((loiApi) => { if (conHieuLuc) setLoi(loiApi.message); });
     return () => { conHieuLuc = false; };
   }, [cuaHangId]);
+  useEffect(() => {
+    if (!cuocTroChuyenId) return undefined;
+    let conHieuLuc = true;
+    nguoiBanLayDanhSachCuocTroChuyen({ cuocTroChuyenId, gioiHan: 1 })
+      .then((data) => { if (conHieuLuc) { setCuocDaChon(data.danhSach[0] || null); setMoKhungTin(true); } })
+      .catch((loiApi) => { if (conHieuLuc) setLoi(loiApi.message); });
+    return () => { conHieuLuc = false; };
+  }, [cuocTroChuyenId]);
 
   const chonCuoc = (cuoc) => {
     setCuocDaChon(cuoc);
     setMoKhungTin(true);
-    if (cuaHangId) setParams({}, { replace: true });
+    if (cuaHangId || cuocTroChuyenId) setParams({}, { replace: true });
   };
   const vuaTao = (cuoc) => {
     setCuocDaChon(cuoc);
@@ -75,7 +84,7 @@ export default function TroChuyenPage({ nguoiBan = false }) {
   };
   const quayLai = () => {
     setMoKhungTin(false);
-    if (cuaHangId) setParams({}, { replace: true });
+    if (cuaHangId || cuocTroChuyenId) setParams({}, { replace: true });
   };
   const tenDoiPhuong = nguoiBan ? cuocDaChon?.nguoiDung?.hoTen : cuocDaChon?.cuaHang?.tenCuaHang
     || (cuaHangId ? location.state?.tenCuaHang || 'Cửa hàng' : '');

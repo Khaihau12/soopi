@@ -25,7 +25,7 @@ const kiemTraTrangThai = (trangThai) => {
   return trangThai;
 };
 const kiemTraHinhAnh = (hinhAnh) => {
-  if (!laDuongDanAnhHopLe(hinhAnh)) throw taoLoi(400, 'Hình ảnh banner không hợp lệ. Vui lòng tải ảnh JPG, PNG, WEBP hoặc nhập URL http(s).');
+  if (!laDuongDanAnhHopLe(hinhAnh)) throw taoLoi(400, 'Ảnh banner phải được tải lên Cloudinary.');
   return hinhAnh;
 };
 const kiemTraDanhMuc = async (danhMucId) => {

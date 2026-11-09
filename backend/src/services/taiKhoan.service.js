@@ -8,6 +8,7 @@ const { DO_DAI_MAT_KHAU_TOI_THIEU, SO_VONG_BAM_MAT_KHAU, REGEX_SO_DIEN_THOAI, DO
 const { layThongTinTaiKhoan } = require('./xacThuc.service');
 const { taoLoi } = require('../utils/taoLoi');
 const { thoatKyTuRegex } = require('../utils/thoatKyTuRegex');
+const { dongBoDiaChiHoSo } = require('./soDiaChi.service');
 
 const TRUONG_HO_SO = ['hoTen', 'ngaySinh', 'gioiTinh', 'soDienThoai', 'diaChiNhanHang'];
 
@@ -52,6 +53,7 @@ const capNhatHoSo = async (taiKhoanId, body = {}) => {
       ...(Object.keys(unset).length ? { $unset: unset } : {}),
     }, { runValidators: true });
   }
+  if (Object.hasOwn(body, 'diaChiNhanHang')) await dongBoDiaChiHoSo(taiKhoanId, set.diaChiNhanHang || '');
   const taiKhoan = await TaiKhoan.findById(taiKhoanId);
   if (!taiKhoan) throw taoLoi(401, 'Vui lòng đăng nhập để tiếp tục');
   return layHoSo(taiKhoan);

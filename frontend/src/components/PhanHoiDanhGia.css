@@ -1,0 +1,6 @@
+.phanHoiDanhGia, .phanHoiDanhGiaForm { display: grid; gap: var(--kc2); min-width: 0; padding: var(--kc3) var(--kc4); border-left: 3px solid var(--mauChinh); border-radius: var(--boGocNho); background: var(--nen); }
+.phanHoiDanhGiaDau { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--kc2); }
+.phanHoiDanhGiaDau strong { color: var(--mauChinhDam); }
+.phanHoiDanhGiaDau time { color: var(--chuPhu); font-size: .8125rem; }
+.phanHoiDanhGia p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.phanHoiDanhGiaHanhDong { display: flex; flex-wrap: wrap; gap: var(--kc2); }

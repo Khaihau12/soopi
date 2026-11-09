@@ -142,13 +142,13 @@ Các thông số là mặc định; mỗi component có trạng thái **default,
 - **Giỏ và voucher:** checkbox từng dòng/nhóm/đại diện có quan hệ dễ hiểu; chỉ dòng đã chọn vào checkout. “Tạm tính” trước khi phí/voucher được xác nhận. Chọn voucher trong một modal/drawer có điều kiện và lý do không áp dụng; voucher cửa hàng theo đúng shop.
 - **Checkout:** nhóm đơn theo cửa hàng; mỗi đơn có địa chỉ chụp tại lúc đặt, giá từng dòng, voucher và phí vận chuyển mô phỏng. Chọn **VNPay hoặc COD** theo QĐ-16; đơn 0đ đi tiếp không qua cổng. Không vẽ biểu mẫu thẻ tín dụng trên Soopi.
 - **Sau thanh toán:** tách giao dịch “Thành công/Thất bại/Hết hạn/Chờ thanh toán” khỏi trạng thái xử lý đơn. Thành công thanh toán chưa có nghĩa Người bán đã xác nhận. Không gợi ý trả tiền lần hai khi kết quả còn chưa rõ.
-- **Đơn, đánh giá, khiếu nại, chat:** dùng enum thật, đánh giá chỉ sau khi đơn “Hoàn thành”, một đánh giá/yêu cầu theo dòng hàng như dữ liệu cho phép. Chat chữ giữa Người dùng và cửa hàng; không giả chức năng file đính kèm.
+- **Đơn, đánh giá, khiếu nại, chat:** dùng enum thật, đánh giá chỉ sau khi đơn “Hoàn thành”, một đánh giá/yêu cầu theo dòng hàng như dữ liệu cho phép. Phản hồi của Người bán hiển thị dưới đúng đánh giá; chỉ cửa hàng sở hữu được gửi một phản hồi. Chat chữ giữa Người dùng và cửa hàng; không giả chức năng file đính kèm.
 
 ## 13. Seller Dashboard Guidelines
 
 Sidebar nhóm Tổng quan, Cửa hàng, Sản phẩm, Bán hàng, Khách hàng và Thống kê; chỉ hiện mục có màn/chức năng tương ứng. Mỗi trang có tiêu đề, breadcrumb, một CTA chính, bộ lọc liền kề bảng và trạng thái rỗng. Người bán chỉ thấy dữ liệu cửa hàng của tài khoản hiện tại; không có bộ chọn cửa hàng khác.
 
-Sản phẩm: form tên, ảnh, mô tả, giá gốc, tồn kho, danh mục, trạng thái kinh doanh. Khuyến mãi nằm ở chương trình và chi tiết sản phẩm, không ghi đè giá gốc. Voucher Người bán chỉ loại Cửa hàng. Đơn VNPay chỉ được xử lý sau thanh toán; đơn COD có thể xử lý ngay theo QĐ-16. Luồng tuần tự: Chờ xác nhận → Đã xác nhận → Đang xử lý → Đang vận chuyển → Hoàn thành. Không có nút từ chối đơn đã thanh toán. Tồn kho và doanh thu có mốc thời gian rõ; không dựng hãng giao hàng, mã vận đơn, hoàn tiền tự động hay trả lời đánh giá công khai khi dữ liệu chưa hỗ trợ.
+Sản phẩm: form tên, ảnh, mô tả, giá gốc, tồn kho, danh mục, trạng thái kinh doanh. Khuyến mãi nằm ở chương trình và chi tiết sản phẩm, không ghi đè giá gốc. Voucher Người bán chỉ loại Cửa hàng. Đơn VNPay chỉ được xử lý sau thanh toán; đơn COD có thể xử lý ngay theo QĐ-16. Luồng tuần tự: Chờ xác nhận → Đã xác nhận → Đang xử lý → Đang vận chuyển → Hoàn thành. Không có nút từ chối đơn đã thanh toán. Tồn kho và doanh thu có mốc thời gian rõ; không dựng hãng giao hàng, mã vận đơn hay hoàn tiền tự động. Phản hồi đánh giá công khai dùng `DanhGia.phanHoiNguoiBan` và chỉ cho Người bán sở hữu sản phẩm gửi một lần.
 
 ## 14. Admin Dashboard Guidelines
 

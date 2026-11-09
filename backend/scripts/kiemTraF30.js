@@ -68,7 +68,7 @@ async function main() {
   assert.equal((await goi('PATCH', `/don-hang/${donA1._id}/huy`, null))[0], 401);
   assert.equal((await huy(donA1, muaKhac))[0], 404);
   assert.equal((await huy(donA1, banA))[0], 404);
-  assert.equal((await huy(donA1, admin))[0], 404);
+  assert.equal((await huy(donA1, admin))[0], 403);
   const danhSachA = (await goi('GET', '/don-hang', mua))[1].data.danhSach;
   const tomTatA = danhSachA.find((don) => String(don._id) === String(donA1._id));
   assert.equal(tomTatA.soDonSeBiHuy, 2);
@@ -87,9 +87,13 @@ async function main() {
   }
   assert.equal(await giaTriKho(sanA), 5);
   assert.equal(await giaTriKho(sanB), 5);
+  assert.equal((await SanPham.findById(sanA._id).select('+bienDongTonKho')).bienDongTonKho.filter((dong) =>
+    String(dong.donHangId) === String(donA1._id)).length, 1);
   assert.equal((await Voucher.findById(voucher._id)).soLuong, 2);
   assert.equal((await huy(donA2, mua))[0], 409);
   assert.equal(await giaTriKho(sanA), 5);
+  assert.equal((await SanPham.findById(sanA._id).select('+bienDongTonKho')).bienDongTonKho.filter((dong) =>
+    String(dong.donHangId) === String(donA1._id)).length, 1, 'Hủy lặp không tạo thêm biến động');
 
   const gdAdua = await taoGiaoDich('VNPay', 'Chờ thanh toán', 200000);
   const donAdua1 = await taoDon({ giaoDich: gdAdua, dungVoucher: true });

@@ -7,6 +7,7 @@ import Pagination from './ui/Pagination.jsx';
 import Skeleton from './ui/Skeleton.jsx';
 import DanhGiaForm from './DanhGiaForm.jsx';
 import SaoDanhGia from './SaoDanhGia.jsx';
+import PhanHoiDanhGia from './PhanHoiDanhGia.jsx';
 import { useXacThuc } from '../hooks/XacThucContext.jsx';
 import { layDanhSachDanhGia, layDongCoTheDanhGia } from '../services/danhGia.api.js';
 import { dinhDangNgay } from '../utils/dinhDang.js';
@@ -56,7 +57,7 @@ export default function KhoiDanhGiaSanPham({ sanPhamId, onThongKe }) {
           <span>{thongKe?.phanBoSao[so] || 0}</span></div>)}</div></div>
       {duLieu.danhSach.length ? <><div className="khoiDanhGiaDanhSach">{duLieu.danhSach.map((danhGia) => <article key={danhGia._id} className="khoiDanhGiaDong">
         <Avatar hoTen={danhGia.taiKhoan.hoTen} /><div><strong>{danhGia.taiKhoan.hoTen}</strong><div className="khoiDanhGiaMeta"><SaoDanhGia giaTri={danhGia.soSao} /><time dateTime={danhGia.ngayDanhGia}>{dinhDangNgay(danhGia.ngayDanhGia)}</time></div>
-          <p>{danhGia.noiDung}</p></div></article>)}</div>
+          <p>{danhGia.noiDung}</p><PhanHoiDanhGia danhGia={danhGia} /></div></article>)}</div>
         <Pagination trang={duLieu.phanTrang.trang} tongTrang={duLieu.phanTrang.tongTrang} onChange={setTrang} /></>
         : <EmptyState title="Sản phẩm chưa có đánh giá nào" description="Đánh giá đầu tiên sẽ xuất hiện khi khách đã mua và nhận hàng." />}
     </>}

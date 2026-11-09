@@ -13,6 +13,7 @@ const DO_DAI_TOI_DA = Object.freeze({
   TEN_SAN_PHAM: 200,
   MO_TA: 5000,
   DIA_CHI: 500,
+  LOI_NHAN_CHO_CUA_HANG: 300,
   NOI_DUNG: 1000,
 });
 const ANH = Object.freeze({ DUNG_LUONG_TOI_DA_MB: 5, TOI_DA_MOI_SAN_PHAM: 8 });

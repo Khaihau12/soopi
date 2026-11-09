@@ -37,6 +37,10 @@ export default function TongQuanNguoiBanPage() {
         <TheThongKe nhan="Sản phẩm đã bán" giaTri={tong?.soSanPhamDaBan} dangTai={dangTai} />
         <TheThongKe nhan="Đơn chờ xác nhận" giaTri={tong?.soDonChoXacNhan} dangTai={dangTai} nhanManh={tong?.soDonChoXacNhan > 0} den={`${DUONG_DAN.NGUOI_BAN.DON_HANG}?tab=cho-xac-nhan`} />
       </div>
+      {!dangTai && tong?.soSanPhamCanNhap > 0 && <div className="thongKeCanhBaoTon" role="status">
+        <span><strong>{tong.soSanPhamCanNhap} sản phẩm cần nhập thêm</strong><small>Tồn kho đã bằng hoặc dưới ngưỡng cảnh báo của cửa hàng.</small></span>
+        <Button variant="secondary" to={`${DUONG_DAN.NGUOI_BAN.SAN_PHAM}?canhBaoTon=1`}>Xem sản phẩm</Button>
+      </div>}
       <p className="thongKeGhiChu">{GHI_CHU}</p>
       {dangTai ? <Skeleton variant="block" count={2} /> : tong?.soDonHoanThanh === 0 ?
         <EmptyState title="Cửa hàng chưa có đơn hoàn thành trong 30 ngày qua" description="Khi đơn hàng hoàn thành, doanh thu và sản phẩm bán chạy sẽ xuất hiện tại đây." actionLabel="Thêm sản phẩm" actionTo={DUONG_DAN.NGUOI_BAN.THEM_SAN_PHAM} /> : <>

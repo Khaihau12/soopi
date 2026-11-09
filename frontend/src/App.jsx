@@ -11,6 +11,7 @@ import DangNhapPage from './pages/DangNhapPage.jsx';
 import DangKyPage from './pages/DangKyPage.jsx';
 import TrangChuPage from './pages/TrangChuPage.jsx';
 import { GioHangProvider } from './hooks/GioHangContext.jsx';
+import { YeuThichProvider } from './hooks/YeuThichContext.jsx';
 import { DUONG_DAN, VAI_TRO } from './utils/hangSo.js';
 
 const QuenMatKhauPage = lazy(() => import('./pages/QuenMatKhauPage.jsx'));
@@ -18,6 +19,9 @@ const DatLaiMatKhauPage = lazy(() => import('./pages/DatLaiMatKhauPage.jsx'));
 const HoSoPage = lazy(() => import('./pages/HoSoPage.jsx'));
 const DanhSachSanPhamPage = lazy(() => import('./pages/DanhSachSanPhamPage.jsx'));
 const ChiTietSanPhamPage = lazy(() => import('./pages/ChiTietSanPhamPage.jsx'));
+const CuaHangPage = lazy(() => import('./pages/CuaHangPage.jsx'));
+const SanPhamYeuThichPage = lazy(() => import('./pages/SanPhamYeuThichPage.jsx'));
+const ThongBaoPage = lazy(() => import('./pages/ThongBaoPage.jsx'));
 const DangKyNguoiBanPage = lazy(() => import('./pages/DangKyNguoiBanPage.jsx'));
 const DanhMucQuanTriPage = lazy(() => import('./pages/quanTriVien/DanhMucQuanTriPage.jsx'));
 const DuyetNguoiBanPage = lazy(() => import('./pages/quanTriVien/DuyetNguoiBanPage.jsx'));
@@ -57,6 +61,7 @@ export default function App() {
     <ThongBaoProvider>
       <XacThucProvider>
       <GioHangProvider>
+      <YeuThichProvider>
       <Routes>
         <Route path={DUONG_DAN.DANG_NHAP} element={<DangNhapPage />} />
         <Route path={DUONG_DAN.DANG_KY} element={<DangKyPage />} />
@@ -66,8 +71,11 @@ export default function App() {
           <Route path={DUONG_DAN.TRANG_CHU} element={<TrangChuPage />} />
           <Route path={DUONG_DAN.SAN_PHAM} element={<DanhSachSanPhamPage />} />
           <Route path="/san-pham/:id" element={<ChiTietSanPhamPage />} />
+          <Route path="/cua-hang/:id" element={<CuaHangPage />} />
           <Route element={<BaoVeRoute />}>
             <Route path={DUONG_DAN.TAI_KHOAN} element={<HoSoPage />} />
+            <Route path={DUONG_DAN.YEU_THICH} element={<SanPhamYeuThichPage />} />
+            <Route path={DUONG_DAN.THONG_BAO} element={<ThongBaoPage />} />
             <Route path={DUONG_DAN.DANG_KY_NGUOI_BAN} element={<DangKyNguoiBanPage />} />
             <Route path={DUONG_DAN.GIO_HANG} element={<GioHangPage />} />
             <Route path={DUONG_DAN.THANH_TOAN} element={<ThanhToanPage />} />
@@ -96,6 +104,7 @@ export default function App() {
             <Route path="danh-gia" element={<DanhGiaNguoiBanPage />} />
             <Route path="doi-tra-khieu-nai" element={<DoiTraKhieuNaiNguoiBanPage />} />
             <Route path="tro-chuyen" element={<TroChuyenNguoiBanPage />} />
+            <Route path="thong-bao" element={<ThongBaoPage />} />
             <Route path="*" element={<KhongTimThayPage />} />
           </Route>
         </Route>
@@ -103,6 +112,7 @@ export default function App() {
           <Route path={DUONG_DAN.QUAN_TRI_VIEN.TONG_QUAN} element={<QuanTriVienLayout />}>
             <Route index element={<Suspense fallback={<p>Đang tải tổng quan…</p>}><TongQuanQuanTriPage /></Suspense>} />
             <Route path="bao-cao" element={<Suspense fallback={<p>Đang tải báo cáo…</p>}><BaoCaoQuanTriPage /></Suspense>} />
+            <Route path="thong-bao" element={<ThongBaoPage />} />
             <Route path="danh-muc" element={<DanhMucQuanTriPage />} />
             <Route path="tai-khoan" element={<TaiKhoanQuanTriPage />} />
             <Route path="cua-hang" element={<CuaHangQuanTriPage />} />
@@ -118,6 +128,7 @@ export default function App() {
           </Route>
         </Route>
       </Routes>
+      </YeuThichProvider>
       </GioHangProvider>
       </XacThucProvider>
     </ThongBaoProvider>

@@ -7,14 +7,11 @@ const SanPham = require('../src/models/sanPham.model');
 const BannerQuangCao = require('../src/models/bannerQuangCao.model');
 const DanhMuc = require('../src/models/danhMuc.model');
 const CuaHang = require('../src/models/cuaHang.model');
-const { taiAnhLen, xoaAnhNeuKhongDung } = require('../src/services/anhCloudinary.service');
 
 const duongDanDuLieu = path.join(__dirname, '../data/anhMau.json');
-const thuMucAnh = path.join(__dirname, '../assets/generated-images');
 const laAnhMauCu = (url) => typeof url === 'string' && url.startsWith('/anh-demo/');
 const laAnhDaDung = (url) => typeof url === 'string' && /^https?:\/\//.test(url);
 
-const luuDanhSach = (danhSach) => fs.writeFileSync(duongDanDuLieu, `${JSON.stringify(danhSach, null, 2)}\n`, 'utf8');
 
 const timBanGhi = async (item) => {
   const Model = item.loai === 'banner' ? BannerQuangCao : SanPham;
@@ -59,26 +56,19 @@ async function main() {
         continue;
       }
       const danhMucDich = item.loai === 'banner' ? await layDanhMucDich(item) : null;
-      let url = item.url;
-      let vuaTai = false;
-      if (url) {
-        const kiemTra = await fetch(url, { method: 'HEAD' });
-        if (!kiemTra.ok || !kiemTra.headers.get('content-type')?.startsWith('image/')) url = '';
+      const url = item.url;
+      if (!url?.startsWith('https://res.cloudinary.com/')) {
+        throw new Error(`Thiếu URL Cloudinary cho ảnh mẫu ${item.ten}.`);
       }
-      if (!url) {
-        const tep = path.join(thuMucAnh, item.file);
-        if (!fs.existsSync(tep)) throw new Error(`Thiếu ảnh ${item.file}; cần ảnh local hoặc URL đã lưu trong manifest.`);
-        url = await taiAnhLen(fs.readFileSync(tep));
-        item.url = url;
-        luuDanhSach(danhSach);
-        vuaTai = true;
+      const kiemTra = await fetch(url, { method: 'HEAD' });
+      if (!kiemTra.ok || !kiemTra.headers.get('content-type')?.startsWith('image/')) {
+        throw new Error(`Ảnh Cloudinary của ${item.ten} không truy cập được.`);
       }
       const capNhat = item.loai === 'banner'
         ? { hinhAnh: url, danhMucId: danhMucDich, noiDung: item.noiDung }
         : { hinhAnh: [url] };
       const ketQua = await Model.updateOne({ _id: banGhi._id, hinhAnh: banGhi.hinhAnh }, { $set: capNhat });
       if (ketQua.modifiedCount !== 1) {
-        if (vuaTai) await xoaAnhNeuKhongDung(url);
         throw new Error(`Ảnh của ${item.ten} đã thay đổi trong lúc bổ sung, dừng để tránh ghi đè.`);
       }
       daGan += 1;

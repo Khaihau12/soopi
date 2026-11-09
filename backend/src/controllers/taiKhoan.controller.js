@@ -1,4 +1,6 @@
 const service = require('../services/taiKhoan.service');
+const soDiaChiService = require('../services/soDiaChi.service');
+const sanPhamDaXemService = require('../services/sanPhamDaXem.service');
 const { xoaCookieDangNhap } = require('../utils/cookie');
 
 const layHoSo = (req, res) => {
@@ -12,6 +14,42 @@ const capNhatHoSo = async (req, res, next) => {
   } catch (loi) { next(loi); }
 };
 
+const laySoDiaChi = async (req, res, next) => {
+  try { const danhSach = await soDiaChiService.laySoDiaChi(req.taiKhoan._id);
+    res.json({ success: true, message: 'Lấy sổ địa chỉ thành công', data: { danhSach } }); }
+  catch (loi) { next(loi); }
+};
+const themDiaChi = async (req, res, next) => {
+  try { const danhSach = await soDiaChiService.themDiaChi(req.taiKhoan._id, req.body);
+    res.status(201).json({ success: true, message: 'Đã lưu địa chỉ', data: { danhSach } }); }
+  catch (loi) { next(loi); }
+};
+const suaDiaChi = async (req, res, next) => {
+  try { const danhSach = await soDiaChiService.suaDiaChi(req.taiKhoan._id, req.params.id, req.body);
+    res.json({ success: true, message: 'Đã cập nhật địa chỉ', data: { danhSach } }); }
+  catch (loi) { next(loi); }
+};
+const datDiaChiMacDinh = async (req, res, next) => {
+  try { const danhSach = await soDiaChiService.datMacDinh(req.taiKhoan._id, req.params.id);
+    res.json({ success: true, message: 'Đã đặt địa chỉ mặc định', data: { danhSach } }); }
+  catch (loi) { next(loi); }
+};
+const xoaDiaChi = async (req, res, next) => {
+  try { const danhSach = await soDiaChiService.xoaDiaChi(req.taiKhoan._id, req.params.id);
+    res.json({ success: true, message: 'Đã xóa địa chỉ', data: { danhSach } }); }
+  catch (loi) { next(loi); }
+};
+
+const laySanPhamDaXem = async (req, res, next) => {
+  try { const danhSach = await sanPhamDaXemService.layDanhSach(req.taiKhoan._id);
+    res.json({ success: true, message: 'Lấy sản phẩm vừa xem thành công', data: { danhSach } }); }
+  catch (loi) { next(loi); }
+};
+const ghiNhanSanPhamDaXem = async (req, res, next) => {
+  try { await sanPhamDaXemService.ghiNhan(req.taiKhoan._id, req.params.id);
+    res.json({ success: true, message: 'Đã lưu sản phẩm vừa xem', data: {} }); }
+  catch (loi) { next(loi); }
+};
 const doiMatKhau = async (req, res, next) => {
   try {
     await service.doiMatKhau(req.taiKhoan._id, req.body);
@@ -41,5 +79,6 @@ const quanTriDatLaiMatKhau = async (req, res, next) => {
   catch (loi) { next(loi); }
 };
 
-module.exports = { layHoSo, capNhatHoSo, doiMatKhau, quanTriLayDanhSachTaiKhoan,
+module.exports = { layHoSo, capNhatHoSo, laySoDiaChi, themDiaChi, suaDiaChi, datDiaChiMacDinh, xoaDiaChi,
+  laySanPhamDaXem, ghiNhanSanPhamDaXem, doiMatKhau, quanTriLayDanhSachTaiKhoan,
   quanTriLayChiTietTaiKhoan, quanTriCapNhatTrangThaiTaiKhoan, quanTriDatLaiMatKhau };

@@ -1,5 +1,23 @@
 const service = require('../services/cuaHang.service');
 
+const layDanhSachCuaHangCongKhai = async (req, res, next) => {
+  try { res.json({ success: true, message: 'Lấy danh sách cửa hàng thành công',
+    data: { danhSach: await service.layDanhSachCuaHangCongKhai() } }); }
+  catch (loi) { next(loi); }
+};
+
+const layCuaHangCongKhai = async (req, res, next) => {
+  try { res.json({ success: true, message: 'Lấy thông tin cửa hàng thành công',
+    data: await service.layCuaHangCongKhai(req.params.id) }); }
+  catch (loi) { next(loi); }
+};
+
+const layDanhGiaCuaCuaHang = async (req, res, next) => {
+  try { res.json({ success: true, message: 'Lấy đánh giá cửa hàng thành công',
+    data: await service.layDanhGiaCuaCuaHang(req.params.id, req.query) }); }
+  catch (loi) { next(loi); }
+};
+
 const nguoiBanLayCuaHang = async (req, res, next) => {
   try {
     const cuaHang = service.nguoiBanLayCuaHang(req.cuaHang);
@@ -25,5 +43,6 @@ const quanTriCapNhatTrangThaiCuaHang = async (req, res, next) => {
   catch (loi) { next(loi); }
 };
 
-module.exports = { nguoiBanLayCuaHang, nguoiBanCapNhatCuaHang,
+module.exports = { layDanhSachCuaHangCongKhai, layCuaHangCongKhai, layDanhGiaCuaCuaHang,
+  nguoiBanLayCuaHang, nguoiBanCapNhatCuaHang,
   quanTriLayDanhSachCuaHang, quanTriCapNhatTrangThaiCuaHang };

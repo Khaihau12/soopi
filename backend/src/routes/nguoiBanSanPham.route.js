@@ -9,6 +9,7 @@ router.post('/', controller.nguoiBanTaoSanPham);
 router.get('/:id', controller.nguoiBanLayChiTietSanPham);
 router.patch('/:id', controller.nguoiBanCapNhatSanPham);
 router.patch('/:id/ton-kho', controller.nguoiBanCapNhatTonKho);
+router.get('/:id/lich-su-ton-kho', controller.nguoiBanLayLichSuTonKho);
 router.delete('/:id', controller.nguoiBanXoaSanPham);
 
 module.exports = router;

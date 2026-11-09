@@ -1,5 +1,3 @@
-import { layGocMayChuApi } from '../services/httpClient.js';
-
 const MUI_GIO = 'Asia/Ho_Chi_Minh';
 
 const layNgayHopLe = (giaTri) => {
@@ -49,9 +47,5 @@ export function dinhDangNgayChoInput(giaTri) {
 
 export function taoUrlAnh(duongDan) {
   if (!duongDan) return '';
-  if (/^https?:\/\//i.test(duongDan)) return duongDan;
-  const gocMayChu = layGocMayChuApi();
-  return gocMayChu && duongDan.startsWith('/uploads/')
-    ? new URL(duongDan, gocMayChu).href
-    : '';
+  return /^https:\/\/res\.cloudinary\.com\//i.test(duongDan) ? duongDan : '';
 }

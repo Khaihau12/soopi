@@ -1,4 +1,5 @@
 const service = require('../services/sanPham.service');
+const { layLichSuTonKho } = require('../services/tonKho.service');
 
 const layDanhSachSanPham = async (req, res, next) => {
   try {
@@ -30,7 +31,7 @@ const nguoiBanLayChiTietSanPham = async (req, res, next) => {
 
 const nguoiBanTaoSanPham = async (req, res, next) => {
   try {
-    const sanPham = await service.nguoiBanTaoSanPham(req.cuaHang._id, req.body);
+    const sanPham = await service.nguoiBanTaoSanPham(req.cuaHang._id, req.body, req.taiKhoan._id);
     res.status(201).json({ success: true, message: 'Thêm sản phẩm thành công', data: { sanPham } });
   } catch (loi) { next(loi); }
 };
@@ -44,8 +45,15 @@ const nguoiBanCapNhatSanPham = async (req, res, next) => {
 
 const nguoiBanCapNhatTonKho = async (req, res, next) => {
   try {
-    const sanPham = await service.nguoiBanCapNhatTonKho(req.cuaHang._id, req.params.id, req.body?.soLuongTon);
+    const sanPham = await service.nguoiBanCapNhatTonKho(req.cuaHang._id, req.params.id, req.body, req.taiKhoan._id);
     res.json({ success: true, message: 'Cập nhật tồn kho thành công', data: { sanPham } });
+  } catch (loi) { next(loi); }
+};
+
+const nguoiBanLayLichSuTonKho = async (req, res, next) => {
+  try {
+    const data = await layLichSuTonKho(req.cuaHang._id, req.params.id, req.query);
+    res.json({ success: true, message: 'Lấy lịch sử tồn kho thành công', data });
   } catch (loi) { next(loi); }
 };
 
@@ -72,6 +80,6 @@ const quanTriCapNhatTrangThaiSanPham = async (req, res, next) => {
 module.exports = {
   layDanhSachSanPham, layChiTietSanPham,
   nguoiBanLayDanhSachSanPham, nguoiBanLayChiTietSanPham, nguoiBanTaoSanPham,
-  nguoiBanCapNhatSanPham, nguoiBanCapNhatTonKho, nguoiBanXoaSanPham,
+  nguoiBanCapNhatSanPham, nguoiBanCapNhatTonKho, nguoiBanLayLichSuTonKho, nguoiBanXoaSanPham,
   quanTriLayDanhSachSanPham, quanTriLayChiTietSanPham, quanTriCapNhatTrangThaiSanPham,
 };

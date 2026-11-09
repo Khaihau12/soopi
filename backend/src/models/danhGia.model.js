@@ -9,6 +9,8 @@ const danhGiaSchema = new mongoose.Schema({
   taiKhoanId: { type: mongoose.Schema.Types.ObjectId, ref: 'TaiKhoan', required: true },
   sanPhamId: { type: mongoose.Schema.Types.ObjectId, ref: 'SanPham', required: true },
   chiTietDonHangId: { type: mongoose.Schema.Types.ObjectId, ref: 'ChiTietDonHang', required: true, unique: true },
+  phanHoiNguoiBan: { type: String, trim: true, maxlength: DO_DAI_TOI_DA.NOI_DUNG },
+  ngayPhanHoi: { type: Date },
 }, { collection: 'DanhGia' });
 
 danhGiaSchema.index({ sanPhamId: 1 });

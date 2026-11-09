@@ -13,6 +13,7 @@ import Pagination from '../../components/ui/Pagination.jsx';
 import Select from '../../components/ui/Select.jsx';
 import Skeleton from '../../components/ui/Skeleton.jsx';
 import SaoDanhGia from '../../components/SaoDanhGia.jsx';
+import PhanHoiDanhGia from '../../components/PhanHoiDanhGia.jsx';
 import { nguoiBanLayDanhSachDanhGia, nguoiBanLayDanhSachSanPhamDanhGia } from '../../services/danhGia.api.js';
 import { nguoiBanLayChiTietSanPham } from '../../services/sanPham.api.js';
 import { dinhDangNgay, taoUrlAnh } from '../../utils/dinhDang.js';
@@ -216,6 +217,7 @@ export default function DanhGiaNguoiBanPage() {
                   <div className="danhGiaBanSao"><SaoDanhGia giaTri={danhGia.soSao} />
                     {danhGia.soSao <= 2 && <span className="danhGiaBanCanChuY">Cần chú ý</span>}</div>
                   <NoiDungDanhGia noiDung={danhGia.noiDung} />
+                  <PhanHoiDanhGia danhGia={danhGia} nguoiBan onThanhCong={() => setLanTai((cu) => cu + 1)} />
                   {!sanPhamId && <button type="button" className="danhGiaBanLienKetSanPham" onClick={() => chonSanPham(danhGia.sanPham._id)}>
                     <AnhSanPham hinhAnh={danhGia.sanPham.hinhAnh} />{danhGia.sanPham.tenSanPham}</button>}
                 </article>)}</div><Pagination trang={duLieu.phanTrang.trang} tongTrang={duLieu.phanTrang.tongTrang}

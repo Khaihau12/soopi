@@ -4,6 +4,7 @@ const DonHang = require('../models/donHang.model');
 const ChiTietDonHang = require('../models/chiTietDonHang.model');
 const SanPham = require('../models/sanPham.model');
 const TaiKhoan = require('../models/taiKhoan.model');
+const { taoThongBao } = require('./thongBao.service');
 const { DO_DAI_TOI_DA, PHAN_TRANG } = require('../constants/cauHinh.constant');
 const { TRANG_THAI_XU_LY } = require('../constants/trangThai.constant');
 const { taoLoi } = require('../utils/taoLoi');
@@ -58,7 +59,7 @@ const dungDanhSachDanhGia = async (dieuKien, phanTrang, hienSanPham = false, sap
   const thuTu = { ...(sapXep === 'saoThap' ? { soSao: 1 } : sapXep === 'saoCao' ? { soSao: -1 } : {}), ngayDanhGia: -1, _id: -1 };
   const [tongSo, cacDanhGia] = await Promise.all([
     DanhGia.countDocuments(dieuKien),
-    DanhGia.find(dieuKien).select('_id soSao noiDung ngayDanhGia taiKhoanId sanPhamId')
+    DanhGia.find(dieuKien).select('_id soSao noiDung ngayDanhGia taiKhoanId sanPhamId phanHoiNguoiBan ngayPhanHoi')
       .sort(thuTu).skip((trang - 1) * gioiHan).limit(gioiHan).lean(),
   ]);
   const [cacTaiKhoan, cacSanPham] = await Promise.all([
@@ -69,11 +70,21 @@ const dungDanhSachDanhGia = async (dieuKien, phanTrang, hienSanPham = false, sap
   const sanPhamTheoId = new Map(cacSanPham.map((item) => [String(item._id), item]));
   return {
     danhSach: cacDanhGia.map((item) => ({ _id: item._id, soSao: item.soSao, noiDung: item.noiDung,
+      phanHoiNguoiBan: item.phanHoiNguoiBan || null, ngayPhanHoi: item.ngayPhanHoi || null,
       ngayDanhGia: item.ngayDanhGia, taiKhoan: { hoTen: taiKhoanTheoId.get(String(item.taiKhoanId))?.hoTen || 'Người mua' },
       ...(hienSanPham ? { sanPham: sanPhamTheoId.get(String(item.sanPhamId)) ||
         { _id: item.sanPhamId, tenSanPham: 'Sản phẩm không còn hiển thị', hinhAnh: [] } } : {}) })),
     phanTrang: { trang, gioiHan, tongSo, tongTrang: Math.ceil(tongSo / gioiHan) },
   };
+};
+
+const layDanhGiaCuaCuaHangCongKhai = async (sanPhamIds, query = {}) => {
+  const phanTrang = docPhanTrang(query);
+  const [danhSach, thongKe] = await Promise.all([
+    dungDanhSachDanhGia({ sanPhamId: { $in: sanPhamIds } }, phanTrang, true),
+    tinhThongKeDanhGia(sanPhamIds),
+  ]);
+  return { ...danhSach, thongKe };
 };
 
 const layDanhSachDanhGia = async (query = {}) => {
@@ -175,5 +186,25 @@ const nguoiBanLayDanhSachSanPhamDanhGia = async (cuaHangId, query = {}) => {
     phanTrang: { trang, gioiHan, tongSo: danhSach.length, tongTrang: Math.ceil(danhSach.length / gioiHan) } };
 };
 
+const nguoiBanPhanHoiDanhGia = async (cuaHangId, id, body = {}) => {
+  if (!mongoose.isValidObjectId(id)) throw taoLoi(404, 'Không tìm thấy đánh giá của cửa hàng');
+  if (typeof body.noiDung !== 'string' || !body.noiDung.trim()) throw taoLoi(400, 'Vui lòng nhập nội dung phản hồi');
+  const noiDung = body.noiDung.trim();
+  if (noiDung.length > DO_DAI_TOI_DA.NOI_DUNG) throw taoLoi(400, `Phản hồi không được quá ${DO_DAI_TOI_DA.NOI_DUNG} ký tự`);
+  const danhGia = await DanhGia.findById(id).select('sanPhamId taiKhoanId phanHoiNguoiBan').lean();
+  const sanPham = danhGia && await SanPham.findOne({ _id: danhGia.sanPhamId, cuaHangId }).select('_id tenSanPham').lean();
+  if (!sanPham) throw taoLoi(404, 'Không tìm thấy đánh giá của cửa hàng');
+  if (danhGia.phanHoiNguoiBan) throw taoLoi(409, 'Đánh giá này đã có phản hồi');
+  const daPhanHoi = await DanhGia.findOneAndUpdate({ _id: id, $or: [{ phanHoiNguoiBan: { $exists: false } },
+    { phanHoiNguoiBan: null }, { phanHoiNguoiBan: '' }] },
+  { $set: { phanHoiNguoiBan: noiDung, ngayPhanHoi: new Date() } }, { returnDocument: 'after', runValidators: true }).lean();
+  if (!daPhanHoi) throw taoLoi(409, 'Đánh giá vừa được phản hồi, vui lòng tải lại');
+  await taoThongBao({ taiKhoanId: danhGia.taiKhoanId, loai: 'Đánh giá', tieuDe: 'Cửa hàng đã phản hồi đánh giá',
+    noiDung: `Cửa hàng đã phản hồi đánh giá của bạn về ${sanPham.tenSanPham}.`,
+    duongDan: `/san-pham/${sanPham._id}#danh-gia`, maSuKien: `phan-hoi-danh-gia:${id}` });
+  return { _id: daPhanHoi._id, phanHoiNguoiBan: daPhanHoi.phanHoiNguoiBan, ngayPhanHoi: daPhanHoi.ngayPhanHoi };
+};
+
 module.exports = { layDanhSachDanhGia, layDongCoTheDanhGia, taoDanhGia,
-  nguoiBanLayDanhSachDanhGia, nguoiBanLayDanhSachSanPhamDanhGia, tinhThongKeDanhGia };
+  nguoiBanLayDanhSachDanhGia, nguoiBanLayDanhSachSanPhamDanhGia, tinhThongKeDanhGia,
+  layDanhGiaCuaCuaHangCongKhai, nguoiBanPhanHoiDanhGia };

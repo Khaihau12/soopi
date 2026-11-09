@@ -2,6 +2,7 @@
 .userHeader { position: sticky; top: 0; z-index: var(--tangHeader); border-bottom: var(--doDayVien) solid var(--vien); background: var(--beMat); }
 .userHeaderScrolled { box-shadow: var(--bongNoi); }
 .userHeaderInner { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: var(--kc3); min-height: var(--chieuCaoHeader); padding-block: var(--kc2); }
+.userHeaderInner > .nutThongBao { justify-self: end; }
 .userLogo { display: inline-flex; align-items: center; }
 .userLogo img { display: block; width: 7.5rem; height: auto; }
 .userSearch { display: flex; grid-column: 1 / -1; grid-row: 2; min-width: 0; border: var(--doDayVien) solid var(--vienDam); border-radius: var(--boGocNho); }

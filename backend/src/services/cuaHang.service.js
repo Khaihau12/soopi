@@ -2,14 +2,47 @@ const mongoose = require('mongoose');
 const CuaHang = require('../models/cuaHang.model');
 const SanPham = require('../models/sanPham.model');
 const { DO_DAI_TOI_DA, PHAN_TRANG } = require('../constants/cauHinh.constant');
-const { TRANG_THAI_HOAT_DONG_CUA_HANG } = require('../constants/trangThai.constant');
+const { TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_KINH_DOANH } = require('../constants/trangThai.constant');
 const { taoLoi } = require('../utils/taoLoi');
 const { thoatKyTuRegex } = require('../utils/thoatKyTuRegex');
+const { tinhThongKeDanhGia, layDanhGiaCuaCuaHangCongKhai } = require('./danhGia.service');
 
 const dinhDangCuaHang = ({ _id, tenCuaHang, moTa, diaChi, trangThaiHoatDong }) =>
   ({ _id, tenCuaHang, moTa: moTa || '', diaChi: diaChi || '', trangThaiHoatDong });
 
 const nguoiBanLayCuaHang = (cuaHang) => dinhDangCuaHang(cuaHang);
+
+const timCuaHangHoatDong = async (id) => {
+  if (!mongoose.isValidObjectId(id)) throw taoLoi(404, 'Không tìm thấy cửa hàng.');
+  const cuaHang = await CuaHang.findOne({ _id: id, trangThaiHoatDong: TRANG_THAI_HOAT_DONG_CUA_HANG.HOAT_DONG },
+    '_id tenCuaHang moTa diaChi taiKhoanId').lean();
+  if (!cuaHang) throw taoLoi(404, 'Cửa hàng không tồn tại hoặc đã ngừng hoạt động.');
+  return cuaHang;
+};
+
+const layDanhSachCuaHangCongKhai = async () => {
+  const danhSach = await CuaHang.find({ trangThaiHoatDong: TRANG_THAI_HOAT_DONG_CUA_HANG.HOAT_DONG }, '_id tenCuaHang')
+    .sort({ tenCuaHang: 1, _id: 1 }).lean();
+  return danhSach.filter((cuaHang) => mongoose.isValidObjectId(cuaHang._id));
+};
+
+const layCuaHangCongKhai = async (id) => {
+  const cuaHang = await timCuaHangHoatDong(id);
+  const [soSanPham, sanPhamIds] = await Promise.all([
+    SanPham.countDocuments({ cuaHangId: id, trangThaiKinhDoanh: TRANG_THAI_KINH_DOANH.DANG_KINH_DOANH }),
+    SanPham.find({ cuaHangId: id }).distinct('_id'),
+  ]);
+  const thongKeDanhGia = await tinhThongKeDanhGia(sanPhamIds.filter((sanPhamId) => mongoose.isValidObjectId(sanPhamId)));
+  return { cuaHang: { _id: cuaHang._id, tenCuaHang: cuaHang.tenCuaHang, moTa: cuaHang.moTa || '',
+    diaChi: cuaHang.diaChi || '', taiKhoanId: cuaHang.taiKhoanId }, soSanPham, thongKeDanhGia };
+};
+
+const layDanhGiaCuaCuaHang = async (id, query) => {
+  await timCuaHangHoatDong(id);
+  const sanPhamIds = (await SanPham.find({ cuaHangId: id }).distinct('_id'))
+    .filter((sanPhamId) => mongoose.isValidObjectId(sanPhamId));
+  return layDanhGiaCuaCuaHangCongKhai(sanPhamIds, query);
+};
 
 const nguoiBanCapNhatCuaHang = async (cuaHang, body = {}) => {
   const duLieu = body && typeof body === 'object' && !Array.isArray(body) ? body : {};
@@ -88,5 +121,6 @@ const quanTriCapNhatTrangThaiCuaHang = async (id, body = {}) => {
   return moi;
 };
 
-module.exports = { nguoiBanLayCuaHang, nguoiBanCapNhatCuaHang,
+module.exports = { layDanhSachCuaHangCongKhai, layCuaHangCongKhai, layDanhGiaCuaCuaHang,
+  nguoiBanLayCuaHang, nguoiBanCapNhatCuaHang,
   quanTriLayDanhSachCuaHang, quanTriCapNhatTrangThaiCuaHang };

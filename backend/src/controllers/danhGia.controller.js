@@ -35,5 +35,12 @@ const nguoiBanLayDanhSachSanPhamDanhGia = async (req, res, next) => {
   } catch (loi) { next(loi); }
 };
 
+const nguoiBanPhanHoiDanhGia = async (req, res, next) => {
+  try {
+    const phanHoi = await service.nguoiBanPhanHoiDanhGia(req.cuaHang._id, req.params.id, req.body);
+    res.json({ success: true, message: 'Đã phản hồi đánh giá', data: { phanHoi } });
+  } catch (loi) { next(loi); }
+};
+
 module.exports = { layDanhSachDanhGia, layDongCoTheDanhGia, taoDanhGia,
-  nguoiBanLayDanhSachDanhGia, nguoiBanLayDanhSachSanPhamDanhGia };
+  nguoiBanLayDanhSachDanhGia, nguoiBanLayDanhSachSanPhamDanhGia, nguoiBanPhanHoiDanhGia };

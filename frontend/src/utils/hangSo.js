@@ -118,11 +118,14 @@ export const DUONG_DAN = {
   TRANG_CHU: '/',
   SAN_PHAM: '/san-pham',
   chiTietSanPham: (id) => '/san-pham/' + id,
+  chiTietCuaHang: (id) => '/cua-hang/' + id,
   DANG_NHAP: '/dang-nhap',
   DANG_KY: '/dang-ky',
   QUEN_MAT_KHAU: '/quen-mat-khau',
   DAT_LAI_MAT_KHAU: '/dat-lai-mat-khau',
   GIO_HANG: '/gio-hang',
+  YEU_THICH: '/yeu-thich',
+  THONG_BAO: '/thong-bao',
   THANH_TOAN: '/thanh-toan',
   KET_QUA_THANH_TOAN: '/thanh-toan/ket-qua',
   DON_HANG: '/don-hang',
@@ -146,6 +149,7 @@ export const DUONG_DAN = {
     DOI_TRA_KHIEU_NAI: '/nguoi-ban/doi-tra-khieu-nai',
     DANH_GIA: '/nguoi-ban/danh-gia',
     TRO_CHUYEN: '/nguoi-ban/tro-chuyen',
+    THONG_BAO: '/nguoi-ban/thong-bao',
     BAO_CAO: '/nguoi-ban/bao-cao',
   },
   QUAN_TRI_VIEN: {
@@ -162,6 +166,7 @@ export const DUONG_DAN = {
     suaKhuyenMai: (id) => '/quan-tri-vien/khuyen-mai/' + id + '/sua',
     VOUCHER: '/quan-tri-vien/voucher',
     BAO_CAO: '/quan-tri-vien/bao-cao',
+    THONG_BAO: '/quan-tri-vien/thong-bao',
   },
 };
 
@@ -191,6 +196,9 @@ export const CHU_KY_BANNER_MS = 5000;
 
 export const MENU_TAI_KHOAN = (daLaNguoiBan = false) => [
   { nhan: 'Hồ sơ', duongDan: DUONG_DAN.TAI_KHOAN },
+  { nhan: 'Sản phẩm yêu thích', duongDan: DUONG_DAN.YEU_THICH },
+  { nhan: 'Sản phẩm vừa xem', duongDan: `${DUONG_DAN.TAI_KHOAN}#san-pham-vua-xem` },
+  { nhan: 'Thông báo', duongDan: DUONG_DAN.THONG_BAO },
   { nhan: 'Đơn hàng', duongDan: DUONG_DAN.DON_HANG },
   { nhan: 'Đổi trả và khiếu nại', duongDan: DUONG_DAN.DOI_TRA_KHIEU_NAI },
   { nhan: 'Trao đổi', duongDan: DUONG_DAN.TRO_CHUYEN },

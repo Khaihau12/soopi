@@ -16,6 +16,7 @@ const GiaoDichThanhToan = require('../src/models/giaoDichThanhToan.model');
 const ApDungVoucher = require('../src/models/apDungVoucher.model');
 const { xacThucChuKy } = require('../src/utils/vnpay');
 const { tachMaGiaoDichTuTxnRef } = require('../src/services/giaoDichThanhToan.service');
+const { layChiTietDonHangCuaToi, nguoiBanLayChiTietDonHang } = require('../src/services/donHang.service');
 
 const uri = new URL(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/soopi');
 uri.pathname = `/soopi_f17_kiemtra_${Date.now()}`;
@@ -65,8 +66,31 @@ async function run() {
   const vn = await taoBo();
   const v = await themVoucher('F17VNP', 10000);
   await ChiTietGioHang.create({ gioHangId: vn.gio[0]._id, sanPhamId: (await SanPham.create({ tenSanPham: 'Dòng không chọn', giaGoc: 5000, soLuongTon: 5, cuaHangId: vn.shop[0]._id, danhMucId: (await DanhMuc.findOne())._id }))._id, soLuong: 1, duocChon: false });
-  let [status, res] = await goi('/don-hang', vn.nguoiMua[0]._id, { phuongThucThanhToan: 'VNPay', danhSachMaVoucher: ['F17VNP'], tongThanhToan: 1 });
+  const loiNhanTheoCuaHang = {
+    [vn.shop[0]._id]: '  Vui lòng đóng gói kỹ  ',
+    [vn.shop[1]._id]: 'Kiểm tra đúng mẫu trước khi gửi',
+    [new mongoose.Types.ObjectId()]: 'Không thuộc giỏ hàng',
+  };
+  assert.equal((await goi('/don-hang/xem-truoc', vn.nguoiMua[0]._id,
+    { loiNhanTheoCuaHang: { [vn.shop[0]._id]: 'x'.repeat(301) } }))[0], 400);
+  assert.equal((await goi('/don-hang/xem-truoc', vn.nguoiMua[0]._id,
+    { loiNhanTheoCuaHang: 'ghi chú sai kiểu' }))[0], 400);
+  const [maXemTruoc, xemTruoc] = await goi('/don-hang/xem-truoc', vn.nguoiMua[0]._id, { loiNhanTheoCuaHang });
+  assert.equal(maXemTruoc, 200);
+  assert.deepEqual(xemTruoc.data.danhSachDonHang.map((don) => don.loiNhanChoCuaHang),
+    ['Vui lòng đóng gói kỹ', 'Kiểm tra đúng mẫu trước khi gửi']);
+  let [status, res] = await goi('/don-hang', vn.nguoiMua[0]._id, { phuongThucThanhToan: 'VNPay', danhSachMaVoucher: ['F17VNP'], tongThanhToan: 1, loiNhanTheoCuaHang });
   assert.equal(status, 201); assert.equal(res.data.danhSachDonHang.length, 2);
+  const donTheoShop = new Map((await DonHang.find({ taiKhoanId: vn.nguoiMua[0]._id }))
+    .map((don) => [String(don.cuaHangId), don]));
+  assert.equal(donTheoShop.get(String(vn.shop[0]._id)).loiNhanChoCuaHang, 'Vui lòng đóng gói kỹ');
+  assert.equal(donTheoShop.get(String(vn.shop[1]._id)).loiNhanChoCuaHang, 'Kiểm tra đúng mẫu trước khi gửi');
+  const donShopHai = donTheoShop.get(String(vn.shop[1]._id));
+  assert.equal((await layChiTietDonHangCuaToi(vn.nguoiMua[0]._id, donShopHai._id)).loiNhanChoCuaHang,
+    'Kiểm tra đúng mẫu trước khi gửi');
+  assert.equal((await nguoiBanLayChiTietDonHang(vn.shop[1], donShopHai._id)).loiNhanChoCuaHang,
+    'Kiểm tra đúng mẫu trước khi gửi');
+  await assert.rejects(nguoiBanLayChiTietDonHang(vn.shop[0], donShopHai._id), { statusCode: 404 });
   assert.equal(res.data.danhSachGiaoDich.length, 1); assert.equal(res.data.canThanhToanVnpay, true);
   const giaoDichId = res.data.giaoDichVnpayId;
   assert.equal((await GiaoDichThanhToan.findById(giaoDichId)).soTien, 250000);
@@ -77,6 +101,10 @@ async function run() {
   assert.equal((await ChiTietGioHang.countDocuments({ gioHangId: vn.gio[0]._id })), 1);
   assert.equal((await GioHang.findById(vn.gio[0]._id)).tongGiaTri, 0);
   assert.equal((await SanPham.findById(vn.sanPham[0]._id)).soLuongTon, 4);
+  const lichSuDatHang = (await SanPham.findById(vn.sanPham[0]._id).select('+bienDongTonKho')).bienDongTonKho;
+  assert.equal(lichSuDatHang.length, 1);
+  assert.equal(lichSuDatHang[0].soLuongThayDoi, -1);
+  assert.equal(String(lichSuDatHang[0].donHangId), res.data.danhSachDonHang[0]._id);
   await SanPham.updateOne({ _id: vn.sanPham[0]._id }, { $set: { giaGoc: 150000 } });
   assert.equal((await ChiTietDonHang.findOne({ sanPhamId: vn.sanPham[0]._id })).giaGocTaiThoiDiemDat, 100000);
 
@@ -151,6 +179,8 @@ async function run() {
   assert.equal((await ChiTietGioHang.countDocuments({ gioHangId: loiXoaGio.gio[0]._id })), 1);
   assert.equal(await DonHang.countDocuments({ taiKhoanId: loiXoaGio.nguoiMua[0]._id }), 0);
   assert.equal((await SanPham.findById(loiXoaGio.sanPham[0]._id)).soLuongTon, 5);
+  const lichSuHoanTac = (await SanPham.findById(loiXoaGio.sanPham[0]._id).select('+bienDongTonKho')).bienDongTonKho;
+  assert.deepEqual(lichSuHoanTac.map((dong) => dong.soLuongThayDoi), [-1, 1]);
 
   const loiGhi = await taoBo({ soCuaHang: 2 });
   const lv = await themVoucher('F17ROLL', 1000);

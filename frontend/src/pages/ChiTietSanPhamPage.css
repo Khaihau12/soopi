@@ -17,6 +17,9 @@
 .chiTietSanPhamHetHang { color: var(--loi); }
 .chiTietSanPhamCuaHang, .chiTietSanPhamMoTa { display: grid; gap: var(--kc3); padding: var(--kc5); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
 .chiTietSanPhamCuaHang p { color: var(--chuPhu); }
+.chiTietSanPhamCuaHang a { width: fit-content; color: var(--mauChinhDam); }
+.chiTietSanPhamTenCuaHang { font-weight: 700; font-size: 1.125rem; text-decoration: none; }
+.chiTietSanPhamTenCuaHang:hover { text-decoration: underline; }
 .chiTietSanPhamMoTa p { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
 .chiTietSanPhamLoi { display: grid; justify-items: start; gap: var(--kc4); }
 @media (min-width: 1024px) { .chiTietSanPhamChinh { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }

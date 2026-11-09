@@ -1,0 +1,15 @@
+.yeuThichPage { display: grid; gap: var(--kc5); }
+.yeuThichSoLuong { margin: 0; color: var(--chuPhu); }
+.yeuThichDanhSach { display: grid; gap: var(--kc3); }
+.yeuThichDong { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: var(--kc4); padding: var(--kc4); border: var(--doDayVien) solid var(--vien); border-radius: var(--boGocVua); background: var(--beMat); }
+.yeuThichAnh { display: grid; place-items: center; width: 6rem; height: 6rem; overflow: hidden; border-radius: var(--boGocNho); background: var(--nen); color: var(--chuMo); }
+.yeuThichAnh img { width: 100%; height: 100%; object-fit: cover; }
+.yeuThichNoiDung { display: grid; align-content: start; gap: var(--kc2); min-width: 0; }
+.yeuThichNoiDung h2 { margin: 0; font-size: 1rem; overflow-wrap: anywhere; }
+.yeuThichNoiDung p { margin: 0; color: var(--chuPhu); font-size: .875rem; }
+.yeuThichTrangThai { color: var(--chuPhu); font-size: .875rem; }
+.yeuThichHanhDong { grid-column: 2; display: flex; align-items: center; flex-wrap: wrap; gap: var(--kc3); }
+.yeuThichHanhDong a { color: var(--mauChinhDam); font-weight: 600; }
+@media (min-width: 640px) { .yeuThichDong { grid-template-columns: 7rem minmax(0, 1fr) auto; align-items: center; }
+  .yeuThichAnh { width: 7rem; height: 7rem; }
+  .yeuThichHanhDong { grid-column: 3; } }

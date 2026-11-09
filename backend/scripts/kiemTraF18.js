@@ -112,12 +112,15 @@ async function run() {
   const huy = kyKetQua(thatBai.giaoDich, { vnp_ResponseCode: '24', vnp_TransactionStatus: '02' });
   await guiKetQua(huy);
   await trangThai(thatBai, 'Thất bại', 'Thất bại', 5, 3);
+  const soLanHoanKho = async () => (await SanPham.findById(thatBai.sanPham[0]._id).select('+bienDongTonKho')).bienDongTonKho.length;
+  assert.equal(await soLanHoanKho(), 1);
   const maTrangThaiLoi = await taoBo();
   await guiKetQua(kyKetQua(maTrangThaiLoi.giaoDich, { vnp_TransactionStatus: '02' }));
   await trangThai(maTrangThaiLoi, 'Thất bại', 'Thất bại', 5, 3);
   assert.equal(await ApDungVoucher.countDocuments({ donHangId: { $in: thatBai.donHang.map((don) => don._id) } }), 2);
   await guiKetQua(huy);
   await trangThai(thatBai, 'Thất bại', 'Thất bại', 5, 3);
+  assert.equal(await soLanHoanKho(), 1, 'Callback lặp không ghi thêm biến động');
   const cu = console.warn;
   const canhBao = [];
   console.warn = (...args) => canhBao.push(args.join(' '));

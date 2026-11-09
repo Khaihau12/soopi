@@ -1,0 +1,6 @@
+.ketQuaMuaLai { display: grid; gap: var(--kc4); }
+.ketQuaMuaLai h3 { margin: 0; font-size: 1rem; }
+.ketQuaMuaLai ul { margin: var(--kc2) 0 0; padding-left: var(--kc5); }
+.ketQuaMuaLai li { padding-block: var(--kc1); overflow-wrap: anywhere; }
+.ketQuaMuaLai p { margin: 0; color: var(--chuPhu); }
+.ketQuaMuaLaiActions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--kc2); }

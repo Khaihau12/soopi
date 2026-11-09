@@ -7,6 +7,7 @@ const TaiKhoan = require('../src/models/taiKhoan.model');
 const CuaHang = require('../src/models/cuaHang.model');
 const CuocTroChuyen = require('../src/models/cuocTroChuyen.model');
 const TinNhan = require('../src/models/tinNhan.model');
+const ThongBao = require('../src/models/thongBao.model');
 
 const uri = new URL(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/soopi');
 uri.pathname = `/soopi_f23_kiemtra_${Date.now()}`;
@@ -47,6 +48,11 @@ async function run() {
   assert.equal((await goi(`/cuoc-tro-chuyen?cuaHangId=${shop._id}`, mua._id))[1].data.danhSach.length, 1);
   assert.equal((await goi('/cuoc-tro-chuyen', muaKhac._id))[1].data.danhSach.length, 0);
   assert.equal((await goi('/nguoi-ban/cuoc-tro-chuyen', ban._id))[1].data.danhSach[0].nguoiDung.hoTen, 'Khách Một');
+  assert.equal((await goi(`/nguoi-ban/cuoc-tro-chuyen?cuocTroChuyenId=${idCuoc}`, ban._id))[1].data.danhSach[0]._id, idCuoc);
+  assert.equal((await goi(`/nguoi-ban/cuoc-tro-chuyen?cuocTroChuyenId=${idCuoc}`, banKhac._id))[1].data.danhSach.length, 0);
+  assert.equal((await goi('/nguoi-ban/cuoc-tro-chuyen?cuocTroChuyenId=abc', ban._id))[0], 400);
+  assert.equal((await ThongBao.findOne({ taiKhoanId: ban._id, loai: 'Tin nhắn' })).duongDan,
+    `/nguoi-ban/tro-chuyen?cuocTroChuyenId=${idCuoc}`);
   assert.equal((await goi('/nguoi-ban/cuoc-tro-chuyen', banKhac._id))[1].data.danhSach.length, 0);
   assert.equal((await goi('/nguoi-ban/cuoc-tro-chuyen', mua._id))[0], 403);
   for (const id of [muaKhac._id, banKhac._id]) {
@@ -55,6 +61,8 @@ async function run() {
   }
   assert.equal((await goi(`/cuoc-tro-chuyen/${idCuoc}/tin-nhan`, null))[0], 401);
   assert.equal((await goi(`/cuoc-tro-chuyen/${idCuoc}/tin-nhan`, ban._id, 'POST', { noiDung: 'Đã nhận yêu cầu' }))[0], 201);
+  assert.equal((await ThongBao.findOne({ taiKhoanId: mua._id, loai: 'Tin nhắn' })).duongDan,
+    `/tro-chuyen?cuaHangId=${shop._id}`);
   assert.equal((await goi(`/cuoc-tro-chuyen/${idCuoc}/tin-nhan`, mua._id))[1].data.danhSach.length, 3);
   assert.equal((await goi(`/cuoc-tro-chuyen/${idCuoc}/tin-nhan`, mua._id, 'POST', { noiDung: '  ' }))[0], 400);
   assert.equal((await goi(`/cuoc-tro-chuyen/${idCuoc}/tin-nhan`, mua._id, 'POST', { noiDung: 'x'.repeat(1001) }))[0], 400);

@@ -9,6 +9,7 @@ const { khoiTaoSocket } = require('../src/services/thongBaoTinNhan.service');
 const TaiKhoan = require('../src/models/taiKhoan.model');
 const CuaHang = require('../src/models/cuaHang.model');
 const TinNhan = require('../src/models/tinNhan.model');
+const ThongBao = require('../src/models/thongBao.model');
 
 const uri = new URL(process.env.MONGODB_URI);
 uri.pathname = `/soopi_realtime_test_${Date.now()}`;
@@ -52,15 +53,21 @@ async function run() {
   let tinNgoai = 0;
   clientNgoai.on('tin-nhan-moi', () => { tinNgoai += 1; });
   const tinDau = doiSuKien(clientBan, 'tin-nhan-moi');
+  const thongBaoBan = doiSuKien(clientBan, 'thong-bao-moi');
   const [maTao, dataTao] = await guiRest(mua._id, '/cuoc-tro-chuyen', { cuaHangId: shop._id, noiDung: 'Xin chào' });
   assert.equal(maTao, 201);
   const tin = await tinDau;
+  await thongBaoBan;
   assert.equal(tin._id, dataTao.data.tinNhan._id);
   assert.equal((await TinNhan.countDocuments({ _id: tin._id })), 1);
+  assert.equal((await ThongBao.findOne({ taiKhoanId: ban._id, maSuKien: `tin-nhan:${tin._id}` })).duongDan,
+    `/nguoi-ban/tro-chuyen?cuocTroChuyenId=${tin.cuocTroChuyenId}`);
   const tinTraLoi = doiSuKien(clientMua, 'tin-nhan-moi');
+  const thongBaoMua = doiSuKien(clientMua, 'thong-bao-moi');
   const [maGui, dataGui] = await guiRest(ban._id, `/cuoc-tro-chuyen/${tin.cuocTroChuyenId}/tin-nhan`, { noiDung: 'Đã nhận' });
   assert.equal(maGui, 201);
   assert.equal((await tinTraLoi)._id, dataGui.data.tinNhan._id);
+  await thongBaoMua;
   assert.equal(tinNgoai, 0);
   await TaiKhoan.updateOne({ _id: mua._id }, { $inc: { phienBanToken: 1 } });
   const clientMoi = await ketNoi(mua._id, 1);
