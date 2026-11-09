@@ -65,7 +65,7 @@ export default function ChiTietSanPhamPage() {
     let conHieuLuc = true;
     setVoucher([]);
     setLoiVoucher('');
-    layDanhSachVoucherDangDung({ cuaHangId: sanPham.cuaHang._id })
+    layDanhSachVoucherDangDung({ cuaHangId: sanPham.cuaHang._id, sanPhamId: sanPham._id })
       .then((data) => { if (conHieuLuc) setVoucher(data.danhSach); })
       .catch(() => { if (conHieuLuc) { setVoucher([]); setLoiVoucher('Không tải được voucher.'); } });
     return () => { conHieuLuc = false; };

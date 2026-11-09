@@ -19,7 +19,12 @@ const { taoLoi } = require('../utils/taoLoi');
 const { PHI_VAN_CHUYEN_MAC_DINH, SO_VOUCHER_TOI_DA_MOI_LAN, SO_TIEN_VNPAY_TOI_THIEU, DO_DAI_TOI_DA, PHAN_TRANG, THOI_HAN_THANH_TOAN_GIO, SO_NGAY_DOI_TRA_TOI_DA } = require('../constants/cauHinh.constant');
 const { LOAI_VOUCHER, PHUONG_THUC_THANH_TOAN, TRANG_THAI_VOUCHER, TRANG_THAI_KINH_DOANH, TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_GIAO_DICH, TRANG_THAI_THANH_TOAN_DON, TRANG_THAI_XU_LY, THU_TU_TRANG_THAI_XU_LY } = require('../constants/trangThai.constant');
 
-const danhGiaVoucher = (voucher, donHang, tongTienHangToanBo, thoiDiem) => {
+const tienHangDungDanhMuc = (voucher, danhSachDonHang) => danhSachDonHang.reduce((tong, don) => tong +
+  (voucher.loaiVoucher === LOAI_VOUCHER.CUA_HANG && String(don.cuaHang._id) !== String(voucher.cuaHangId)
+    ? 0 : don.danhSachSanPham.filter((dong) => String(dong.danhMucId) === String(voucher.danhMucId?._id ?? voucher.danhMucId))
+      .reduce((tien, dong) => tien + dong.thanhTien, 0)), 0);
+
+const danhGiaVoucher = (voucher, donHang, danhSachDonHang, tongTienHangToanBo, thoiDiem) => {
   if (voucher.loaiVoucher === LOAI_VOUCHER.CUA_HANG && !donHang) {
     return { hopLe: false, lyDo: 'Voucher không áp dụng cho sản phẩm trong giỏ' };
   }
@@ -27,6 +32,7 @@ const danhGiaVoucher = (voucher, donHang, tongTienHangToanBo, thoiDiem) => {
     cuaHangId: donHang?.cuaHang._id,
     tongTienHangCuaHang: donHang?.tongTienHang,
     tongTienHangToanBo,
+    tienHangDungDanhMuc: voucher.danhMucId ? tienHangDungDanhMuc(voucher, danhSachDonHang) : undefined,
     thoiDiem,
   });
 };
@@ -40,15 +46,16 @@ const goiYVoucherChoGioHang = async (danhSachDonHang, tongTienHangToanBo, thoiDi
       { loaiVoucher: { $in: [LOAI_VOUCHER.TOAN_SAN, LOAI_VOUCHER.FREESHIP] }, cuaHangId: null },
       { loaiVoucher: LOAI_VOUCHER.CUA_HANG, cuaHangId: { $in: cuaHangIds } },
     ],
-  }).sort({ ngayKetThuc: 1, _id: 1 }).lean();
+  }).sort({ ngayKetThuc: 1, _id: 1 }).populate({ path: 'danhMucId', select: '_id tenDanhMuc' }).lean();
   return danhSach.map((voucher) => {
     const donHang = danhSachDonHang.find((don) => String(don.cuaHang._id) === String(voucher.cuaHangId));
-    const kiemTra = danhGiaVoucher(voucher, donHang, tongTienHangToanBo, thoiDiem);
+    const kiemTra = danhGiaVoucher(voucher, donHang, danhSachDonHang, tongTienHangToanBo, thoiDiem);
     return {
       maVoucher: voucher.maVoucher, tenVoucher: voucher.tenVoucher,
       loaiVoucher: voucher.loaiVoucher, kieuGiam: voucher.kieuGiam,
       giaTriGiam: voucher.giaTriGiam, giamToiDa: voucher.giamToiDa ?? null,
       giaTriDonToiThieu: voucher.giaTriDonToiThieu, cuaHangId: voucher.cuaHangId,
+      danhMucId: voucher.danhMucId?._id ?? null, tenDanhMuc: voucher.danhMucId?.tenDanhMuc ?? null,
       ngayKetThuc: voucher.ngayKetThuc,
       dapUngDieuKien: kiemTra.hopLe, lyDo: kiemTra.lyDo ?? null,
     };
@@ -89,7 +96,7 @@ const tinhToanDonHang = async (taiKhoan, { diaChiNhanHang, danhSachMaVoucher = [
     don.danhSachSanPham.push({
       chiTietGioHangId: dong._id,
       sanPham: { _id: dong.sanPham._id, tenSanPham: dong.sanPham.tenSanPham, hinhAnh: dong.sanPham.hinhAnh },
-      soLuong: dong.soLuong, giaGoc: dong.sanPham.giaGoc,
+      soLuong: dong.soLuong, giaGoc: dong.sanPham.giaGoc, danhMucId: dong.sanPham.danhMucId,
       giaBanThucTe: dong.sanPham.giaBanThucTe, thanhTien,
     });
     don.tongTienHang += thanhTien;
@@ -106,7 +113,7 @@ const tinhToanDonHang = async (taiKhoan, { diaChiNhanHang, danhSachMaVoucher = [
     const voucher = theoMa.get(maVoucher);
     if (!voucher) { voucherKhongHopLe.push({ maVoucher, lyDo: 'Mã voucher không tồn tại' }); continue; }
     const don = danhSachDonHang.find((item) => String(item.cuaHang._id) === String(voucher.cuaHangId));
-    const ketQua = danhGiaVoucher(voucher, don, tongTienHangToanBo, thoiDiem);
+    const ketQua = danhGiaVoucher(voucher, don, danhSachDonHang, tongTienHangToanBo, thoiDiem);
     if (!ketQua.hopLe) { voucherKhongHopLe.push({ maVoucher, lyDo: ketQua.lyDo }); continue; }
     if (voucher.loaiVoucher === LOAI_VOUCHER.CUA_HANG) {
       const id = String(voucher.cuaHangId);
@@ -120,6 +127,7 @@ const tinhToanDonHang = async (taiKhoan, { diaChiNhanHang, danhSachMaVoucher = [
   }
 
   const voucherApDung = [];
+  const danhMucVoucherShop = new Map();
   const ghiGiam = (voucher, cacPhan) => {
     const tongGiam = cacPhan.reduce((tong, so) => tong + so, 0);
     voucherApDung.push({ maVoucher: voucher.maVoucher, tenVoucher: voucher.tenVoucher, loaiVoucher: voucher.loaiVoucher, giaTriGiamThucTe: tongGiam });
@@ -128,14 +136,23 @@ const tinhToanDonHang = async (taiKhoan, { diaChiNhanHang, danhSachMaVoucher = [
     });
   };
   for (const voucher of voucherHopLe.filter((item) => item.loaiVoucher === LOAI_VOUCHER.CUA_HANG)) {
+    danhMucVoucherShop.set(String(voucher.cuaHangId), voucher.danhMucId ? String(voucher.danhMucId) : null);
     const cacPhan = danhSachDonHang.map((don) => String(don.cuaHang._id) === String(voucher.cuaHangId)
-      ? tinhMucGiamVoucher(voucher, don.tongTienHang) : 0);
+      ? tinhMucGiamVoucher(voucher, voucher.danhMucId ? tienHangDungDanhMuc(voucher, [don]) : don.tongTienHang) : 0);
     cacPhan.forEach((so, i) => { danhSachDonHang[i].giamVoucherCuaHang += so; });
     ghiGiam(voucher, cacPhan);
   }
   const toanSan = voucherHopLe.find((item) => item.loaiVoucher === LOAI_VOUCHER.TOAN_SAN);
   if (toanSan) {
-    const trongSo = danhSachDonHang.map((don) => don.tongTienHang - don.giamVoucherCuaHang);
+    const trongSo = danhSachDonHang.map((don) => {
+      const tienPhuHop = toanSan.danhMucId ? tienHangDungDanhMuc(toanSan, [don]) : don.tongTienHang;
+      const danhMucShop = danhMucVoucherShop.get(String(don.cuaHang._id));
+      const giamShopPhanBo = !toanSan.danhMucId || danhMucShop === String(toanSan.danhMucId)
+        ? don.giamVoucherCuaHang
+        : danhMucShop ? 0
+          : don.tongTienHang ? Math.round(don.giamVoucherCuaHang * tienPhuHop / don.tongTienHang) : 0;
+      return Math.max(0, tienPhuHop - giamShopPhanBo);
+    });
     const coSo = trongSo.reduce((tong, so) => tong + so, 0);
     const cacPhan = phanBoTheoTyLe(tinhMucGiamVoucher(toanSan, coSo), trongSo);
     cacPhan.forEach((so, i) => { danhSachDonHang[i].giamVoucherToanSan = so; });

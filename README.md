@@ -56,9 +56,9 @@ Truy cập `http://localhost:5173`; kiểm tra API tại `http://localhost:3000/
 
 Các tài khoản F29 dùng chung mật khẩu từ `DEMO_PASSWORD`: `nguoi-mua-f29@soopi.test`, `nguoi-ban-f29-a@soopi.test`, `nguoi-ban-f29-b@soopi.test`, `nguoi-ban-f29-c@soopi.test`. Nếu đã tồn tại với mật khẩu khác, script giữ nguyên mật khẩu đó.
 
-Ảnh mẫu sản phẩm và banner đã lưu trên Cloudinary, URL công khai nằm trong `backend/data/anhMau.json`. Sau khi tạo dữ liệu mẫu, chạy `npm --prefix backend run seed:images` để gắn ảnh cho các bản ghi có ảnh trống hoặc đường dẫn `/anh-demo/` cũ. Lệnh nhận diện sản phẩm theo tên và cửa hàng, bỏ qua ảnh đã tải thủ công; chạy lại không tạo ảnh trùng. Cần cấu hình Cloudinary nếu phải tải ảnh mới từ `backend/assets/generated-images/`. Ảnh gốc tạo trên máy được bỏ qua khỏi Git để repository nhẹ; các URL trong manifest đủ dùng khi cài lại dữ liệu mẫu còn tồn tại trên Cloudinary.
+URL ảnh sản phẩm và banner được lưu trực tiếp trong các bản ghi `SanPham.hinhAnh` và `BannerQuangCao.hinhAnh` của MongoDB; tệp ảnh nằm trên Cloudinary. Dữ liệu mẫu mới tạo bằng `seed:demo` chưa có ảnh: hãy đăng nhập vai trò Người bán hoặc Quản trị viên và tải ảnh lên qua giao diện tương ứng. Khi chuyển dự án sang máy khác, cần chuyển cả dữ liệu MongoDB nếu muốn giữ nguyên ảnh và dữ liệu mẫu hiện có.
 
-Nếu database cũ có Flash Sale do Người bán tạo, chạy `npm --prefix backend run migrate:flash-sale` một lần. Script sao lưu các chương trình đó vào `backend/backups/` (không đưa lên Git), rồi chuyển chúng thành chương trình `Giảm giá`. Chỉ Quản trị viên tạo Flash Sale Toàn sàn; `seed:demo` tạo một chương trình mẫu để thử mục Flash Sale trên trang chủ.
+Khuyến mãi chỉ do Người bán tạo cho sản phẩm cửa hàng mình. Quản trị viên không quản lý khuyến mãi hoặc Flash Sale; trang chủ hiển thị các chương trình giảm giá cửa hàng đang hiệu lực. Giá giảm tính từ giá gốc và không cộng dồn. Các chương trình Toàn sàn cũ được sao lưu trong `backend/backups/` trước khi xóa khỏi MongoDB.
 
 ## VNPay sandbox và kiểm thử
 
@@ -72,6 +72,8 @@ npm --prefix backend run test:cloudinary
 ```
 
 Các script `test:f12` đến `test:f30` nằm trong `backend/package.json`; mỗi script dùng database kiểm thử tách riêng. Chạy thêm các script liên quan tới chức năng đang sửa.
+
+Voucher Cửa hàng và Toàn sàn có thể giới hạn vào một danh mục. Form tạo/sửa cho phép chọn danh mục; khi thanh toán, backend chỉ tính điều kiện và mức giảm trên sản phẩm thuộc danh mục đó. Không chọn danh mục thì voucher áp dụng theo phạm vi cũ. Freeship chỉ giảm phí vận chuyển, không chọn danh mục.
 
 Chat dùng Socket.IO để báo tin mới sau khi MongoDB lưu thành công. REST vẫn dùng để gửi tin, lấy danh sách/lịch sử và đồng bộ sau khi mất kết nối. Ảnh mới được tải lên Cloudinary; ảnh cũ trong `backend/uploads` tiếp tục hiển thị. Khi thay/xóa ảnh sản phẩm hoặc banner, hệ thống xóa ảnh Cloudinary chỉ nếu không còn bản ghi nào tham chiếu. Ảnh tải lên rồi bỏ dở biểu mẫu được quét sau 24 giờ, mỗi ngày một lần; cần giữ backend chạy để quét.
 

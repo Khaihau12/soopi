@@ -8,6 +8,7 @@ import Select from './ui/Select.jsx';
 import { KIEU_GIAM, LOAI_VOUCHER } from '../utils/hangSo.js';
 import { dinhDangTien } from '../utils/dinhDang.js';
 import { moTaVoucher } from '../utils/voucher.js';
+import { layDanhSachDanhMuc } from '../services/danhMuc.api.js';
 import './VoucherForm.css';
 
 const gioVietNam = (ngay) => {
@@ -24,6 +25,7 @@ const taoDuLieu = (voucher, nhanBan, laQuanTri) => {
     loaiVoucher: laQuanTri ? (goc?.loaiVoucher || LOAI_VOUCHER.TOAN_SAN) : LOAI_VOUCHER.CUA_HANG,
     kieuGiam: goc?.kieuGiam || KIEU_GIAM.PHAN_TRAM, giaTriGiam: goc?.giaTriGiam ?? '',
     giamToiDa: goc?.giamToiDa ?? '', giaTriDonToiThieu: goc?.giaTriDonToiThieu ?? 0, soLuong: goc?.soLuong ?? 1,
+    danhMucId: goc?.danhMucId || '',
     ngayBatDau: voucher ? gioVietNam(voucher.ngayBatDau) : batDau,
     ngayKetThuc: voucher ? gioVietNam(voucher.ngayKetThuc) : gioVietNam(new Date(new Date().getTime() + doDai * 86400000)),
   };
@@ -34,6 +36,14 @@ export default function VoucherForm({ voucher, nhanBan, laQuanTri, dangGui, loiC
   const [banDau] = useState(() => taoDuLieu(voucher, nhanBan, laQuanTri));
   const [loi, setLoi] = useState({});
   const [xacNhanHuy, setXacNhanHuy] = useState(false);
+  const [danhMuc, setDanhMuc] = useState([]);
+  const [loiDanhMuc, setLoiDanhMuc] = useState('');
+  useEffect(() => {
+    let conHieuLuc = true;
+    layDanhSachDanhMuc().then((data) => { if (conHieuLuc) setDanhMuc(data.danhSach || []); })
+      .catch(() => { if (conHieuLuc) setLoiDanhMuc('Không tải được danh mục. Vui lòng mở lại biểu mẫu.'); });
+    return () => { conHieuLuc = false; };
+  }, []);
   const daSua = Object.keys(duLieu).some((ten) => String(duLieu[ten]) !== String(banDau[ten]));
   const doi = (ten, giaTri) => { setDuLieu((cu) => ({ ...cu, [ten]: giaTri })); setLoi((cu) => ({ ...cu, [ten]: '' })); };
   const dong = () => daSua ? setXacNhanHuy(true) : onClose();
@@ -67,10 +77,12 @@ export default function VoucherForm({ voucher, nhanBan, laQuanTri, dangGui, loiC
       tenVoucher: duLieu.tenVoucher.trim(), kieuGiam: duLieu.kieuGiam, giaTriGiam: so,
       giamToiDa: duLieu.kieuGiam === KIEU_GIAM.PHAN_TRAM && duLieu.giamToiDa !== '' ? toiDa : null,
       giaTriDonToiThieu: toiThieu, soLuong,
+      danhMucId: duLieu.loaiVoucher === LOAI_VOUCHER.FREESHIP ? null : duLieu.danhMucId || null,
       ngayBatDau: ngayUtc(duLieu.ngayBatDau).toISOString(), ngayKetThuc: ngayUtc(duLieu.ngayKetThuc).toISOString(),
     });
   };
-  const xemTruoc = { ...duLieu, giaTriGiam: Number(duLieu.giaTriGiam) || 0, giamToiDa: duLieu.kieuGiam === KIEU_GIAM.PHAN_TRAM && duLieu.giamToiDa !== '' ? Number(duLieu.giamToiDa) : null, giaTriDonToiThieu: Number(duLieu.giaTriDonToiThieu) || 0 };
+  const xemTruoc = { ...duLieu, tenDanhMuc: duLieu.danhMucId ? danhMuc.find((muc) => muc._id === duLieu.danhMucId)?.tenDanhMuc || voucher?.tenDanhMuc : null,
+    giaTriGiam: Number(duLieu.giaTriGiam) || 0, giamToiDa: duLieu.kieuGiam === KIEU_GIAM.PHAN_TRAM && duLieu.giamToiDa !== '' ? Number(duLieu.giamToiDa) : null, giaTriDonToiThieu: Number(duLieu.giaTriDonToiThieu) || 0 };
   const loiMa = loi.maVoucher || (!voucher && loiChung?.includes('Mã voucher đã tồn tại') ? loiChung : '');
   useEffect(() => { if (loiChung?.includes('Mã voucher đã tồn tại')) document.getElementById('voucher-maVoucher')?.focus(); }, [loiChung]);
   const hieuLuc = (ngayUtc(duLieu.ngayKetThuc) - ngayUtc(duLieu.ngayBatDau)) / 86400000;
@@ -81,7 +93,8 @@ export default function VoucherForm({ voucher, nhanBan, laQuanTri, dangGui, loiC
           <section><h3>Thông tin</h3>
             <div className="voucherFormInline"><Field label="Mã voucher" required error={loiMa}><Input id="voucher-maVoucher" value={duLieu.maVoucher} maxLength={20} readOnly={Boolean(voucher)} disabled={dangGui} onChange={(event) => doi('maVoucher', event.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))} /></Field><Button variant="secondary" onClick={voucher ? () => navigator.clipboard.writeText(duLieu.maVoucher) : taoMa}>{voucher ? 'Sao chép' : 'Tạo mã gợi ý'}</Button></div><small>{duLieu.maVoucher.length}/20 ký tự</small>
             <Field label="Tên voucher" required error={loi.tenVoucher}><Input id="voucher-tenVoucher" value={duLieu.tenVoucher} maxLength={201} disabled={dangGui} onChange={(event) => doi('tenVoucher', event.target.value)} /></Field>
-            {laQuanTri && <Field label="Loại voucher" required><Select value={duLieu.loaiVoucher} disabled={Boolean(voucher) || dangGui} onChange={(event) => doi('loaiVoucher', event.target.value)}><option value={LOAI_VOUCHER.TOAN_SAN}>Toàn sàn</option><option value={LOAI_VOUCHER.FREESHIP}>Freeship</option></Select></Field>}
+            {laQuanTri && <Field label="Loại voucher" required><Select value={duLieu.loaiVoucher} disabled={Boolean(voucher) || dangGui} onChange={(event) => setDuLieu((cu) => ({ ...cu, loaiVoucher: event.target.value, danhMucId: event.target.value === LOAI_VOUCHER.FREESHIP ? '' : cu.danhMucId }))}><option value={LOAI_VOUCHER.TOAN_SAN}>Toàn sàn</option><option value={LOAI_VOUCHER.FREESHIP}>Freeship</option></Select></Field>}
+            {duLieu.loaiVoucher !== LOAI_VOUCHER.FREESHIP && <Field label="Danh mục áp dụng" hint={laQuanTri ? 'Để Tất cả danh mục nếu voucher áp dụng cho mọi sản phẩm.' : 'Chọn danh mục cửa hàng có sản phẩm; để Tất cả danh mục nếu áp dụng cho mọi sản phẩm.'} error={loiDanhMuc}><Select id="voucher-danhMucId" value={duLieu.danhMucId} disabled={dangGui || Boolean(loiDanhMuc)} onChange={(event) => doi('danhMucId', event.target.value)}><option value="">Tất cả danh mục</option>{danhMuc.map((muc) => <option key={muc._id} value={muc._id}>{muc.tenDanhMuc}</option>)}</Select></Field>}
           </section>
           <section><h3>Ưu đãi</h3>
             <div className="voucherFormSegment" role="group" aria-label="Kiểu giảm">{Object.values(KIEU_GIAM).map((muc) => <button type="button" key={muc} aria-pressed={duLieu.kieuGiam === muc} onClick={() => doi('kieuGiam', muc)}>{muc}</button>)}</div>
@@ -89,7 +102,7 @@ export default function VoucherForm({ voucher, nhanBan, laQuanTri, dangGui, loiC
             <div className="voucherFormChips">{(duLieu.kieuGiam === KIEU_GIAM.PHAN_TRAM ? [5, 10, 15, 20, 30, 50] : [10000, 20000, 50000, 100000]).map((muc) => <Button key={muc} size="sm" variant="secondary" onClick={() => doi('giaTriGiam', String(muc))}>{duLieu.kieuGiam === KIEU_GIAM.PHAN_TRAM ? muc + '%' : dinhDangTien(muc)}</Button>)}</div>
             {duLieu.kieuGiam !== KIEU_GIAM.PHAN_TRAM && duLieu.giaTriGiam !== '' && <small>Giảm {dinhDangTien(Number(duLieu.giaTriGiam))}</small>}
             {duLieu.kieuGiam === KIEU_GIAM.PHAN_TRAM && <Field label="Giảm tối đa (đ)" hint="Để trống nếu không giới hạn" error={loi.giamToiDa}><Input id="voucher-giamToiDa" type="number" min="1" step="1" value={duLieu.giamToiDa} disabled={dangGui} onChange={(event) => doi('giamToiDa', event.target.value)} /></Field>}
-            <Field label="Đơn tối thiểu (đ)" required hint={laQuanTri ? 'Tính theo tổng tiền hàng toàn bộ đơn.' : 'Tính theo tổng tiền hàng của cửa hàng bạn trong đơn.'} error={loi.giaTriDonToiThieu}><Input id="voucher-giaTriDonToiThieu" type="number" min="0" step="1" value={duLieu.giaTriDonToiThieu} disabled={dangGui} onChange={(event) => doi('giaTriDonToiThieu', event.target.value)} /></Field>
+            <Field label="Đơn tối thiểu (đ)" required hint={duLieu.danhMucId ? 'Chỉ tính tiền sản phẩm thuộc danh mục đã chọn.' : laQuanTri ? 'Tính theo tổng tiền hàng toàn bộ đơn.' : 'Tính theo tổng tiền hàng của cửa hàng bạn trong đơn.'} error={loi.giaTriDonToiThieu}><Input id="voucher-giaTriDonToiThieu" type="number" min="0" step="1" value={duLieu.giaTriDonToiThieu} disabled={dangGui} onChange={(event) => doi('giaTriDonToiThieu', event.target.value)} /></Field>
             {duLieu.kieuGiam === KIEU_GIAM.SO_TIEN_CO_DINH && Number(duLieu.giaTriDonToiThieu) > 0 && Number(duLieu.giaTriGiam) > Number(duLieu.giaTriDonToiThieu) && <p className="voucherFormHint">Mức giảm lớn hơn giá trị đơn tối thiểu.</p>}
           </section>
           <section><h3>Số lượng và thời gian</h3>

@@ -10,15 +10,13 @@ import { layDanhSachDanhMuc } from '../services/danhMuc.api.js';
 import { layDanhSachSanPham } from '../services/sanPham.api.js';
 import { layDanhSachKhuyenMaiDangDienRa } from '../services/khuyenMai.api.js';
 import { dinhDangNgayGio } from '../utils/dinhDang.js';
-import { DUONG_DAN, LOAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, PHAN_TRANG } from '../utils/hangSo.js';
+import { DUONG_DAN, PHAN_TRANG } from '../utils/hangSo.js';
 import './TrangChuPage.css';
 
 export default function TrangChuPage() {
   const [banner, setBanner] = useState([]);
   const [danhMuc, setDanhMuc] = useState([]);
   const [sanPham, setSanPham] = useState([]);
-  const [flashSale, setFlashSale] = useState(null);
-  const [sanPhamFlashSale, setSanPhamFlashSale] = useState([]);
   const [khuyenMaiGiamGia, setKhuyenMaiGiamGia] = useState([]);
   const [dangTai, setDangTai] = useState(true);
   const [loi, setLoi] = useState('');
@@ -37,18 +35,9 @@ export default function TrangChuPage() {
       if (ketQuaDanhMuc.status === 'fulfilled') setDanhMuc(ketQuaDanhMuc.value.danhSach);
       if (ketQuaSanPham.status === 'fulfilled') setSanPham(ketQuaSanPham.value.danhSach);
       else setLoi(ketQuaSanPham.reason.message);
-      setFlashSale(null);
-      setSanPhamFlashSale([]);
       setKhuyenMaiGiamGia([]);
       if (ketQuaKhuyenMai.status === 'fulfilled') {
-        const cacChuongTrinh = ketQuaKhuyenMai.value.danhSach;
-        const cacFlashSale = cacChuongTrinh.filter((muc) => muc.loaiKhuyenMai === LOAI_KHUYEN_MAI.FLASH_SALE && muc.phamVi === PHAM_VI_KHUYEN_MAI.TOAN_SAN);
-        setKhuyenMaiGiamGia(cacChuongTrinh.filter((muc) => muc.loaiKhuyenMai === LOAI_KHUYEN_MAI.GIAM_GIA));
-        for (const chuongTrinh of cacFlashSale) {
-          const ketQuaFlashSale = await layDanhSachSanPham({ khuyenMaiId: chuongTrinh._id, trang: 1, gioiHan: 6 }).catch(() => null);
-          if (!conHieuLuc) return;
-          if (ketQuaFlashSale?.danhSach.length) { setFlashSale(chuongTrinh); setSanPhamFlashSale(ketQuaFlashSale.danhSach); break; }
-        }
+        setKhuyenMaiGiamGia(ketQuaKhuyenMai.value.danhSach);
       }
       setDangTai(false);
     };
@@ -59,7 +48,6 @@ export default function TrangChuPage() {
   return <div className="trangChuPage">
     <BannerCarousel danhSach={banner} />
     <section className="trangChuSection" aria-labelledby="trang-chu-danh-muc"><h2 id="trang-chu-danh-muc">Danh mục</h2><DanhMucChips danhSach={danhMuc} /></section>
-    {flashSale && <section className="trangChuSection" aria-labelledby="trang-chu-flash-sale"><div className="trangChuHeading"><div><h2 id="trang-chu-flash-sale">Flash Sale</h2><p>Kết thúc lúc {dinhDangNgayGio(flashSale.ngayKetThuc)}</p></div><Link to={`${DUONG_DAN.SAN_PHAM}?khuyenMaiId=${flashSale._id}`}>Xem tất cả</Link></div><LuoiSanPham danhSach={sanPhamFlashSale} /></section>}
     {khuyenMaiGiamGia.length > 0 && <section className="trangChuSection" aria-labelledby="trang-chu-khuyen-mai"><h2 id="trang-chu-khuyen-mai">Khuyến mãi đang diễn ra</h2><div className="trangChuKhuyenMai">{khuyenMaiGiamGia.map((muc) => <Link key={muc._id} to={`${DUONG_DAN.SAN_PHAM}?khuyenMaiId=${muc._id}`}><strong>{muc.tenKhuyenMai}</strong><span>Kết thúc lúc {dinhDangNgayGio(muc.ngayKetThuc)}</span></Link>)}</div></section>}
     <section className="trangChuSection" aria-labelledby="trang-chu-san-pham"><div className="trangChuHeading"><h1 id="trang-chu-san-pham">Sản phẩm mới</h1><Link to={DUONG_DAN.SAN_PHAM}>Xem tất cả sản phẩm</Link></div>
       {loi ? <ErrorState message={loi} taiLai={() => setLanTai((lan) => lan + 1)} /> : <><LuoiSanPham danhSach={sanPham} dangTai={dangTai} />{!dangTai && !sanPham.length && <EmptyState title="Chưa có sản phẩm" description="Hãy quay lại sau để khám phá sản phẩm mới." />}</>}

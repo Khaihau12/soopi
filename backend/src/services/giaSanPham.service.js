@@ -1,12 +1,15 @@
 const mongoose = require('mongoose');
 const KhuyenMai = require('../models/khuyenMai.model');
 const ChiTietKhuyenMai = require('../models/chiTietKhuyenMai.model');
-const { TRANG_THAI_KHUYEN_MAI } = require('../constants/trangThai.constant');
+const { TRANG_THAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, LOAI_KHUYEN_MAI } = require('../constants/trangThai.constant');
 
 const gomGiaBanThucTe = async (danhSachSanPham, thoiDiem = new Date()) => {
   if (!danhSachSanPham.length) return [];
   const sanPhamIds = danhSachSanPham.map((sanPham) => sanPham._id);
   const khuyenMai = (await KhuyenMai.find({
+    phamVi: PHAM_VI_KHUYEN_MAI.CUA_HANG,
+    cuaHangId: { $ne: null },
+    loaiKhuyenMai: LOAI_KHUYEN_MAI.GIAM_GIA,
     ngayBatDau: { $lte: thoiDiem },
     ngayKetThuc: { $gte: thoiDiem },
     trangThai: { $ne: TRANG_THAI_KHUYEN_MAI.DA_KET_THUC },

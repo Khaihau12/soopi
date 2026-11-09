@@ -59,6 +59,7 @@ const dungTrangThaiGioHang = async (taiKhoanId, { chiDoc = false } = {}) => {
       sanPham: {
         _id: item._id, tenSanPham: item.tenSanPham, hinhAnh: item.hinhAnh,
         giaGoc: item.giaGoc, giaBanThucTe: item.giaBanThucTe,
+        danhMucId: item.danhMucId,
         khuyenMaiApDung: item.khuyenMaiApDung, soLuongTon: item.soLuongTon,
         trangThaiKinhDoanh: item.trangThaiKinhDoanh,
       },

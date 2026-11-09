@@ -30,8 +30,6 @@ const SanPhamNguoiBanPage = lazy(() => import('./pages/nguoiBan/SanPhamNguoiBanP
 const FormSanPhamPage = lazy(() => import('./pages/nguoiBan/FormSanPhamPage.jsx'));
 const KhuyenMaiNguoiBanPage = lazy(() => import('./pages/nguoiBan/KhuyenMaiNguoiBanPage.jsx'));
 const FormKhuyenMaiPage = lazy(() => import('./pages/nguoiBan/FormKhuyenMaiPage.jsx'));
-const KhuyenMaiQuanTriPage = lazy(() => import('./pages/quanTriVien/KhuyenMaiQuanTriPage.jsx'));
-const FormKhuyenMaiQuanTriPage = lazy(() => import('./pages/quanTriVien/FormKhuyenMaiQuanTriPage.jsx'));
 const VoucherNguoiBanPage = lazy(() => import('./pages/nguoiBan/VoucherNguoiBanPage.jsx'));
 const VoucherQuanTriPage = lazy(() => import('./pages/quanTriVien/VoucherQuanTriPage.jsx'));
 const GioHangPage = lazy(() => import('./pages/GioHangPage.jsx'));
@@ -110,9 +108,6 @@ export default function App() {
             <Route path="san-pham" element={<SanPhamQuanTriPage />} />
             <Route path="banner" element={<BannerQuanTriPage />} />
             <Route path="duyet-nguoi-ban" element={<DuyetNguoiBanPage />} />
-            <Route path="khuyen-mai" element={<KhuyenMaiQuanTriPage />} />
-            <Route path="khuyen-mai/them" element={<FormKhuyenMaiQuanTriPage />} />
-            <Route path="khuyen-mai/:id/sua" element={<FormKhuyenMaiQuanTriPage />} />
             <Route path="voucher" element={<VoucherQuanTriPage />} />
             <Route path="*" element={<KhongTimThayPage />} />
           </Route>

@@ -239,7 +239,7 @@ GET   /api/giao-dich-thanh-toan/vnpay/ket-qua           # VNPay trả về
 
 - **NguoiDung:** tài khoản, tìm/xem sản phẩm, giỏ hàng, voucher, đặt hàng, VNPay, theo dõi đơn, đánh giá, đổi trả/khiếu nại, nhắn tin với NguoiBan, đăng ký trở thành NguoiBan.
 - **NguoiBan:** NguoiDung đã được duyệt (vẫn được mua hàng). Quản lý cửa hàng, sản phẩm, tồn kho, giá/khuyến mãi, voucher cửa hàng, đơn hàng, đổi trả, thống kê **của chính cửa hàng mình**.
-- **QuanTriVien:** quản lý tài khoản, duyệt NguoiBan, danh mục/sản phẩm toàn hệ thống, giao dịch, banner/khuyến mãi/voucher hệ thống (Toàn sàn, Freeship), báo cáo tổng quan.
+- **QuanTriVien:** quản lý tài khoản, duyệt NguoiBan, danh mục/sản phẩm toàn hệ thống, giao dịch, banner/voucher hệ thống (Toàn sàn, Freeship), báo cáo tổng quan. Không quản lý khuyến mãi sản phẩm.
 - Ngoài phạm vi đề tài: không có giao hàng thật hay đơn vị vận chuyển (phí và trạng thái vận chuyển chỉ **mô phỏng**), không hoàn tiền tự động.
 
 ## 8. Bất biến nghiệp vụ (không được phá vỡ)
@@ -250,7 +250,7 @@ GET   /api/giao-dich-thanh-toan/vnpay/ket-qua           # VNPay trả về
 - Tài khoản `Bị khóa` không dùng được chức năng yêu cầu tài khoản hoạt động.
 
 **Giá và khuyến mãi**
-- Chỉ QuanTriVien tạo/sửa chương trình `Flash Sale` Toàn sàn; NguoiBan chỉ tạo chương trình `Giảm giá` cho cửa hàng mình. Trang chủ chỉ lấy sản phẩm thuộc Flash Sale Toàn sàn đang hiệu lực.
+- Chỉ NguoiBan tạo/sửa chương trình `Giảm giá` cho sản phẩm cửa hàng mình. Không có khuyến mãi Toàn sàn hoặc Flash Sale; trang chủ lấy chương trình giảm giá cửa hàng đang hiệu lực.
 - `giaGoc` và giá khuyến mãi lưu riêng. Không ghi đè `giaGoc`.
 - Giá khuyến mãi lấy từ `ChiTietKhuyenMai` (`tyLeGiam` hoặc `giaKhuyenMai`) của chương trình `Đang hoạt động` và còn trong `ngayBatDau`–`ngayKetThuc`. Giá khuyến mãi ≤ `giaGoc`.
 - Backend quyết định giá cuối (`giaBanThucTe`).
@@ -260,6 +260,7 @@ GET   /api/giao-dich-thanh-toan/vnpay/ket-qua           # VNPay trả về
 - Có 3 loại và có thể kết hợp trên một đơn: `Freeship`, `Toàn sàn`, `Cửa hàng`. Voucher Toàn sàn/Freeship do QuanTriVien tạo (`cuaHangId` rỗng); voucher Cửa hàng do NguoiBan tạo.
 - Kiểm tra: trạng thái `Kích hoạt`, thời gian hiệu lực, `giaTriDonToiThieu`, `giamToiDa`, `soLuong`, phạm vi cửa hàng. Mỗi lần áp dụng ghi một bản ghi `ApDungVoucher` với `giaTriGiamThucTe`.
 - Không tin mức giảm từ frontend.
+- Voucher `Cửa hàng` và `Toàn sàn` có thể giới hạn vào một `danhMucId`; khi đó điều kiện đơn tối thiểu và số tiền được giảm chỉ tính trên sản phẩm thuộc danh mục ấy. `Freeship` không giới hạn theo danh mục. Voucher không chọn danh mục áp dụng như trước.
 
 **Giỏ hàng**
 - Mỗi tài khoản một giỏ. Mỗi sản phẩm một dòng; thêm lại thì tăng `soLuong`. Chỉ dòng `duocChon = true` được đưa vào đơn. `tongGiaTri` tính lại ở backend.

@@ -157,9 +157,6 @@ export const DUONG_DAN = {
     SAN_PHAM: '/quan-tri-vien/san-pham',
     GIAO_DICH: '/quan-tri-vien/giao-dich',
     BANNER: '/quan-tri-vien/banner',
-    KHUYEN_MAI: '/quan-tri-vien/khuyen-mai',
-    THEM_KHUYEN_MAI: '/quan-tri-vien/khuyen-mai/them',
-    suaKhuyenMai: (id) => '/quan-tri-vien/khuyen-mai/' + id + '/sua',
     VOUCHER: '/quan-tri-vien/voucher',
     BAO_CAO: '/quan-tri-vien/bao-cao',
   },
@@ -257,7 +254,6 @@ export const MENU_QUAN_TRI_VIEN = [
   { nhan: 'Sản phẩm', duongDan: DUONG_DAN.QUAN_TRI_VIEN.SAN_PHAM, bieuTuong: 'package' },
   { nhan: 'Giao dịch', duongDan: DUONG_DAN.QUAN_TRI_VIEN.GIAO_DICH, bieuTuong: 'cart' },
   { nhan: 'Banner', duongDan: DUONG_DAN.QUAN_TRI_VIEN.BANNER, bieuTuong: 'image' },
-  { nhan: 'Khuyến mãi', duongDan: DUONG_DAN.QUAN_TRI_VIEN.KHUYEN_MAI, bieuTuong: 'tag' },
   { nhan: 'Voucher', duongDan: DUONG_DAN.QUAN_TRI_VIEN.VOUCHER, bieuTuong: 'ticket' },
   { nhan: 'Báo cáo', duongDan: DUONG_DAN.QUAN_TRI_VIEN.BAO_CAO, bieuTuong: 'chart' },
 ];

@@ -6,7 +6,8 @@ export const moTaVoucher = (voucher) => {
   const mucGiam = voucher.kieuGiam === KIEU_GIAM.PHAN_TRAM ? `${voucher.giaTriGiam}%` : dinhDangTien(voucher.giaTriGiam);
   const gioiHan = voucher.giamToiDa ? ` (tối đa ${dinhDangTien(voucher.giamToiDa)})` : '';
   const donToiThieu = voucher.giaTriDonToiThieu ? ` cho đơn từ ${dinhDangTien(voucher.giaTriDonToiThieu)}` : '';
-  return `${voucher.loaiVoucher === LOAI_VOUCHER.FREESHIP ? 'Giảm phí vận chuyển' : 'Giảm'} ${mucGiam}${gioiHan}${donToiThieu}`;
+  const danhMuc = voucher.tenDanhMuc ? ` · Danh mục: ${voucher.tenDanhMuc}` : '';
+  return `${voucher.loaiVoucher === LOAI_VOUCHER.FREESHIP ? 'Giảm phí vận chuyển' : 'Giảm'} ${mucGiam}${gioiHan}${donToiThieu}${danhMuc}`;
 };
 
 export const tinhTinhTrangVoucher = (voucher, thoiDiem = new Date()) => {

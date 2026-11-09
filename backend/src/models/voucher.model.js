@@ -17,6 +17,7 @@ const voucherSchema = new mongoose.Schema({
   ngayKetThuc: { type: Date, required: true },
   trangThai: { type: String, enum: Object.values(TRANG_THAI_VOUCHER), default: TRANG_THAI_VOUCHER.KICH_HOAT },
   cuaHangId: { type: mongoose.Schema.Types.ObjectId, ref: 'CuaHang', default: null },
+  danhMucId: { type: mongoose.Schema.Types.ObjectId, ref: 'DanhMuc', default: null },
 }, { collection: 'Voucher' });
 
 voucherSchema.index({ maVoucher: 1 }, { unique: true });

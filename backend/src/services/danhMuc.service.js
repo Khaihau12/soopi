@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const DanhMuc = require('../models/danhMuc.model');
 const SanPham = require('../models/sanPham.model');
+const Voucher = require('../models/voucher.model');
 const { DO_DAI_TOI_DA } = require('../constants/cauHinh.constant');
 const { taoLoi } = require('../utils/taoLoi');
 
@@ -64,6 +65,7 @@ const quanTriXoaDanhMuc = async (id) => {
   if (soSanPham > 0) {
     throw taoLoi(409, `Danh mục đang có ${soSanPham} sản phẩm nên không thể xóa. Hãy chuyển các sản phẩm sang danh mục khác trước.`);
   }
+  if (await Voucher.exists({ danhMucId: danhMuc._id })) throw taoLoi(409, 'Danh mục đang được voucher sử dụng nên không thể xóa.');
   await danhMuc.deleteOne();
 };
 

@@ -8,7 +8,7 @@ const DanhGia = require('../models/danhGia.model');
 const ChiTietKhuyenMai = require('../models/chiTietKhuyenMai.model');
 const ChiTietGioHang = require('../models/chiTietGioHang.model');
 const KhuyenMai = require('../models/khuyenMai.model');
-const { TRANG_THAI_KINH_DOANH, TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_KHUYEN_MAI } = require('../constants/trangThai.constant');
+const { TRANG_THAI_KINH_DOANH, TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, LOAI_KHUYEN_MAI } = require('../constants/trangThai.constant');
 const { PHAN_TRANG, DO_DAI_TOI_DA, ANH } = require('../constants/cauHinh.constant');
 const { laDuongDanAnhHopLe } = require('../utils/kiemTra');
 const { taoLoi } = require('../utils/taoLoi');
@@ -47,7 +47,7 @@ const layDanhSachSanPham = async ({ tuKhoa, danhMucId, khuyenMaiId, trang, gioiH
   let sanPhamKhuyenMaiIds;
   if (khuyenMaiId) {
     const bayGio = new Date();
-    const chuongTrinh = await KhuyenMai.findOne({ _id: khuyenMaiId, ngayBatDau: { $lte: bayGio }, ngayKetThuc: { $gte: bayGio }, trangThai: { $ne: TRANG_THAI_KHUYEN_MAI.DA_KET_THUC } });
+    const chuongTrinh = await KhuyenMai.findOne({ _id: khuyenMaiId, phamVi: PHAM_VI_KHUYEN_MAI.CUA_HANG, cuaHangId: { $ne: null }, loaiKhuyenMai: LOAI_KHUYEN_MAI.GIAM_GIA, ngayBatDau: { $lte: bayGio }, ngayKetThuc: { $gte: bayGio }, trangThai: { $ne: TRANG_THAI_KHUYEN_MAI.DA_KET_THUC } });
     if (!chuongTrinh) return phanTrangRong;
     sanPhamKhuyenMaiIds = await ChiTietKhuyenMai.find({ khuyenMaiId }).distinct('sanPhamId');
     if (!sanPhamKhuyenMaiIds.length) return phanTrangRong;

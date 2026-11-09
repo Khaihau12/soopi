@@ -63,9 +63,10 @@ export default function ChonVoucher({ loai, cuaHang, duLieu, maDaChon, onThayDoi
         <h3>{chiTiet.tenVoucher}</h3>
         <p><strong>Mã:</strong> {chiTiet.maVoucher}</p>
         <p><strong>Ưu đãi:</strong> {moTaVoucher(chiTiet)}</p>
-        <p><strong>Đơn tối thiểu:</strong> {dinhDangTien(chiTiet.giaTriDonToiThieu || 0)} {chiTiet.loaiVoucher === LOAI_VOUCHER.CUA_HANG ? 'tiền hàng của cửa hàng' : 'tiền hàng của cả giỏ'}</p>
+        <p><strong>Đơn tối thiểu:</strong> {dinhDangTien(chiTiet.giaTriDonToiThieu || 0)} {chiTiet.danhMucId ? 'tiền sản phẩm thuộc danh mục áp dụng' : chiTiet.loaiVoucher === LOAI_VOUCHER.CUA_HANG ? 'tiền hàng của cửa hàng' : 'tiền hàng của cả giỏ'}</p>
         {chiTiet.giamToiDa != null && <p><strong>Giảm tối đa:</strong> {dinhDangTien(chiTiet.giamToiDa)}</p>}
         <p><strong>Phạm vi:</strong> {chiTiet.loaiVoucher === LOAI_VOUCHER.CUA_HANG ? cuaHang.tenCuaHang : chiTiet.loaiVoucher === LOAI_VOUCHER.FREESHIP ? 'Phí vận chuyển của các đơn trong giỏ' : 'Các đơn trong giỏ'}</p>
+        {chiTiet.danhMucId && <p><strong>Danh mục áp dụng:</strong> {chiTiet.tenDanhMuc}</p>}
         {chiTiet.ngayKetThuc && <p><strong>Hạn sử dụng:</strong> {new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(chiTiet.ngayKetThuc))}</p>}
         {!chiTiet.dapUngDieuKien && <p className="chonVoucherLoi" role="status">{chiTiet.lyDo}</p>}
       </div> : <>

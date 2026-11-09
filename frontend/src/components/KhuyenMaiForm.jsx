@@ -8,9 +8,9 @@ import Modal from './ui/Modal.jsx';
 import Pagination from './ui/Pagination.jsx';
 import Select from './ui/Select.jsx';
 import { layDanhSachDanhMuc } from '../services/danhMuc.api.js';
-import { layDanhSachSanPham, nguoiBanLayDanhSachSanPham } from '../services/sanPham.api.js';
+import { nguoiBanLayDanhSachSanPham } from '../services/sanPham.api.js';
 import { dinhDangTien, taoUrlAnh } from '../utils/dinhDang.js';
-import { LOAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI } from '../utils/hangSo.js';
+import { LOAI_KHUYEN_MAI } from '../utils/hangSo.js';
 import './KhuyenMaiForm.css';
 
 const SO_DONG_MOI_TRANG = 20;
@@ -45,11 +45,10 @@ const phanTramThucTe = (dong) => {
   return giaSau === null || goc <= 0 ? null : Math.round((goc - giaSau) / goc * 10000) / 100;
 };
 
-export default function KhuyenMaiForm({ phamVi, khuyenMai, onSubmit, dangGui, loiChung, onCancel }) {
-  const laQuanTri = phamVi === PHAM_VI_KHUYEN_MAI.TOAN_SAN;
+export default function KhuyenMaiForm({ khuyenMai, onSubmit, dangGui, loiChung, onCancel }) {
   const chiTietBanDau = (khuyenMai?.chiTiet || []).filter((muc) => muc.sanPham).map(taoDong);
   const [tenKhuyenMai, setTenKhuyenMai] = useState(khuyenMai?.tenKhuyenMai || '');
-  const [loaiKhuyenMai, setLoaiKhuyenMai] = useState(laQuanTri ? (khuyenMai?.loaiKhuyenMai || LOAI_KHUYEN_MAI.GIAM_GIA) : LOAI_KHUYEN_MAI.GIAM_GIA);
+  const loaiKhuyenMai = LOAI_KHUYEN_MAI.GIAM_GIA;
   const [ngayBatDau, setNgayBatDau] = useState(gioVietNam(khuyenMai?.ngayBatDau));
   const [ngayKetThuc, setNgayKetThuc] = useState(gioVietNam(khuyenMai?.ngayKetThuc));
   const [chiTiet, setChiTiet] = useState(chiTietBanDau);
@@ -71,12 +70,10 @@ export default function KhuyenMaiForm({ phamVi, khuyenMai, onSubmit, dangGui, lo
   const [daChon, setDaChon] = useState(() => new Map());
   const [dangChonTatCa, setDangChonTatCa] = useState(false);
 
-  const laySanPham = laQuanTri ? layDanhSachSanPham : nguoiBanLayDanhSachSanPham;
   const daThem = useMemo(() => new Set(chiTiet.map((dong) => String(dong.sanPham._id))), [chiTiet]);
   const loiDong = useMemo(() => chiTiet.filter((dong) => loiCuaDong(dong)), [chiTiet]);
   const mucGiamHopLe = mucChung !== '' && Number.isFinite(Number(mucChung)) && Number(mucChung) > 0 && Number(mucChung) < 100;
   const daThayDoi = tenKhuyenMai !== (khuyenMai?.tenKhuyenMai || '')
-    || loaiKhuyenMai !== (laQuanTri ? (khuyenMai?.loaiKhuyenMai || LOAI_KHUYEN_MAI.GIAM_GIA) : LOAI_KHUYEN_MAI.GIAM_GIA)
     || ngayBatDau !== gioVietNam(khuyenMai?.ngayBatDau) || ngayKetThuc !== gioVietNam(khuyenMai?.ngayKetThuc)
     || mucChung !== mucBanDau(chiTietBanDau) || chiTiet.length !== chiTietBanDau.length
     || chiTiet.some((dong, viTri) => dong.sanPham._id !== chiTietBanDau[viTri]?.sanPham._id || dong.kieu !== chiTietBanDau[viTri]?.kieu || dong.giaTri !== chiTietBanDau[viTri]?.giaTri);
@@ -92,11 +89,11 @@ export default function KhuyenMaiForm({ phamVi, khuyenMai, onSubmit, dangGui, lo
     if (!moChon) return undefined;
     let conHieuLuc = true;
     setDangTaiSanPham(true); setLoiSanPham('');
-    laySanPham({ tuKhoa, danhMucId, trang, gioiHan: 12 }).then((data) => { if (conHieuLuc) setKetQua(data); })
+    nguoiBanLayDanhSachSanPham({ tuKhoa, danhMucId, trang, gioiHan: 12 }).then((data) => { if (conHieuLuc) setKetQua(data); })
       .catch((loiApi) => { if (conHieuLuc) setLoiSanPham(loiApi.message); })
       .finally(() => { if (conHieuLuc) setDangTaiSanPham(false); });
     return () => { conHieuLuc = false; };
-  }, [moChon, tuKhoa, danhMucId, trang, laQuanTri]);
+  }, [moChon, tuKhoa, danhMucId, trang]);
 
   const doiDong = (id, thayDoi) => setChiTiet((cu) => cu.map((dong) => String(dong.sanPham._id) === String(id) ? { ...dong, ...thayDoi } : dong));
   const doiKieu = (dong, kieu) => {
@@ -183,8 +180,7 @@ export default function KhuyenMaiForm({ phamVi, khuyenMai, onSubmit, dangGui, lo
   return <form className="khuyenMaiForm" noValidate onSubmit={luu}>
     <Card><h2>Thông tin chương trình</h2><div className="khuyenMaiFormFields">
       <Field label="Tên chương trình" required error={loi.tenKhuyenMai}><Input id="khuyen-mai-tenKhuyenMai" value={tenKhuyenMai} maxLength={201} disabled={dangGui} onChange={(event) => { setTenKhuyenMai(event.target.value); setLoi((cu) => ({ ...cu, tenKhuyenMai: '' })); }} /></Field>
-      {laQuanTri ? <Field label="Loại khuyến mãi" required><Select value={loaiKhuyenMai} disabled={dangGui} onChange={(event) => setLoaiKhuyenMai(event.target.value)}>{Object.values(LOAI_KHUYEN_MAI).map((giaTri) => <option key={giaTri}>{giaTri}</option>)}</Select></Field>
-        : <p>Người bán chỉ tạo chương trình giảm giá. Mức giảm được tính từ giá gốc của từng sản phẩm.</p>}
+      <p>Người bán chỉ tạo chương trình giảm giá. Mức giảm được tính từ giá gốc của từng sản phẩm.</p>
       <Field label="Bắt đầu" required hint="Giờ Việt Nam" error={loi.ngayBatDau}><Input id="khuyen-mai-ngayBatDau" type="datetime-local" value={ngayBatDau} disabled={dangGui} onChange={(event) => { setNgayBatDau(event.target.value); setLoi((cu) => ({ ...cu, ngayBatDau: '' })); }} /></Field>
       <Field label="Kết thúc" required hint="Giờ Việt Nam" error={loi.ngayKetThuc}><Input id="khuyen-mai-ngayKetThuc" type="datetime-local" value={ngayKetThuc} disabled={dangGui} onChange={(event) => { setNgayKetThuc(event.target.value); setLoi((cu) => ({ ...cu, ngayKetThuc: '' })); }} /></Field>
     </div></Card>
@@ -218,7 +214,7 @@ export default function KhuyenMaiForm({ phamVi, khuyenMai, onSubmit, dangGui, lo
               <td data-label="Chọn"><input type="checkbox" checked={daTick.has(id)} disabled={dangGui} aria-label={`Chọn ${dong.sanPham.tenSanPham}`} onChange={() => tickDong(id)} /></td>
               <td data-label="Sản phẩm"><div className="khuyenMaiProduct">
                 {taoUrlAnh(dong.sanPham.hinhAnh?.[0]) && <img src={taoUrlAnh(dong.sanPham.hinhAnh[0])} alt="" />}
-                <span><strong>{dong.sanPham.tenSanPham}</strong>{laQuanTri && dong.sanPham.cuaHang?.tenCuaHang && <small>{dong.sanPham.cuaHang.tenCuaHang}</small>}{tuyChinh && <small className="khuyenMaiCustom">Tùy chỉnh</small>}</span>
+                <span><strong>{dong.sanPham.tenSanPham}</strong>{tuyChinh && <small className="khuyenMaiCustom">Tùy chỉnh</small>}</span>
               </div></td>
               <td data-label="Giá gốc">{dinhDangTien(dong.sanPham.giaGoc)}</td>
               <td data-label="Kiểu giảm"><div className="khuyenMaiType" role="group" aria-label={`Kiểu giảm cho ${dong.sanPham.tenSanPham}`}>
@@ -250,9 +246,9 @@ export default function KhuyenMaiForm({ phamVi, khuyenMai, onSubmit, dangGui, lo
         <Button variant="ghost" size="sm" loading={dangChonTatCa} disabled={dangTaiSanPham || !ketQua.phanTrang.tongSo} onClick={chonTatCaKetQua}>Chọn tất cả {ketQua.phanTrang.tongSo} kết quả phù hợp</Button></div>
       {dangTaiSanPham ? <p>Đang tải sản phẩm…</p> : loiSanPham ? <p className="khuyenMaiFormLoi" role="alert">{loiSanPham}</p> : !ketQua.danhSach.length ? <p>Không có sản phẩm phù hợp.</p> : <div className="khuyenMaiPickerList">{ketQua.danhSach.map((sanPham) => {
         const daCo = daThem.has(String(sanPham._id));
-        return <label key={sanPham._id} className="khuyenMaiPickerItem"><input type="checkbox" checked={daCo || daChon.has(sanPham._id)} disabled={daCo || dangChonTatCa} aria-label={`Chọn ${sanPham.tenSanPham}${laQuanTri && sanPham.cuaHang?.tenCuaHang ? ` của ${sanPham.cuaHang.tenCuaHang}` : ''}`} onChange={() => tickSanPham(sanPham)} />
+        return <label key={sanPham._id} className="khuyenMaiPickerItem"><input type="checkbox" checked={daCo || daChon.has(sanPham._id)} disabled={daCo || dangChonTatCa} aria-label={`Chọn ${sanPham.tenSanPham}`} onChange={() => tickSanPham(sanPham)} />
           {taoUrlAnh(sanPham.hinhAnh?.[0]) && <img src={taoUrlAnh(sanPham.hinhAnh[0])} alt="" />}
-          <span><strong>{sanPham.tenSanPham}</strong>{laQuanTri && sanPham.cuaHang?.tenCuaHang && <small>{sanPham.cuaHang.tenCuaHang}</small>}<small>{dinhDangTien(sanPham.giaGoc)}{sanPham.soLuongTon != null ? ` · Còn ${sanPham.soLuongTon}` : ''}</small></span>
+          <span><strong>{sanPham.tenSanPham}</strong><small>{dinhDangTien(sanPham.giaGoc)}{sanPham.soLuongTon != null ? ` · Còn ${sanPham.soLuongTon}` : ''}</small></span>
           {daCo && <small>Đã thêm</small>}
         </label>;
       })}</div>}

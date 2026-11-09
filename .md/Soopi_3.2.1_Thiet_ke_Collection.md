@@ -119,12 +119,13 @@ Dựa vào biểu đồ lớp (Hình 3.72) gồm 19 lớp, cơ sở dữ liệu 
 | kieuGiam | String | Kiểu giảm của voucher (Phần trăm, Số tiền cố định) |
 | giaTriGiam | Number | Giá trị giảm (theo phần trăm hoặc theo số tiền tùy kieuGiam) |
 | giamToiDa | Number | Mức giảm tối đa của voucher |
-| giaTriDonToiThieu | Number | Giá trị đơn hàng tối thiểu để được áp dụng voucher |
+| giaTriDonToiThieu | Number | Giá trị tiền hàng tối thiểu để được áp dụng voucher; nếu voucher có danhMucId thì chỉ tính sản phẩm thuộc danh mục đó |
 | soLuong | Number | Số lượng voucher có thể sử dụng |
 | ngayBatDau | Date | Ngày bắt đầu hiệu lực |
 | ngayKetThuc | Date | Ngày kết thúc hiệu lực |
 | trangThai | String | Trạng thái của voucher (Kích hoạt, Vô hiệu hóa,...) |
 | cuaHangId | String | ID của cửa hàng tạo voucher (tham chiếu tới CuaHang; để trống với voucher Toàn sàn và Freeship do Quản trị viên tạo) |
+| danhMucId | ObjectId, tùy chọn | Danh mục sản phẩm được giảm (tham chiếu tới DanhMuc); để trống nếu áp dụng mọi danh mục. Chỉ dùng cho voucher Cửa hàng và Toàn sàn, không dùng cho Freeship. |
 
 **i. Thiết kế Collection Áp dụng voucher**
 

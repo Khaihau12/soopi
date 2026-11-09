@@ -42,6 +42,7 @@
   - Voucher Cửa hàng: kiểm tra và giảm trên `tongTienHang` của **đơn của cửa hàng đó**.
   - Voucher Toàn sàn: kiểm tra `giaTriDonToiThieu` trên **tổng tiền hàng cả lần thanh toán**; mức giảm tính trên tổng tiền hàng **sau khi trừ voucher Cửa hàng**, rồi **chia cho các đơn theo tỷ lệ** `tongTienHang`.
   - Voucher Freeship: kiểm tra trên tổng tiền hàng cả lần thanh toán; mức giảm tính trên **tổng phí vận chuyển** (không vượt tổng phí), **chia cho các đơn theo tỷ lệ** `phiVanChuyen`.
+  - Voucher Cửa hàng và Toàn sàn có thể chọn đúng một danh mục áp dụng. Khi chọn, ngưỡng đơn tối thiểu và mức giảm chỉ tính trên tiền sản phẩm thuộc danh mục đó; phần giảm Toàn sàn phân bổ theo số tiền đủ điều kiện của mỗi đơn sau phần voucher Cửa hàng tương ứng. Không chọn danh mục thì giữ cách tính hiện tại. Freeship không giới hạn danh mục.
   - Chia bằng làm tròn xuống số nguyên, đơn cuối nhận phần dư để tổng khớp; không đơn nào giảm quá `tongTienHang` (hoặc `phiVanChuyen`) của nó.
   - Mỗi đơn nhận **một bản ghi `ApDungVoucher` cho mỗi voucher có phần giảm > 0**, `giaTriGiamThucTe` = phần được chia cho đơn đó.
 - **Trạng thái: ĐÃ CHỐT** — làm theo quyết định trên.
@@ -97,8 +98,8 @@
   3. Khi **tra giá**: chương trình chỉ có hiệu lực khi ngày hiện tại nằm trong `[ngayBatDau, ngayKetThuc]` **và** `trangThai ≠ Đã kết thúc` (nên chương trình bị vô hiệu hóa lập tức không còn áp dụng).
   4. Sản phẩm nằm trong nhiều chương trình đang hiệu lực: lấy **giá thấp nhất**; `giaBanThucTe = min(giá KM, giaGoc)`.
   5. Khi tạo: `ngayKetThuc > ngayBatDau` và `ngayKetThuc > hiện tại`; mỗi `ChiTietKhuyenMai` dùng **một trong hai** `tyLeGiam` (0 < x < 100) hoặc `giaKhuyenMai` (1 ≤ x ≤ `giaGoc`); có **ít nhất 1** chi tiết.
-  6. `loaiKhuyenMai` chỉ `Giảm giá` hoặc `Flash Sale`.
-  7. Quyết định mới: **chỉ Quản trị viên tạo/sửa Flash Sale toàn sàn**. Người bán chỉ tạo chương trình `Giảm giá` cho sản phẩm cửa hàng mình. Giá giảm luôn tính từ `giaGoc`, nhiều chương trình cùng hiệu lực chọn giá thấp nhất, không cộng dồn. Trang chủ chỉ hiển thị sản phẩm thuộc Flash Sale toàn sàn đang hiệu lực; Flash Sale cửa hàng cũ chuyển thành `Giảm giá`.
+  6. `loaiKhuyenMai` chỉ dùng `Giảm giá` khi tạo chương trình mới.
+  7. Quyết định mới nhất: **bỏ khuyến mãi và Flash Sale của Quản trị viên** để tránh trùng phạm vi với Người bán. Chỉ Người bán tạo `Giảm giá` cho sản phẩm cửa hàng mình. Giá giảm tính từ `giaGoc`, nhiều chương trình cửa hàng cùng hiệu lực chọn giá thấp nhất, không cộng dồn. Trang chủ hiển thị khuyến mãi cửa hàng đang hiệu lực. Dữ liệu Toàn sàn cũ phải sao lưu trước khi xóa.
 - **Trạng thái: ĐÃ CHỐT** — làm theo quyết định trên.
 
 ### QĐ-13 — Voucher: tính giảm, số lượng, hoàn lại, voucher không hợp lệ
