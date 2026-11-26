@@ -88,10 +88,6 @@ export const KET_QUA_XU_LY = {
   TU_CHOI: 'Từ chối',
 };
 
-export const LOAI_YEU_CAU = {
-  DOI_TRA: 'Đổi trả',
-  KHIEU_NAI: 'Khiếu nại',
-};
 
 export const TRANG_THAI_XU_LY_YEU_CAU = {
   CHO_XU_LY: 'Chờ xử lý',
@@ -189,7 +185,7 @@ export const CHU_KY_BANNER_MS = 5000;
 export const MENU_TAI_KHOAN = (daLaNguoiBan = false) => [
   { nhan: 'Hồ sơ', duongDan: DUONG_DAN.TAI_KHOAN },
   { nhan: 'Đơn hàng', duongDan: DUONG_DAN.DON_HANG },
-  { nhan: 'Đổi trả và khiếu nại', duongDan: DUONG_DAN.DOI_TRA_KHIEU_NAI },
+  { nhan: 'Yêu cầu đổi trả', duongDan: DUONG_DAN.DOI_TRA_KHIEU_NAI },
   { nhan: 'Trao đổi', duongDan: DUONG_DAN.TRO_CHUYEN },
   daLaNguoiBan
     ? { nhan: 'Kênh người bán', duongDan: DUONG_DAN.NGUOI_BAN.TONG_QUAN }
@@ -239,7 +235,7 @@ export const MENU_NGUOI_BAN = [
   { nhan: 'Khuyến mãi', duongDan: DUONG_DAN.NGUOI_BAN.KHUYEN_MAI, bieuTuong: 'tag' },
   { nhan: 'Voucher', duongDan: DUONG_DAN.NGUOI_BAN.VOUCHER, bieuTuong: 'ticket' },
   { nhan: 'Đơn hàng', duongDan: DUONG_DAN.NGUOI_BAN.DON_HANG, bieuTuong: 'cart' },
-  { nhan: 'Đổi trả và khiếu nại', duongDan: DUONG_DAN.NGUOI_BAN.DOI_TRA_KHIEU_NAI, bieuTuong: 'alert' },
+  { nhan: 'Yêu cầu đổi trả', duongDan: DUONG_DAN.NGUOI_BAN.DOI_TRA_KHIEU_NAI, bieuTuong: 'alert' },
   { nhan: 'Đánh giá', duongDan: DUONG_DAN.NGUOI_BAN.DANH_GIA, bieuTuong: 'star' },
   { nhan: 'Trao đổi', duongDan: DUONG_DAN.NGUOI_BAN.TRO_CHUYEN, bieuTuong: 'chat' },
   { nhan: 'Báo cáo', duongDan: DUONG_DAN.NGUOI_BAN.BAO_CAO, bieuTuong: 'chart' },

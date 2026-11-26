@@ -4,7 +4,7 @@ const TinNhan = require('../models/tinNhan.model');
 const CuaHang = require('../models/cuaHang.model');
 const TaiKhoan = require('../models/taiKhoan.model');
 const { DO_DAI_TOI_DA, PHAN_TRANG, SO_TIN_NHAN_MOI_LAN } = require('../constants/cauHinh.constant');
-const { TRANG_THAI_HOAT_DONG_CUA_HANG } = require('../constants/trangThai.constant');
+const { TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_YEU_CAU_NGUOI_BAN } = require('../constants/trangThai.constant');
 const { VAI_TRO } = require('../constants/vaiTro.constant');
 const { taoLoi } = require('../utils/taoLoi');
 const { phatTinNhanMoi } = require('./thongBaoTinNhan.service');
@@ -52,7 +52,9 @@ const guiTinChoCuocTroChuyen = async (cuocTroChuyen, nguoiGuiId, noiDung) => {
 const taoCuocTroChuyenVaGuiTinNhan = async (taiKhoan, body = {}) => {
   const noiDung = docNoiDung(body);
   if (!mongoose.isValidObjectId(body.cuaHangId)) throw taoLoi(404, 'Không tìm thấy cửa hàng');
-  const cuaHang = await CuaHang.findById(body.cuaHangId).select('_id taiKhoanId tenCuaHang trangThaiHoatDong').lean();
+  const cuaHang = await CuaHang.findOne({ _id: body.cuaHangId,
+    trangThaiDuyet: { $in: [TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_PHE_DUYET, null] } })
+    .select('_id taiKhoanId tenCuaHang trangThaiHoatDong').lean();
   if (!cuaHang) throw taoLoi(404, 'Không tìm thấy cửa hàng');
   if (String(cuaHang.taiKhoanId) === String(taiKhoan._id)) throw taoLoi(409, 'Bạn không thể nhắn tin cho cửa hàng của chính mình');
   const dieuKien = { taiKhoanId: taiKhoan._id, cuaHangId: cuaHang._id };

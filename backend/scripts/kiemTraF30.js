@@ -8,7 +8,6 @@ const CuaHang = require('../src/models/cuaHang.model');
 const DanhMuc = require('../src/models/danhMuc.model');
 const SanPham = require('../src/models/sanPham.model');
 const Voucher = require('../src/models/voucher.model');
-const ApDungVoucher = require('../src/models/apDungVoucher.model');
 const DonHang = require('../src/models/donHang.model');
 const ChiTietDonHang = require('../src/models/chiTietDonHang.model');
 const GiaoDichThanhToan = require('../src/models/giaoDichThanhToan.model');
@@ -54,10 +53,12 @@ async function main() {
     trangThaiXuLy = 'Chờ xác nhận', tongThanhToan = 100000, soLuong = 1, dungVoucher = false }) => {
     const don = await DonHang.create({ taiKhoanId: nguoiMua._id, cuaHangId: cuaHang._id, giaoDichId: giaoDich._id,
       diaChiNhanHang: 'Địa chỉ F30', tongTienHang: 100000, tongThanhToan,
-      phuongThucThanhToan, trangThaiThanhToan, trangThaiXuLy });
+      phuongThucThanhToan, trangThaiThanhToan, trangThaiXuLy,
+      voucherDaDung: dungVoucher ? [{ voucherId: voucher._id, maVoucher: voucher.maVoucher,
+        tenVoucher: voucher.tenVoucher, loaiVoucher: voucher.loaiVoucher,
+        giaTriGiamThucTe: 5000, thoiGianApDung: new Date() }] : [] });
     await ChiTietDonHang.create({ donHangId: don._id, sanPhamId: sanPham._id, soLuong,
       giaGocTaiThoiDiemDat: 100000, giaBanThucTe: 100000, thanhTien: 100000 });
-    if (dungVoucher) await ApDungVoucher.create({ donHangId: don._id, voucherId: voucher._id, giaTriGiamThucTe: 5000 });
     return don;
   };
 
@@ -68,7 +69,7 @@ async function main() {
   assert.equal((await goi('PATCH', `/don-hang/${donA1._id}/huy`, null))[0], 401);
   assert.equal((await huy(donA1, muaKhac))[0], 404);
   assert.equal((await huy(donA1, banA))[0], 404);
-  assert.equal((await huy(donA1, admin))[0], 404);
+  assert.equal((await huy(donA1, admin))[0], 403);
   const danhSachA = (await goi('GET', '/don-hang', mua))[1].data.danhSach;
   const tomTatA = danhSachA.find((don) => String(don._id) === String(donA1._id));
   assert.equal(tomTatA.soDonSeBiHuy, 2);

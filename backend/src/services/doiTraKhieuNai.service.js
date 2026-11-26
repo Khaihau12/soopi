@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const YeuCauDoiTraKhieuNai = require('../models/yeuCauDoiTraKhieuNai.model');
 const ChiTietDonHang = require('../models/chiTietDonHang.model');
 const DonHang = require('../models/donHang.model');
 const SanPham = require('../models/sanPham.model');
@@ -15,12 +14,15 @@ const kiemTraId = (id) => {
   return id;
 };
 
-const docBoLoc = (query = {}, nguoiBan = false) => {
+const dieuKienYeuCau = (query = {}) => {
+  const dieuKien = { 'yeuCauDoiTra._id': { $exists: true } };
+  if (query.trangThaiXuLy) dieuKien['yeuCauDoiTra.trangThaiXuLy'] = query.trangThaiXuLy;
+  return dieuKien;
+};
+
+const docBoLoc = (query = {}) => {
   if (query.trangThaiXuLy && !Object.values(TRANG_THAI_XU_LY_YEU_CAU).includes(query.trangThaiXuLy)) {
     throw taoLoi(400, 'Trạng thái yêu cầu không hợp lệ');
-  }
-  if (nguoiBan && query.loaiYeuCau && !Object.values(LOAI_YEU_CAU).includes(query.loaiYeuCau)) {
-    throw taoLoi(400, 'Loại yêu cầu không hợp lệ');
   }
   for (const giaTri of [query.trang, query.gioiHan]) {
     if (giaTri !== undefined && (!/^\d+$/.test(String(giaTri)) || !Number.isSafeInteger(Number(giaTri)) || Number(giaTri) < 1)) {
@@ -31,9 +33,7 @@ const docBoLoc = (query = {}, nguoiBan = false) => {
 };
 
 // Các thông tin liên quan được nạp theo lô; số truy vấn không tăng theo số yêu cầu trong trang.
-const dungDanhSachYeuCau = async (cacYeuCau, nguoiBan = false) => {
-  const cacDong = await ChiTietDonHang.find({ _id: { $in: cacYeuCau.map((item) => item.chiTietDonHangId) } })
-    .select('_id donHangId sanPhamId soLuong giaBanThucTe thanhTien').lean();
+const dungDanhSachYeuCau = async (cacDong, nguoiBan = false) => {
   const cacDon = await DonHang.find({ _id: { $in: cacDong.map((item) => item.donHangId) } })
     .select('_id ngayTao cuaHangId taiKhoanId').lean();
   const [cacSanPham, cacCuaHang, cacTaiKhoan] = await Promise.all([
@@ -42,13 +42,12 @@ const dungDanhSachYeuCau = async (cacYeuCau, nguoiBan = false) => {
     nguoiBan ? TaiKhoan.find({ _id: { $in: cacDon.map((item) => item.taiKhoanId) } }).select('_id hoTen soDienThoai').lean() : [],
   ]);
   const taoBang = (danhSach) => new Map(danhSach.map((item) => [String(item._id), item]));
-  const dongTheoId = taoBang(cacDong);
   const donTheoId = taoBang(cacDon);
   const sanPhamTheoId = taoBang(cacSanPham);
   const cuaHangTheoId = taoBang(cacCuaHang);
   const taiKhoanTheoId = taoBang(cacTaiKhoan);
-  return cacYeuCau.map((item) => {
-    const dong = dongTheoId.get(String(item.chiTietDonHangId));
+  return cacDong.map((dong) => {
+    const item = dong.yeuCauDoiTra;
     const don = dong && donTheoId.get(String(dong.donHangId));
     const sanPham = dong && sanPhamTheoId.get(String(dong.sanPhamId));
     const cuaHang = don && cuaHangTheoId.get(String(don.cuaHangId));
@@ -56,10 +55,10 @@ const dungDanhSachYeuCau = async (cacYeuCau, nguoiBan = false) => {
     return {
       _id: item._id, loaiYeuCau: item.loaiYeuCau, noiDung: item.noiDung,
       trangThaiXuLy: item.trangThaiXuLy, ketQuaXuLy: item.ketQuaXuLy || null, ngayTao: item.ngayTao,
-      chiTietDonHang: { _id: dong?._id || item.chiTietDonHangId, soLuong: dong?.soLuong,
-        giaBanThucTe: dong?.giaBanThucTe, thanhTien: dong?.thanhTien,
+      chiTietDonHang: { _id: dong._id, soLuong: dong.soLuong,
+        giaBanThucTe: dong.giaBanThucTe, thanhTien: dong.thanhTien,
         sanPham: sanPham ? { _id: sanPham._id, tenSanPham: sanPham.tenSanPham, hinhAnh: sanPham.hinhAnh }
-          : { _id: dong?.sanPhamId, tenSanPham: 'Sản phẩm không còn hiển thị', hinhAnh: [] } },
+          : { _id: dong.sanPhamId, tenSanPham: 'Sản phẩm không còn hiển thị', hinhAnh: [] } },
       donHang: { _id: don?._id, ngayTao: don?.ngayTao,
         cuaHang: cuaHang ? { _id: cuaHang._id, tenCuaHang: cuaHang.tenCuaHang }
           : { _id: don?.cuaHangId, tenCuaHang: 'Cửa hàng không còn hiển thị' } },
@@ -81,34 +80,30 @@ const guiYeuCauDoiTraKhieuNai = async (taiKhoanId, body = {}) => {
   if (!han || Date.now() > han.getTime()) {
     throw taoLoi(409, `Đã quá thời hạn gửi yêu cầu (${SO_NGAY_DOI_TRA_TOI_DA} ngày kể từ khi đơn hoàn thành)`);
   }
-  if (!Object.values(LOAI_YEU_CAU).includes(body.loaiYeuCau)) throw taoLoi(400, 'Vui lòng chọn loại yêu cầu hợp lệ');
-  if (typeof body.noiDung !== 'string' || !body.noiDung.trim()) throw taoLoi(400, 'Vui lòng nhập lý do/nội dung');
+  if (typeof body.noiDung !== 'string' || !body.noiDung.trim()) throw taoLoi(400, 'Vui lòng nhập lý do đổi trả');
   const noiDung = body.noiDung.trim();
   if (noiDung.length > DO_DAI_TOI_DA.NOI_DUNG) throw taoLoi(400, `Nội dung không được quá ${DO_DAI_TOI_DA.NOI_DUNG} ký tự`);
-  if (await YeuCauDoiTraKhieuNai.exists({ chiTietDonHangId })) throw taoLoi(409, 'Sản phẩm này đã có yêu cầu');
-  try {
-    const yeuCau = await YeuCauDoiTraKhieuNai.create({ chiTietDonHangId, loaiYeuCau: body.loaiYeuCau,
-      noiDung, trangThaiXuLy: TRANG_THAI_XU_LY_YEU_CAU.CHO_XU_LY, ngayTao: new Date() });
-    return (await dungDanhSachYeuCau([yeuCau.toObject()]))[0];
-  } catch (loi) {
-    if (loi.code === 11000) throw taoLoi(409, 'Sản phẩm này đã có yêu cầu');
-    throw loi;
-  }
+  // Điều kiện trên cùng dòng đơn đảm bảo hai lần gửi đồng thời chỉ tạo một yêu cầu.
+  const daCapNhat = await ChiTietDonHang.findOneAndUpdate(
+    { _id: chiTietDonHangId, yeuCauDoiTra: { $exists: false } },
+    { $set: { yeuCauDoiTra: { loaiYeuCau: LOAI_YEU_CAU.DOI_TRA, noiDung,
+      trangThaiXuLy: TRANG_THAI_XU_LY_YEU_CAU.CHO_XU_LY, ngayTao: new Date() } } },
+    { returnDocument: 'after', runValidators: true },
+  ).lean();
+  if (!daCapNhat) throw taoLoi(409, 'Sản phẩm này đã có yêu cầu');
+  return (await dungDanhSachYeuCau([daCapNhat]))[0];
 };
 
 const layDanhSach = async (dieuKienDon, query = {}, nguoiBan = false) => {
-  const { trang, gioiHan } = docBoLoc(query, nguoiBan);
+  const { trang, gioiHan } = docBoLoc(query);
   const donIds = await DonHang.distinct('_id', dieuKienDon);
-  const dongIds = await ChiTietDonHang.distinct('_id', { donHangId: { $in: donIds } });
-  const dieuKien = { chiTietDonHangId: { $in: dongIds } };
-  if (query.trangThaiXuLy) dieuKien.trangThaiXuLy = query.trangThaiXuLy;
-  if (nguoiBan && query.loaiYeuCau) dieuKien.loaiYeuCau = query.loaiYeuCau;
-  const [tongSo, cacYeuCau] = await Promise.all([
-    YeuCauDoiTraKhieuNai.countDocuments(dieuKien),
-    YeuCauDoiTraKhieuNai.find(dieuKien).sort({ ngayTao: -1, _id: -1 })
+  const dieuKien = { donHangId: { $in: donIds }, ...dieuKienYeuCau(query) };
+  const [tongSo, cacDong] = await Promise.all([
+    ChiTietDonHang.countDocuments(dieuKien),
+    ChiTietDonHang.find(dieuKien).sort({ 'yeuCauDoiTra.ngayTao': -1, 'yeuCauDoiTra._id': -1 })
       .skip((trang - 1) * gioiHan).limit(gioiHan).lean(),
   ]);
-  return { danhSach: await dungDanhSachYeuCau(cacYeuCau, nguoiBan),
+  return { danhSach: await dungDanhSachYeuCau(cacDong, nguoiBan),
     phanTrang: { trang, gioiHan, tongSo, tongTrang: Math.ceil(tongSo / gioiHan) } };
 };
 
@@ -117,11 +112,10 @@ const nguoiBanLayDanhSachYeuCau = (cuaHangId, query) => layDanhSach({ cuaHangId 
 
 const layChiTiet = async (dieuKienDon, id, nguoiBan = false) => {
   kiemTraId(id);
-  const yeuCau = await YeuCauDoiTraKhieuNai.findById(id).lean();
-  const dong = yeuCau && await ChiTietDonHang.findById(yeuCau.chiTietDonHangId).select('donHangId').lean();
+  const dong = await ChiTietDonHang.findOne({ 'yeuCauDoiTra._id': id }).lean();
   const don = dong && await DonHang.findOne({ _id: dong.donHangId, ...dieuKienDon }).select('_id').lean();
   if (!don) throw taoLoi(404, 'Không tìm thấy yêu cầu');
-  return (await dungDanhSachYeuCau([yeuCau], nguoiBan))[0];
+  return (await dungDanhSachYeuCau([dong], nguoiBan))[0];
 };
 
 const layChiTietYeuCauCuaToi = (taiKhoanId, id) => layChiTiet({ taiKhoanId }, id);
@@ -132,10 +126,12 @@ const nguoiBanXuLyYeuCau = async (cuaHangId, id, ketQuaXuLy) => {
   const yeuCau = await nguoiBanLayChiTietYeuCau(cuaHangId, id);
   if (!Object.values(KET_QUA_XU_LY).includes(ketQuaXuLy)) throw taoLoi(400, 'Kết quả xử lý không hợp lệ');
   if (yeuCau.trangThaiXuLy !== TRANG_THAI_XU_LY_YEU_CAU.CHO_XU_LY) throw taoLoi(409, 'Yêu cầu đã được xử lý');
-  const daCapNhat = await YeuCauDoiTraKhieuNai.findOneAndUpdate(
-    { _id: id, trangThaiXuLy: TRANG_THAI_XU_LY_YEU_CAU.CHO_XU_LY },
-    { $set: { trangThaiXuLy: TRANG_THAI_XU_LY_YEU_CAU.DA_XU_LY, ketQuaXuLy } },
-    { returnDocument: 'after' },
+  const daCapNhat = await ChiTietDonHang.findOneAndUpdate(
+    { _id: yeuCau.chiTietDonHang._id, 'yeuCauDoiTra._id': id,
+      'yeuCauDoiTra.trangThaiXuLy': TRANG_THAI_XU_LY_YEU_CAU.CHO_XU_LY },
+    { $set: { 'yeuCauDoiTra.trangThaiXuLy': TRANG_THAI_XU_LY_YEU_CAU.DA_XU_LY,
+      'yeuCauDoiTra.ketQuaXuLy': ketQuaXuLy } },
+    { returnDocument: 'after', runValidators: true },
   ).lean();
   if (!daCapNhat) throw taoLoi(409, 'Yêu cầu đã được xử lý');
   return (await dungDanhSachYeuCau([daCapNhat], true))[0];

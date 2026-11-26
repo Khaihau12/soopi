@@ -9,25 +9,22 @@ const { EJSON, ObjectId } = require('bson');
 require('dotenv').config({ quiet: true });
 
 const CAC_COLLECTION = [
-  'TaiKhoan', 'YeuCauDangKyNguoiBan', 'CuaHang', 'DanhMuc', 'SanPham',
-  'KhuyenMai', 'ChiTietKhuyenMai', 'Voucher', 'ApDungVoucher', 'BannerQuangCao',
+  'TaiKhoan', 'CuaHang', 'DanhMuc', 'SanPham',
+  'KhuyenMai', 'ChiTietKhuyenMai', 'Voucher', 'BannerQuangCao',
   'GioHang', 'ChiTietGioHang', 'DonHang', 'ChiTietDonHang', 'GiaoDichThanhToan',
-  'DanhGia', 'YeuCauDoiTraKhieuNai', 'CuocTroChuyen', 'TinNhan',
+  'DanhGia', 'CuocTroChuyen', 'TinNhan',
 ];
 const THAM_CHIEU = {
-  YeuCauDangKyNguoiBan: { taiKhoanId: 'TaiKhoan' },
   CuaHang: { taiKhoanId: 'TaiKhoan' },
   SanPham: { cuaHangId: 'CuaHang', danhMucId: 'DanhMuc' },
   KhuyenMai: { cuaHangId: 'CuaHang' },
   ChiTietKhuyenMai: { khuyenMaiId: 'KhuyenMai', sanPhamId: 'SanPham' },
   Voucher: { cuaHangId: 'CuaHang' },
-  ApDungVoucher: { voucherId: 'Voucher', donHangId: 'DonHang' },
   GioHang: { taiKhoanId: 'TaiKhoan' },
   ChiTietGioHang: { gioHangId: 'GioHang', sanPhamId: 'SanPham' },
   DonHang: { taiKhoanId: 'TaiKhoan', cuaHangId: 'CuaHang', giaoDichId: 'GiaoDichThanhToan' },
   ChiTietDonHang: { donHangId: 'DonHang', sanPhamId: 'SanPham' },
   DanhGia: { taiKhoanId: 'TaiKhoan', sanPhamId: 'SanPham', chiTietDonHangId: 'ChiTietDonHang' },
-  YeuCauDoiTraKhieuNai: { chiTietDonHangId: 'ChiTietDonHang' },
   CuocTroChuyen: { taiKhoanId: 'TaiKhoan', cuaHangId: 'CuaHang' },
   TinNhan: { cuocTroChuyenId: 'CuocTroChuyen', nguoiGuiId: 'TaiKhoan' },
 };
@@ -62,6 +59,17 @@ const lapPhuongAn = (duLieu) => {
         const idMoi = bangId[dich].get(khoa(taiLieu[truong]));
         if (!idMoi) throw new Error(`${ten}/${taiLieu._id}: ${truong} không tham chiếu tới ${dich}`);
         moi[truong] = idMoi;
+      }
+      if (ten === 'DonHang' && Array.isArray(taiLieu.voucherDaDung)) {
+        moi.voucherDaDung = taiLieu.voucherDaDung.map((luot) => {
+          const voucherId = bangId.Voucher.get(khoa(luot.voucherId));
+          if (!voucherId) throw new Error(`DonHang/${taiLieu._id}: voucherDaDung không tham chiếu tới Voucher`);
+          return { ...luot, voucherId };
+        });
+      }
+      if (ten === 'ChiTietDonHang' && typeof taiLieu.yeuCauDoiTra?._id === 'string') {
+        moi.yeuCauDoiTra = { ...taiLieu.yeuCauDoiTra, _id: new ObjectId() };
+        soIdChuoi++;
       }
       return moi;
     });

@@ -11,9 +11,7 @@ const Voucher = require('../src/models/voucher.model');
 const DonHang = require('../src/models/donHang.model');
 const ChiTietDonHang = require('../src/models/chiTietDonHang.model');
 const GiaoDichThanhToan = require('../src/models/giaoDichThanhToan.model');
-const ApDungVoucher = require('../src/models/apDungVoucher.model');
 const DanhGia = require('../src/models/danhGia.model');
-const YeuCauDoiTraKhieuNai = require('../src/models/yeuCauDoiTraKhieuNai.model');
 
 const uri = new URL(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/soopi');
 uri.pathname = `/soopi_f19_kiemtra_${Date.now()}`;
@@ -59,10 +57,12 @@ async function run() {
       trangThaiXuLy, ngayTao,
       ...(i === 2 ? { ngayHoanThanh: new Date(Date.now() - 3 * 86400000) } : {}),
       ...(i === 3 ? { ngayHoanThanh: new Date(Date.now() - 8 * 86400000) } : {}),
+      voucherDaDung: [{ voucherId: voucher._id, maVoucher: voucher.maVoucher,
+        tenVoucher: voucher.tenVoucher, loaiVoucher: voucher.loaiVoucher,
+        giaTriGiamThucTe: 10000, thoiGianApDung: ngayTao }],
     });
     const dong = await ChiTietDonHang.create({ donHangId: don._id, sanPhamId: sanPham._id, soLuong: 1,
       giaGocTaiThoiDiemDat: 100000, giaBanThucTe: 90000, thanhTien: 90000 });
-    await ApDungVoucher.create({ donHangId: don._id, voucherId: voucher._id, giaTriGiamThucTe: 10000 });
     cacDon.push({ don, giaoDich, dong });
   }
   const giaoDichKhac = await GiaoDichThanhToan.create({ maGiaoDich: `SP${String(99).padStart(20, '0')}`, soTien: 100000,
@@ -111,7 +111,9 @@ async function run() {
   const hetHan = (await goi(`/don-hang/${cacDon[3].don._id}`, mua._id))[1].data.donHang;
   assert.equal(hetHan.danhSachChiTiet[0].coTheGuiYeuCau, false);
   await DanhGia.create({ taiKhoanId: mua._id, sanPhamId: sanPham._id, chiTietDonHangId: cacDon[2].dong._id, soSao: 5, noiDung: 'Tốt' });
-  await YeuCauDoiTraKhieuNai.create({ chiTietDonHangId: cacDon[2].dong._id, loaiYeuCau: 'Đổi trả', noiDung: 'Lỗi hàng' });
+  const dongCoYeuCau = await ChiTietDonHang.findById(cacDon[2].dong._id);
+  dongCoYeuCau.yeuCauDoiTra = { loaiYeuCau: 'Đổi trả', noiDung: 'Lỗi hàng' };
+  await dongCoYeuCau.save();
   const daXuLy = (await goi(`/don-hang/${cacDon[2].don._id}`, mua._id))[1].data.donHang.danhSachChiTiet[0];
   assert.equal(daXuLy.daDanhGia, true);
   assert.equal(daXuLy.coTheDanhGia, false);

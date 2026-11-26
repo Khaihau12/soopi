@@ -13,8 +13,6 @@
 .doiTraChiTiet { display: grid; gap: var(--kc3); min-width: 0; }
 .doiTraChiTiet p { margin: 0; }
 .doiTraNoiDung { white-space: pre-wrap; overflow-wrap: anywhere; padding: var(--kc3); background: var(--nen); border-radius: var(--boGocNho); }
-.doiTraBanBoLoc { display: flex; align-items: center; gap: var(--kc3); flex-wrap: wrap; }
-.doiTraBanBoLoc > span { font-weight: 600; }
 .doiTraBanHanhDong { display: flex; gap: var(--kc2); flex-wrap: wrap; }
 .doiTraBanPhu { display: block; color: var(--chuPhu); font-size: .875rem; }
 @media (max-width: 520px) { .doiTraTheDau { grid-template-columns: 64px minmax(0, 1fr); } .doiTraTheDau > .button { grid-column: 1 / -1; justify-self: start; } }

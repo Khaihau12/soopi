@@ -36,9 +36,11 @@ function phamVi({ method, duongDan }) {
   if (duongDan.startsWith('/api/nguoi-ban/') || duongDan === '/api/don-hang/:id/trang-thai') return 'nguoiBan';
   if (duongDan.startsWith('/api/tep-tin/')) return 'nguoiBanHoacAdmin';
   if (duongDan.startsWith('/api/xac-thuc/')) return duongDan === '/api/xac-thuc/toi' ? 'taiKhoan' : 'congKhai';
-  if (duongDan === '/api/giao-dich-thanh-toan/vnpay/ket-qua') return 'congKhai';
-  if (duongDan.startsWith('/api/danh-gia')) return method === 'GET' && duongDan === '/api/danh-gia' ? 'congKhai' : 'taiKhoan';
+  if (['/api/giao-dich-thanh-toan/vnpay/ket-qua', '/api/giao-dich-thanh-toan/vnpay/ipn'].includes(duongDan)) return 'congKhai';
+  if (duongDan.startsWith('/api/danh-gia')) return method === 'GET' && duongDan === '/api/danh-gia' ? 'congKhai' : 'nguoiMua';
   if (['/api/kiem-tra', '/api/danh-muc', '/api/san-pham', '/api/banner-quang-cao', '/api/khuyen-mai', '/api/voucher'].some((dau) => duongDan === dau || duongDan.startsWith(dau + '/'))) return 'congKhai';
+  if (['/api/yeu-cau-dang-ky-nguoi-ban', '/api/gio-hang', '/api/don-hang', '/api/giao-dich-thanh-toan',
+    '/api/danh-gia', '/api/doi-tra-khieu-nai', '/api/cuoc-tro-chuyen'].some((dau) => duongDan === dau || duongDan.startsWith(dau + '/'))) return 'nguoiMua';
   return 'taiKhoan';
 }
 
@@ -146,6 +148,10 @@ async function main() {
       await thu(vaiTro.nguoiDung, 403, 'Người dùng');
       await thu(vaiTro.nguoiBan, 'choPhep', 'Người bán');
       await thu(vaiTro.admin, 'choPhep', 'Quản trị viên');
+    } else if (quyen === 'nguoiMua') {
+      await thu(vaiTro.nguoiDung, 'choPhep', 'Người dùng');
+      await thu(vaiTro.nguoiBan, 'choPhep', 'Người bán');
+      await thu(vaiTro.admin, 403, 'Quản trị viên');
     } else {
       await thu(vaiTro.nguoiDung, 'choPhep', 'Người dùng');
       await thu(vaiTro.nguoiBan, 'choPhep', 'Người bán');

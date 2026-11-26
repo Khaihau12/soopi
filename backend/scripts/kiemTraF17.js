@@ -13,7 +13,6 @@ const Voucher = require('../src/models/voucher.model');
 const DonHang = require('../src/models/donHang.model');
 const ChiTietDonHang = require('../src/models/chiTietDonHang.model');
 const GiaoDichThanhToan = require('../src/models/giaoDichThanhToan.model');
-const ApDungVoucher = require('../src/models/apDungVoucher.model');
 const { xacThucChuKy } = require('../src/utils/vnpay');
 const { tachMaGiaoDichTuTxnRef } = require('../src/services/giaoDichThanhToan.service');
 
@@ -73,7 +72,7 @@ async function run() {
   assert.equal((await DonHang.countDocuments({ giaoDichId })), 2);
   assert.equal((await ChiTietDonHang.countDocuments({ donHangId: { $in: res.data.danhSachDonHang.map((d) => d._id) } })), 2);
   assert.equal((await Voucher.findById(v._id)).soLuong, 2);
-  assert.equal((await ApDungVoucher.countDocuments({ voucherId: v._id })), 2);
+  assert.equal((await DonHang.countDocuments({ 'voucherDaDung.voucherId': v._id })), 2);
   assert.equal((await ChiTietGioHang.countDocuments({ gioHangId: vn.gio[0]._id })), 1);
   assert.equal((await GioHang.findById(vn.gio[0]._id)).tongGiaTri, 0);
   assert.equal((await SanPham.findById(vn.sanPham[0]._id)).soLuongTon, 4);
@@ -165,7 +164,7 @@ async function run() {
   assert.equal((await SanPham.findById(loiGhi.sanPham[0]._id)).soLuongTon, 5);
   assert.equal((await SanPham.findById(loiGhi.sanPham[1]._id)).soLuongTon, 5);
   assert.equal((await ChiTietGioHang.countDocuments({ gioHangId: loiGhi.gio[0]._id })), 2);
-  assert.equal(await ApDungVoucher.countDocuments({ voucherId: lv._id }), 0);
+  assert.equal(await DonHang.countDocuments({ 'voucherDaDung.voucherId': lv._id }), 0);
   assert.equal(await ChiTietDonHang.countDocuments({ sanPhamId: { $in: loiGhi.sanPham.map((sp) => sp._id) } }), 0);
 
   const cuoi = await taoBo({ soCuaHang: 1, soLuongTon: 1, soNguoiMua: 2 });

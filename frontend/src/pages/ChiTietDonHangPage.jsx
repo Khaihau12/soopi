@@ -91,8 +91,8 @@ export default function ChiTietDonHangPage() {
                 <span>{dinhDangTien(dong.giaBanThucTe)}</span></div>
               {dong.daDanhGia && <small>Đã đánh giá</small>}
               {dong.coTheDanhGia && <Button size="sm" variant="secondary" className="donHangNutDanhGia" onClick={() => setDongDanhGia(dong)}>Đánh giá</Button>}
-              {dong.yeuCauDoiTra && <Link to={DUONG_DAN.DOI_TRA_KHIEU_NAI}><Badge variant={MAU_TRANG_THAI[dong.yeuCauDoiTra.ketQuaXuLy] || MAU_TRANG_THAI[dong.yeuCauDoiTra.trangThaiXuLy] || 'neutral'}>{dong.yeuCauDoiTra.loaiYeuCau} · {dong.yeuCauDoiTra.ketQuaXuLy || dong.yeuCauDoiTra.trangThaiXuLy}</Badge></Link>}
-              {dong.coTheGuiYeuCau && <Button size="sm" variant="secondary" className="donHangNutDanhGia" onClick={() => setDongYeuCau(dong)}>Đổi trả / khiếu nại</Button>}
+              {dong.yeuCauDoiTra && <Link to={DUONG_DAN.DOI_TRA_KHIEU_NAI}><Badge variant={MAU_TRANG_THAI[dong.yeuCauDoiTra.ketQuaXuLy] || MAU_TRANG_THAI[dong.yeuCauDoiTra.trangThaiXuLy] || 'neutral'}>Đổi trả · {dong.yeuCauDoiTra.ketQuaXuLy || dong.yeuCauDoiTra.trangThaiXuLy}</Badge></Link>}
+              {dong.coTheGuiYeuCau && <Button size="sm" variant="secondary" className="donHangNutDanhGia" onClick={() => setDongYeuCau(dong)}>Yêu cầu đổi trả</Button>}
               {!daHoanThanh && <small>Chỉ gửi được sau khi đơn hoàn thành</small>}
               {daHoanThanh && !dong.coTheGuiYeuCau && !dong.yeuCauDoiTra && <small>Đã quá thời hạn gửi yêu cầu</small>}
             </div><strong className="donHangThanhTien">{dinhDangTien(dong.thanhTien)}</strong>
@@ -106,7 +106,7 @@ export default function ChiTietDonHangPage() {
           <div><dt>Phương thức thanh toán</dt><dd>{laVnpay ? 'VNPay' : `Thanh toán khi nhận hàng: ${dinhDangTien(donHang.tongThanhToan)}`}</dd></div>
           {laVnpay && <div><dt>Mã giao dịch</dt><dd>{donHang.giaoDich?.maGiaoDich || 'Chưa có'}</dd></div>}
           <div><dt>Trạng thái thanh toán</dt><dd>{donHang.trangThaiThanhToan}</dd></div>
-          {daHoanThanh && <div><dt>Đổi trả / khiếu nại</dt><dd>{conNgay > 0 ? `Còn ${conNgay} ngày để gửi yêu cầu đổi trả/khiếu nại` : 'Đã quá hạn gửi yêu cầu đổi trả/khiếu nại'}</dd></div>}
+          {daHoanThanh && <div><dt>Yêu cầu đổi trả</dt><dd>{conNgay > 0 ? `Còn ${conNgay} ngày để gửi yêu cầu đổi trả` : 'Đã quá hạn gửi yêu cầu đổi trả'}</dd></div>}
         </dl></section>
     </div><aside className="donHangKhung donHangTongKet"><h2>Tổng kết tiền</h2>
       <div><span>Tổng tiền hàng</span><strong>{dinhDangTien(donHang.tongTienHang)}</strong></div>

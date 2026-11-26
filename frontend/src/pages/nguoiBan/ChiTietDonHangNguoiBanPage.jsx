@@ -60,7 +60,7 @@ export default function ChiTietDonHangNguoiBanPage() {
           <div className="donHangChiTietMoTa"><strong>{dong.sanPham.tenSanPham}</strong><span>× {dong.soLuong}</span>
             <div className="donHangGiaDong">{dong.giaGocTaiThoiDiemDat > dong.giaBanThucTe && <del>{dinhDangTien(dong.giaGocTaiThoiDiemDat)}</del>}
               <span>{dinhDangTien(dong.giaBanThucTe)}</span></div>
-            {dong.yeuCauDoiTra && <small>Yêu cầu {dong.yeuCauDoiTra.loaiYeuCau}: {dong.yeuCauDoiTra.ketQuaXuLy || dong.yeuCauDoiTra.trangThaiXuLy}</small>}
+            {dong.yeuCauDoiTra && <small>Yêu cầu đổi trả: {dong.yeuCauDoiTra.ketQuaXuLy || dong.yeuCauDoiTra.trangThaiXuLy}</small>}
           </div><strong className="donHangThanhTien">{dinhDangTien(dong.thanhTien)}</strong>
         </article>;
       })}</div></section>

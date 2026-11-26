@@ -7,10 +7,8 @@ const ChiTietGioHang = require('../models/chiTietGioHang.model');
 const DonHang = require('../models/donHang.model');
 const TaiKhoan = require('../models/taiKhoan.model');
 const ChiTietDonHang = require('../models/chiTietDonHang.model');
-const ApDungVoucher = require('../models/apDungVoucher.model');
 const GiaoDichThanhToan = require('../models/giaoDichThanhToan.model');
 const DanhGia = require('../models/danhGia.model');
-const YeuCauDoiTraKhieuNai = require('../models/yeuCauDoiTraKhieuNai.model');
 const { taoGiaoDich, huyGiaoDichVaHoanKho } = require('./giaoDichThanhToan.service');
 const { dungTrangThaiGioHang } = require('./gioHang.service');
 const { kiemTraDieuKienVoucher, tinhMucGiamVoucher } = require('./voucher.service');
@@ -132,8 +130,16 @@ const tinhToanDonHang = async (taiKhoan, { diaChiNhanHang, danhSachMaVoucher = [
     const tongGiam = cacPhan.reduce((tong, so) => tong + so, 0);
     voucherApDung.push({ maVoucher: voucher.maVoucher, tenVoucher: voucher.tenVoucher, loaiVoucher: voucher.loaiVoucher, giaTriGiamThucTe: tongGiam });
     cacPhan.forEach((so, i) => {
-      if (so > 0) danhSachDonHang[i].voucherApDung.push({ voucherId: voucher._id, maVoucher: voucher.maVoucher, loaiVoucher: voucher.loaiVoucher, giaTriGiamThucTe: so });
+      if (so > 0) danhSachDonHang[i].voucherApDung.push({ voucherId: voucher._id, maVoucher: voucher.maVoucher,
+        tenVoucher: voucher.tenVoucher, loaiVoucher: voucher.loaiVoucher, giaTriGiamThucTe: so });
     });
+    // Voucher đã bị trừ lượt vẫn phải có dấu vết trên đơn để hoàn lượt khi hủy giao dịch.
+    if (tongGiam === 0) {
+      const viTri = voucher.loaiVoucher === LOAI_VOUCHER.CUA_HANG
+        ? danhSachDonHang.findIndex((don) => String(don.cuaHang._id) === String(voucher.cuaHangId)) : 0;
+      danhSachDonHang[viTri].voucherApDung.push({ voucherId: voucher._id, maVoucher: voucher.maVoucher,
+        tenVoucher: voucher.tenVoucher, loaiVoucher: voucher.loaiVoucher, giaTriGiamThucTe: 0 });
+    }
   };
   for (const voucher of voucherHopLe.filter((item) => item.loaiVoucher === LOAI_VOUCHER.CUA_HANG)) {
     danhMucVoucherShop.set(String(voucher.cuaHangId), voucher.danhMucId ? String(voucher.danhMucId) : null);
@@ -197,7 +203,6 @@ const xemTruocDonHang = (taiKhoan, body) => {
 const hoanTacTaoDon = async ({ daTruKho, daTruVoucher, giaoDichIds, donHangIds, taiKhoanId, dongGioDaChon }) => {
   const loiHoanTac = [];
   const thu = async (viec) => { try { await viec(); } catch (loi) { loiHoanTac.push(loi); } };
-  await thu(() => ApDungVoucher.deleteMany({ donHangId: { $in: donHangIds } }));
   await thu(() => ChiTietDonHang.deleteMany({ donHangId: { $in: donHangIds } }));
   await thu(() => DonHang.deleteMany({ _id: { $in: donHangIds } }));
   await thu(() => GiaoDichThanhToan.deleteMany({ _id: { $in: giaoDichIds } }));
@@ -282,16 +287,17 @@ const datHang = async (taiKhoan, body = {}) => {
         trangThaiThanhToan: don.tuDongDaThanhToan ? TRANG_THAI_THANH_TOAN_DON.DA_THANH_TOAN : TRANG_THAI_THANH_TOAN_DON.CHO_THANH_TOAN,
         trangThaiXuLy: TRANG_THAI_XU_LY.CHO_XAC_NHAN, ngayTao: thoiGian,
         taiKhoanId: taiKhoan._id, cuaHangId: don.cuaHang._id, giaoDichId: giaoDich._id,
+        voucherDaDung: don.voucherApDung.map((voucher) => ({
+          voucherId: voucher.voucherId, maVoucher: voucher.maVoucher,
+          tenVoucher: voucher.tenVoucher || voucher.maVoucher, loaiVoucher: voucher.loaiVoucher,
+          giaTriGiamThucTe: voucher.giaTriGiamThucTe, thoiGianApDung: thoiGian,
+        })),
       });
       donHangIds.push(banGhi._id);
       for (const item of don.danhSachSanPham) {
         await ChiTietDonHang.create({ soLuong: item.soLuong, giaGocTaiThoiDiemDat: item.giaGoc,
           giaBanThucTe: item.giaBanThucTe, thanhTien: item.thanhTien,
           donHangId: banGhi._id, sanPhamId: item.sanPham._id });
-      }
-      for (const voucher of don.voucherApDung) {
-        await ApDungVoucher.create({ voucherId: voucher.voucherId, donHangId: banGhi._id,
-          giaTriGiamThucTe: voucher.giaTriGiamThucTe, thoiGianApDung: thoiGian });
       }
       donHangDaTao.push({ _id: banGhi._id, cuaHang: don.cuaHang,
         tongThanhToan: don.tongThanhToan, trangThaiThanhToan: banGhi.trangThaiThanhToan,
@@ -491,23 +497,18 @@ const layDanhSachDonHangCuaToi = async (taiKhoanId, query = {}) => {
 
 // Dùng chung phần dựng dữ liệu; hàm gọi bên ngoài phải kiểm tra quyền truy cập đơn trước.
 const dungChiTietDonHang = async (donHang) => {
-  const [cuaHang, giaoDich, cacDong, cacVoucher] = await Promise.all([
+  const [cuaHang, giaoDich, cacDong] = await Promise.all([
     CuaHang.findById(donHang.cuaHangId).select('_id tenCuaHang').lean(),
     GiaoDichThanhToan.findById(donHang.giaoDichId).select('_id maGiaoDich trangThaiThanhToan thoiGianTao').lean(),
-    ChiTietDonHang.find({ donHangId: donHang._id }).select('_id sanPhamId soLuong giaGocTaiThoiDiemDat giaBanThucTe thanhTien').sort({ _id: 1 }).lean(),
-    ApDungVoucher.find({ donHangId: donHang._id }).select('voucherId giaTriGiamThucTe').lean(),
+    ChiTietDonHang.find({ donHangId: donHang._id }).select('_id sanPhamId soLuong giaGocTaiThoiDiemDat giaBanThucTe thanhTien yeuCauDoiTra').sort({ _id: 1 }).lean(),
   ]);
   const dongIds = cacDong.map((dong) => dong._id);
-  const [cacSanPham, cacDanhGia, cacYeuCau, voucher] = await Promise.all([
+  const [cacSanPham, cacDanhGia] = await Promise.all([
     SanPham.find({ _id: { $in: cacDong.map((dong) => dong.sanPhamId) } }).select('_id tenSanPham hinhAnh').lean(),
     DanhGia.find({ chiTietDonHangId: { $in: dongIds } }).select('chiTietDonHangId').lean(),
-    YeuCauDoiTraKhieuNai.find({ chiTietDonHangId: { $in: dongIds } }).select('_id chiTietDonHangId loaiYeuCau trangThaiXuLy ketQuaXuLy').lean(),
-    Voucher.find({ _id: { $in: cacVoucher.map((item) => item.voucherId) } }).select('_id maVoucher tenVoucher loaiVoucher').lean(),
   ]);
   const sanTheoId = new Map(cacSanPham.map((item) => [String(item._id), item]));
   const daDanhGia = new Set(cacDanhGia.map((item) => String(item.chiTietDonHangId)));
-  const yeuCauTheoDong = new Map(cacYeuCau.map((item) => [String(item.chiTietDonHangId), item]));
-  const voucherTheoId = new Map(voucher.map((item) => [String(item._id), item]));
   const hanGuiYeuCau = tinhHanGuiYeuCau(donHang);
   const daHoanThanh = donHang.trangThaiXuLy === TRANG_THAI_XU_LY.HOAN_THANH;
   const hanThanhToan = donHang.phuongThucThanhToan === PHUONG_THUC_THANH_TOAN.VNPAY && giaoDich
@@ -525,14 +526,13 @@ const dungChiTietDonHang = async (donHang) => {
     cuaHang, giaoDich, hanThanhToan, coTheThanhToanLai: coTheThanhToanLai(donHang, giaoDich),
     coTheHuy: Boolean(kieuHuy), kieuHuy, soDonSeBiHuy, canHoanTienThuCong: canHoanTienThuCong(donHang),
     hanGuiYeuCau,
-    voucherApDung: cacVoucher.map((item) => {
-      const v = voucherTheoId.get(String(item.voucherId));
-      return { maVoucher: v?.maVoucher || 'Voucher không còn hiển thị', tenVoucher: v?.tenVoucher || 'Voucher không còn hiển thị',
-        loaiVoucher: v?.loaiVoucher || null, giaTriGiamThucTe: item.giaTriGiamThucTe };
-    }),
+    voucherApDung: (donHang.voucherDaDung || []).map((item) => ({
+      maVoucher: item.maVoucher, tenVoucher: item.tenVoucher || item.maVoucher,
+      loaiVoucher: item.loaiVoucher, giaTriGiamThucTe: item.giaTriGiamThucTe,
+    })),
     danhSachChiTiet: cacDong.map((dong) => {
       const san = sanTheoId.get(String(dong.sanPhamId));
-      const yeuCau = yeuCauTheoDong.get(String(dong._id));
+      const yeuCau = dong.yeuCauDoiTra;
       const daCoDanhGia = daDanhGia.has(String(dong._id));
       return {
         _id: dong._id, soLuong: dong.soLuong, giaGocTaiThoiDiemDat: dong.giaGocTaiThoiDiemDat,

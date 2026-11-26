@@ -2,6 +2,7 @@ const { taoLoi } = require('../utils/taoLoi');
 const { batBuocDangNhap } = require('./auth.middleware');
 const { VAI_TRO } = require('../constants/vaiTro.constant');
 const CuaHang = require('../models/cuaHang.model');
+const { TRANG_THAI_YEU_CAU_NGUOI_BAN } = require('../constants/trangThai.constant');
 
 const batBuocVaiTro = (...cacVaiTro) => (req, res, next) => {
   if (!req.taiKhoan) return next(taoLoi(401, 'Vui lòng đăng nhập để tiếp tục'));
@@ -21,7 +22,8 @@ const camQuanTriMuaSam = (req, res, next) => {
 
 const batBuocCuaHang = async (req, res, next) => {
   try {
-    const cuaHang = await CuaHang.findOne({ taiKhoanId: req.taiKhoan._id });
+    const cuaHang = await CuaHang.findOne({ taiKhoanId: req.taiKhoan._id,
+      trangThaiDuyet: { $in: [TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_PHE_DUYET, null] } });
     if (!cuaHang) throw taoLoi(403, 'Tài khoản của bạn chưa có cửa hàng');
     req.cuaHang = cuaHang;
     next();

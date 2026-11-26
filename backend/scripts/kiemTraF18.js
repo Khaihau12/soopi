@@ -12,7 +12,6 @@ const SanPham = require('../src/models/sanPham.model');
 const Voucher = require('../src/models/voucher.model');
 const DonHang = require('../src/models/donHang.model');
 const ChiTietDonHang = require('../src/models/chiTietDonHang.model');
-const ApDungVoucher = require('../src/models/apDungVoucher.model');
 const GiaoDichThanhToan = require('../src/models/giaoDichThanhToan.model');
 const { xuLyGiaoDichHetHan, taoThanhToanVnpay } = require('../src/services/giaoDichThanhToan.service');
 
@@ -67,10 +66,12 @@ const taoBo = async ({ soCuaHang = 1, thoiGianTao = new Date(), phuongThuc = 'VN
       cuaHangId: cuaHang._id, danhMucId: danhMuc._id });
     sanPham.push(san);
     const don = await DonHang.create({ diaChiNhanHang: 'Địa chỉ thử nghiệm', tongTienHang: 100000, tongThanhToan: 100000,
-      taiKhoanId: nguoiMua._id, cuaHangId: cuaHang._id, giaoDichId: giaoDich._id, phuongThucThanhToan: phuongThuc });
+      taiKhoanId: nguoiMua._id, cuaHangId: cuaHang._id, giaoDichId: giaoDich._id, phuongThucThanhToan: phuongThuc,
+      voucherDaDung: voucher ? [{ voucherId: voucher._id, maVoucher: voucher.maVoucher,
+        tenVoucher: voucher.tenVoucher, loaiVoucher: voucher.loaiVoucher,
+        giaTriGiamThucTe: 1000, thoiGianApDung: new Date() }] : [] });
     donHang.push(don);
     await ChiTietDonHang.create({ donHangId: don._id, sanPhamId: san._id, soLuong: 1, giaGocTaiThoiDiemDat: 100000, giaBanThucTe: 100000, thanhTien: 100000 });
-    if (voucher) await ApDungVoucher.create({ donHangId: don._id, voucherId: voucher._id, giaTriGiamThucTe: 1000 });
   }
   return { nguoiMua, chuShop, giaoDich, voucher, sanPham, donHang };
 };
@@ -133,7 +134,8 @@ async function run() {
   const maTrangThaiLoi = await taoBo();
   await guiKetQua(kyKetQua(maTrangThaiLoi.giaoDich, { vnp_TransactionStatus: '02' }));
   await trangThai(maTrangThaiLoi, 'Thất bại', 'Thất bại', 5, 3);
-  assert.equal(await ApDungVoucher.countDocuments({ donHangId: { $in: thatBai.donHang.map((don) => don._id) } }), 2);
+  assert.equal(await DonHang.countDocuments({ _id: { $in: thatBai.donHang.map((don) => don._id) },
+    'voucherDaDung.voucherId': thatBai.voucher._id }), 2);
   await guiKetQua(huy);
   await trangThai(thatBai, 'Thất bại', 'Thất bại', 5, 3);
   const cu = console.warn;

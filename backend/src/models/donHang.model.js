@@ -5,6 +5,7 @@ const {
   PHUONG_THUC_THANH_TOAN,
   TRANG_THAI_THANH_TOAN_DON,
   TRANG_THAI_XU_LY,
+  LOAI_VOUCHER,
 } = require('../constants/trangThai.constant');
 
 const donHangSchema = new mongoose.Schema({
@@ -19,6 +20,16 @@ const donHangSchema = new mongoose.Schema({
   trangThaiXuLy: { type: String, enum: Object.values(TRANG_THAI_XU_LY), default: TRANG_THAI_XU_LY.CHO_XAC_NHAN },
   ngayTao: { type: Date, default: Date.now },
   ngayHoanThanh: { type: Date },
+  voucherDaDung: [{
+    _id: false,
+    voucherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Voucher', required: true },
+    maVoucher: { type: String, required: true },
+    tenVoucher: String,
+    loaiVoucher: { type: String, enum: Object.values(LOAI_VOUCHER), required: true },
+    giaTriGiamThucTe: { type: Number, required: true, min: 0,
+      validate: { validator: laSoNguyen, message: 'Giá trị giảm phải là số nguyên' } },
+    thoiGianApDung: { type: Date, required: true },
+  }],
   taiKhoanId: { type: mongoose.Schema.Types.ObjectId, ref: 'TaiKhoan', required: true },
   cuaHangId: { type: mongoose.Schema.Types.ObjectId, ref: 'CuaHang', required: true },
   giaoDichId: { type: mongoose.Schema.Types.ObjectId, ref: 'GiaoDichThanhToan', required: true },
@@ -27,5 +38,6 @@ const donHangSchema = new mongoose.Schema({
 donHangSchema.index({ taiKhoanId: 1, ngayTao: -1 });
 donHangSchema.index({ cuaHangId: 1, ngayTao: -1 });
 donHangSchema.index({ giaoDichId: 1 });
+donHangSchema.index({ 'voucherDaDung.voucherId': 1 });
 
 module.exports = mongoose.model('DonHang', donHangSchema);

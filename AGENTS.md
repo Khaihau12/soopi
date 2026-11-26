@@ -2,7 +2,7 @@
 
 > Hướng dẫn cho AI agent (Codex, Claude Code, Cursor...) khi làm việc trong repo này.
 > **Đọc Mục 0 trước.** Các mục sau là phần tra cứu chi tiết.
-> Nguồn sự thật: field/collection → `.md/Soopi_3.2.1_Thiet_ke_Collection.md`; nghiệp vụ → báo cáo Soopi trong `.md/Soopi_V11_MOI_cap_nhat_activity/`.
+> Nguồn sự thật hiện tại cho field/collection là Mongoose Model trên nhánh `main`. Các báo cáo cũ trong `.md/` chưa cập nhật đợt chuyển từ 19 xuống 16 Collection; chờ báo cáo mới của nhóm để đối chiếu lại.
 > Khi tạo, sửa hoặc đánh giá giao diện frontend, đọc `DESIGN.md` ở gốc project để dùng chung màu, chữ, bố cục và component; tác vụ chỉ liên quan backend không cần đọc file này. Nghiệp vụ vẫn theo tài liệu Soopi và các quy tắc bên dưới.
 > Khi cần xác minh cách Codex đọc chỉ dẫn hoặc hoạt động, tra tài liệu OpenAI Docs chính thức trước khi kết luận.
 
@@ -167,11 +167,13 @@ JWT_SECRET=...
 - Có thể có `.env.example` nhưng không chứa giá trị thật.
 - MongoDB local chạy standalone thường **không hỗ trợ multi-document transaction**. Xem cách xử lý tồn kho ở Mục 8.
 
-### 5.6 19 Collection của Soopi
+### 5.6 16 Collection của Soopi
 
-`TaiKhoan`, `YeuCauDangKyNguoiBan`, `CuaHang`, `DanhMuc`, `SanPham`, `KhuyenMai`, `ChiTietKhuyenMai`, `Voucher`, `ApDungVoucher`, `BannerQuangCao`, `GioHang`, `ChiTietGioHang`, `DonHang`, `ChiTietDonHang`, `GiaoDichThanhToan`, `DanhGia`, `YeuCauDoiTraKhieuNai`, `CuocTroChuyen`, `TinNhan`.
+`TaiKhoan`, `CuaHang`, `DanhMuc`, `SanPham`, `KhuyenMai`, `ChiTietKhuyenMai`, `Voucher`, `BannerQuangCao`, `GioHang`, `ChiTietGioHang`, `DonHang`, `ChiTietDonHang`, `GiaoDichThanhToan`, `DanhGia`, `CuocTroChuyen`, `TinNhan`.
 
-Không đổi sang `snake_case`, `kebab-case` hay tên tiếng Anh. Field chi tiết xem `docs/Soopi_3_2_1_Thiet_ke_Collection.md`. Ràng buộc **bắt buộc** có trong schema:
+Hồ sơ đăng ký bán hàng là trạng thái và thông tin trên `CuaHang` (không lưu lịch sử gửi lại). Một yêu cầu đổi trả/khiếu nại tùy chọn nằm trong `ChiTietDonHang.yeuCauDoiTra`. Voucher đã dùng nằm trong mảng `DonHang.voucherDaDung`, giữ ID, mã, loại, giá trị giảm và thời điểm áp dụng.
+
+Không đổi sang `snake_case`, `kebab-case` hay tên tiếng Anh. Field chi tiết xem Mongoose Model hiện hành. Ràng buộc **bắt buộc** có trong schema:
 
 | Collection | Ràng buộc |
 |---|---|
@@ -182,9 +184,9 @@ Không đổi sang `snake_case`, `kebab-case` hay tên tiếng Anh. Field chi ti
 | `ChiTietGioHang` | (`gioHangId`, `sanPhamId`) unique kết hợp |
 | `GiaoDichThanhToan` | `maGiaoDich` unique |
 | `DanhGia` | `chiTietDonHangId` unique |
-| `YeuCauDoiTraKhieuNai` | `chiTietDonHangId` unique |
+| `ChiTietDonHang` | `yeuCauDoiTra._id` unique sparse để tìm yêu cầu nhúng |
 
-Các index còn lại theo Bảng 3.45 trong tài liệu thiết kế.
+Các index còn lại theo Model hiện hành và truy vấn thực tế của service.
 
 ### 5.7 Giá trị enum (lưu đúng chuỗi có dấu, khai báo thành hằng số)
 
@@ -192,7 +194,7 @@ Các index còn lại theo Bảng 3.45 trong tài liệu thiết kế.
 |---|---|
 | `TaiKhoan.vaiTro` | `Người dùng`, `Người bán`, `Quản trị viên` |
 | `TaiKhoan.trangThaiTaiKhoan` | `Hoạt động`, `Bị khóa` |
-| `YeuCauDangKyNguoiBan.trangThai` | `Chờ phê duyệt`, `Đã phê duyệt`, `Đã từ chối` |
+| `CuaHang.trangThaiDuyet` | `Chờ phê duyệt`, `Đã phê duyệt`, `Đã từ chối` |
 | `SanPham.trangThaiKinhDoanh` | `Đang kinh doanh`, `Ngừng kinh doanh` |
 | `KhuyenMai.trangThai` | `Chưa bắt đầu`, `Đang hoạt động`, `Đã kết thúc` |
 | `KhuyenMai.phamVi` | `Cửa hàng`, `Toàn sàn` |
@@ -201,7 +203,7 @@ Các index còn lại theo Bảng 3.45 trong tài liệu thiết kế.
 | `DonHang.trangThaiThanhToan` | `Chờ thanh toán`, `Đã thanh toán`, `Thất bại`, `Hết hạn` |
 | `DonHang.trangThaiXuLy` | `Chờ xác nhận`, `Đã xác nhận`, `Đang xử lý`, `Đang vận chuyển`, `Hoàn thành`, `Đã hủy` |
 | `GiaoDichThanhToan.trangThaiThanhToan` | `Chờ thanh toán`, `Thành công`, `Thất bại`, `Hết hạn` |
-| `YeuCauDoiTraKhieuNai.ketQuaXuLy` | `Chấp nhận`, `Từ chối` |
+| `ChiTietDonHang.yeuCauDoiTra.ketQuaXuLy` | `Chấp nhận`, `Từ chối` |
 
 Chú ý: giao dịch dùng `Thành công` nhưng đơn hàng dùng `Đã thanh toán`. Giao dịch `Thành công` ⇒ các đơn thuộc giao dịch thành `Đã thanh toán`.
 Các enum khác (kể cả những giá trị tài liệu ghi `...`) lấy từ tài liệu thiết kế. Không tự thêm giá trị mới khi chưa hỏi.
@@ -258,7 +260,7 @@ GET   /api/giao-dich-thanh-toan/vnpay/ket-qua           # VNPay trả về
 
 **Voucher**
 - Có 3 loại và có thể kết hợp trên một đơn: `Freeship`, `Toàn sàn`, `Cửa hàng`. Voucher Toàn sàn/Freeship do QuanTriVien tạo (`cuaHangId` rỗng); voucher Cửa hàng do NguoiBan tạo.
-- Kiểm tra: trạng thái `Kích hoạt`, thời gian hiệu lực, `giaTriDonToiThieu`, `giamToiDa`, `soLuong`, phạm vi cửa hàng. Mỗi lần áp dụng ghi một bản ghi `ApDungVoucher` với `giaTriGiamThucTe`.
+- Kiểm tra: trạng thái `Kích hoạt`, thời gian hiệu lực, `giaTriDonToiThieu`, `giamToiDa`, `soLuong`, phạm vi cửa hàng. Mỗi đơn lưu các voucher đã dùng và `giaTriGiamThucTe` trong `DonHang.voucherDaDung`.
 - Không tin mức giảm từ frontend.
 - Voucher `Cửa hàng` và `Toàn sàn` có thể giới hạn vào một `danhMucId`; khi đó điều kiện đơn tối thiểu và số tiền được giảm chỉ tính trên sản phẩm thuộc danh mục ấy. `Freeship` không giới hạn theo danh mục. Voucher không chọn danh mục áp dụng như trước.
 
@@ -284,7 +286,7 @@ GET   /api/giao-dich-thanh-toan/vnpay/ket-qua           # VNPay trả về
 - `Đã hủy` do hệ thống đặt khi thanh toán thất bại/hết hạn. Mọi lần đổi trạng thái phải kiểm tra role, quyền sở hữu và trạng thái hiện tại.
 
 **Đánh giá, đổi trả**
-- Chỉ chủ đơn mới tạo `DanhGia`, và chỉ khi đơn chứa `ChiTietDonHang` đó ở trạng thái `Hoàn thành`. Mỗi `ChiTietDonHang` tối đa một `DanhGia` và một `YeuCauDoiTraKhieuNai`.
+- Chỉ chủ đơn mới tạo `DanhGia`, và chỉ khi đơn chứa `ChiTietDonHang` đó ở trạng thái `Hoàn thành`. Mỗi `ChiTietDonHang` tối đa một `DanhGia` và một `yeuCauDoiTra` nhúng.
 - NguoiBan chấp nhận/từ chối yêu cầu đổi trả/khiếu nại. Không tự động hoàn tiền.
 
 **Xóa dữ liệu**

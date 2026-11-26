@@ -2,7 +2,6 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 const DonHang = require('../models/donHang.model');
 const ChiTietDonHang = require('../models/chiTietDonHang.model');
-const ApDungVoucher = require('../models/apDungVoucher.model');
 const SanPham = require('../models/sanPham.model');
 const Voucher = require('../models/voucher.model');
 const GiaoDichThanhToan = require('../models/giaoDichThanhToan.model');
@@ -74,7 +73,7 @@ const huyGiaoDichVaHoanKho = async (giaoDich, lyDo) => {
   if (![TRANG_THAI_GIAO_DICH.THAT_BAI, TRANG_THAI_GIAO_DICH.HET_HAN].includes(lyDo)) {
     throw taoLoi(400, 'Lý do hủy giao dịch không hợp lệ');
   }
-  const donHang = await DonHang.find({ giaoDichId: giaoDich._id }).select('_id').lean();
+  const donHang = await DonHang.find({ giaoDichId: giaoDich._id }).select('_id voucherDaDung').lean();
   const donIds = donHang.map((don) => don._id);
   for (const don of donHang) {
     const daHuy = await DonHang.findOneAndUpdate(
@@ -89,7 +88,7 @@ const huyGiaoDichVaHoanKho = async (giaoDich, lyDo) => {
       })));
     }
   }
-  const voucherIds = await ApDungVoucher.distinct('voucherId', { donHangId: { $in: donIds } });
+  const voucherIds = [...new Set(donHang.flatMap((don) => (don.voucherDaDung || []).map((v) => String(v.voucherId))))];
   for (const voucherId of voucherIds) {
     await Voucher.updateOne({ _id: voucherId }, { $inc: { soLuong: 1 } });
   }

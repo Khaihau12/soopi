@@ -11,7 +11,7 @@ import Skeleton from '../components/ui/Skeleton.jsx';
 import Tabs from '../components/ui/Tabs.jsx';
 import { layChiTietYeuCauCuaToi, layDanhSachYeuCauCuaToi } from '../services/doiTraKhieuNai.api.js';
 import { dinhDangNgayGio, maDonHangHienThi, taoUrlAnh } from '../utils/dinhDang.js';
-import { DUONG_DAN, KET_QUA_XU_LY, LOAI_YEU_CAU, MAU_TRANG_THAI, TRANG_THAI_XU_LY_YEU_CAU } from '../utils/hangSo.js';
+import { DUONG_DAN, KET_QUA_XU_LY, MAU_TRANG_THAI, TRANG_THAI_XU_LY_YEU_CAU } from '../utils/hangSo.js';
 import './DoiTraKhieuNaiPage.css';
 
 const TABS = [
@@ -66,7 +66,7 @@ export default function DoiTraKhieuNaiPage() {
   }, [idChiTiet, lanTaiChiTiet]);
 
   return <div className="doiTraPage">
-    <PageHeader title="Đổi trả và khiếu nại" description="Theo dõi yêu cầu đã gửi và kết quả từ cửa hàng." />
+    <PageHeader title="Yêu cầu đổi trả" description="Theo dõi yêu cầu đổi trả đã gửi và kết quả từ cửa hàng." />
     <Tabs items={TABS} value={tab.value} onChange={(value) => setParams({ tab: value })} label="Lọc yêu cầu" />
     {dangTai ? <Skeleton variant="block" count={3} /> : loi ? <ErrorState message={loi} taiLai={() => setLanTai((lan) => lan + 1)} />
       : !duLieu?.danhSach.length ? <EmptyState title="Bạn chưa có yêu cầu nào" description="Yêu cầu sẽ xuất hiện tại đây sau khi bạn gửi từ chi tiết đơn đã hoàn thành."
@@ -77,7 +77,7 @@ export default function DoiTraKhieuNaiPage() {
           return <article key={yeuCau._id} className="doiTraThe"><div className="doiTraTheDau">
             {anh ? <img src={anh} alt="" /> : <span className="doiTraAnhTrong">Chưa có ảnh</span>}
             <div><strong>{sanPham.tenSanPham}</strong><small>{yeuCau.donHang.cuaHang.tenCuaHang} · {dinhDangNgayGio(yeuCau.ngayTao)}</small>
-              <div className="doiTraHuyHieu"><Badge variant="info">{yeuCau.loaiYeuCau}</Badge><Badge variant={MAU_TRANG_THAI[yeuCau.ketQuaXuLy || yeuCau.trangThaiXuLy] || 'neutral'}>{yeuCau.ketQuaXuLy || yeuCau.trangThaiXuLy}</Badge></div></div>
+              <div className="doiTraHuyHieu"><Badge variant={MAU_TRANG_THAI[yeuCau.ketQuaXuLy || yeuCau.trangThaiXuLy] || 'neutral'}>{yeuCau.ketQuaXuLy || yeuCau.trangThaiXuLy}</Badge></div></div>
             <Button variant="secondary" size="sm" onClick={() => setIdChiTiet(yeuCau._id)}>Xem</Button></div>
             <KetQuaYeuCau yeuCau={yeuCau} /></article>;
         })}</div>
@@ -86,7 +86,7 @@ export default function DoiTraKhieuNaiPage() {
     <Modal open={Boolean(idChiTiet)} onClose={() => setIdChiTiet(null)} title="Chi tiết yêu cầu">
       {dangTaiChiTiet ? <Skeleton variant="block" count={2} /> : loiChiTiet ? <ErrorState message={loiChiTiet} taiLai={() => setLanTaiChiTiet((lan) => lan + 1)} /> : chiTiet &&
         <div className="doiTraChiTiet"><strong>{chiTiet.chiTietDonHang.sanPham.tenSanPham}</strong>
-          <p>{chiTiet.loaiYeuCau} · Gửi ngày {dinhDangNgayGio(chiTiet.ngayTao)}</p>
+          <p>Yêu cầu đổi trả · Gửi ngày {dinhDangNgayGio(chiTiet.ngayTao)}</p>
           <p>Cửa hàng: {chiTiet.donHang.cuaHang.tenCuaHang}</p>
           <p className="doiTraNoiDung">{chiTiet.noiDung}</p><KetQuaYeuCau yeuCau={chiTiet} />
           <Link to={DUONG_DAN.chiTietDonHang(chiTiet.donHang._id)} onClick={() => setIdChiTiet(null)}>Xem đơn {maDonHangHienThi(chiTiet.donHang._id)}</Link>

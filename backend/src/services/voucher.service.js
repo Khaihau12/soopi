@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Voucher = require('../models/voucher.model');
-const ApDungVoucher = require('../models/apDungVoucher.model');
+const DonHang = require('../models/donHang.model');
 const CuaHang = require('../models/cuaHang.model');
 const DanhMuc = require('../models/danhMuc.model');
 const SanPham = require('../models/sanPham.model');
@@ -61,10 +61,11 @@ const dinhDangVoucher = (voucher, soDonDaApDung = 0) => ({
 
 const demDonApDung = async (ids) => {
   if (!ids.length) return new Map();
-  const dem = await ApDungVoucher.aggregate([
-    { $match: { voucherId: { $in: ids } } },
-    { $group: { _id: '$voucherId', donHangIds: { $addToSet: '$donHangId' } } },
-    { $project: { soDonDaApDung: { $size: '$donHangIds' } } },
+  const dem = await DonHang.aggregate([
+    { $match: { 'voucherDaDung.voucherId': { $in: ids } } },
+    { $unwind: '$voucherDaDung' },
+    { $match: { 'voucherDaDung.voucherId': { $in: ids } } },
+    { $group: { _id: '$voucherDaDung.voucherId', soDonDaApDung: { $sum: 1 } } },
   ]);
   return new Map(dem.map((dong) => [String(dong._id), dong.soDonDaApDung]));
 };
@@ -240,7 +241,7 @@ const quanTriCapNhatTrangThaiVoucher = (id, body) => capNhatTrangThaiVoucher(id,
 
 const xoaVoucher = async (id, dieuKien) => {
   await layVoucher(id, dieuKien);
-  if (await ApDungVoucher.exists({ voucherId: id })) {
+  if (await DonHang.exists({ 'voucherDaDung.voucherId': id })) {
     await Voucher.updateOne({ _id: id, ...dieuKien }, { $set: { trangThai: TRANG_THAI_VOUCHER.VO_HIEU_HOA } });
     return { message: 'Voucher đã được sử dụng nên chỉ vô hiệu hóa, không xóa dữ liệu' };
   }

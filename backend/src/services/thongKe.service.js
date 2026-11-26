@@ -3,7 +3,6 @@ const DonHang = require('../models/donHang.model');
 const TaiKhoan = require('../models/taiKhoan.model');
 const CuaHang = require('../models/cuaHang.model');
 const SanPham = require('../models/sanPham.model');
-const YeuCauDangKyNguoiBan = require('../models/yeuCauDangKyNguoiBan.model');
 const { PHAN_TRANG } = require('../constants/cauHinh.constant');
 const { TRANG_THAI_XU_LY, TRANG_THAI_THANH_TOAN_DON, PHUONG_THUC_THANH_TOAN, TRANG_THAI_KINH_DOANH, TRANG_THAI_YEU_CAU_NGUOI_BAN } = require('../constants/trangThai.constant');
 const { VAI_TRO } = require('../constants/vaiTro.constant');
@@ -113,9 +112,9 @@ const quanTriLayTongQuan = async (query) => {
       trangThaiXuLy: { $ne: TRANG_THAI_XU_LY.DA_HUY }, ngayTao: khoang }),
     TaiKhoan.countDocuments({ vaiTro: VAI_TRO.NGUOI_DUNG, $nor: [{ vaiTro: VAI_TRO.QUAN_TRI_VIEN }] }),
     TaiKhoan.countDocuments({ vaiTro: VAI_TRO.NGUOI_BAN }),
-    CuaHang.countDocuments(), SanPham.countDocuments(),
+    CuaHang.countDocuments({ trangThaiDuyet: { $in: [TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_PHE_DUYET, null] } }), SanPham.countDocuments(),
     SanPham.countDocuments({ trangThaiKinhDoanh: TRANG_THAI_KINH_DOANH.DANG_KINH_DOANH }),
-    YeuCauDangKyNguoiBan.countDocuments({ trangThai: TRANG_THAI_YEU_CAU_NGUOI_BAN.CHO_PHE_DUYET }),
+    CuaHang.countDocuments({ trangThaiDuyet: TRANG_THAI_YEU_CAU_NGUOI_BAN.CHO_PHE_DUYET }),
   ]);
   const tongDoanhThu = hienTai[0]?.doanhThu || 0;
   const soDonHoanThanh = hienTai[0]?.soDon || 0;

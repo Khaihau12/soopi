@@ -19,7 +19,7 @@ const THU_TU_TRANG_THAI_XU_LY = Object.freeze([
   TRANG_THAI_XU_LY.HOAN_THANH,
 ]);
 const TRANG_THAI_GIAO_DICH = Object.freeze({ CHO_THANH_TOAN: 'Chờ thanh toán', THANH_CONG: 'Thành công', THAT_BAI: 'Thất bại', HET_HAN: 'Hết hạn' });
-const LOAI_YEU_CAU = Object.freeze({ DOI_TRA: 'Đổi trả', KHIEU_NAI: 'Khiếu nại' });
+const LOAI_YEU_CAU = Object.freeze({ DOI_TRA: 'Đổi trả' });
 const TRANG_THAI_XU_LY_YEU_CAU = Object.freeze({ CHO_XU_LY: 'Chờ xử lý', DA_XU_LY: 'Đã xử lý' });
 const KET_QUA_XU_LY = Object.freeze({ CHAP_NHAN: 'Chấp nhận', TU_CHOI: 'Từ chối' });
 

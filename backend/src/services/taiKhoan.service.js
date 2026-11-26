@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const TaiKhoan = require('../models/taiKhoan.model');
 const CuaHang = require('../models/cuaHang.model');
-const { GIOI_TINH, TRANG_THAI_TAI_KHOAN } = require('../constants/trangThai.constant');
+const { GIOI_TINH, TRANG_THAI_TAI_KHOAN, TRANG_THAI_YEU_CAU_NGUOI_BAN } = require('../constants/trangThai.constant');
 const { VAI_TRO } = require('../constants/vaiTro.constant');
 const { DO_DAI_MAT_KHAU_TOI_THIEU, SO_VONG_BAM_MAT_KHAU, REGEX_SO_DIEN_THOAI, DO_DAI_TOI_DA, PHAN_TRANG } = require('../constants/cauHinh.constant');
 const { layThongTinTaiKhoan } = require('./xacThuc.service');
@@ -112,7 +112,9 @@ const quanTriLayChiTietTaiKhoan = async (id) => {
   const taiKhoan = await TaiKhoan.findOne({ _id: id, vaiTro: { $nin: [VAI_TRO.QUAN_TRI_VIEN] } },
     '_id email hoTen soDienThoai vaiTro trangThaiTaiKhoan ngaySinh gioiTinh diaChiNhanHang').lean();
   if (!taiKhoan) throw taoLoi(404, 'Không tìm thấy tài khoản.');
-  const cuaHang = await CuaHang.findOne({ taiKhoanId: taiKhoan._id }, '_id tenCuaHang trangThaiHoatDong').lean();
+  const cuaHang = await CuaHang.findOne({ taiKhoanId: taiKhoan._id,
+    trangThaiDuyet: { $in: [TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_PHE_DUYET, null] } },
+  '_id tenCuaHang trangThaiHoatDong').lean();
   return { ...taiKhoan, cuaHang: cuaHang || null };
 };
 

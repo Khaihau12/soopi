@@ -11,7 +11,7 @@ const SanPham = require('../src/models/sanPham.model');
 const DonHang = require('../src/models/donHang.model');
 const ChiTietDonHang = require('../src/models/chiTietDonHang.model');
 const GiaoDichThanhToan = require('../src/models/giaoDichThanhToan.model');
-const YeuCauDangKyNguoiBan = require('../src/models/yeuCauDangKyNguoiBan.model');
+const { TRANG_THAI_YEU_CAU_NGUOI_BAN, TRANG_THAI_HOAT_DONG_CUA_HANG } = require('../src/constants/trangThai.constant');
 
 const uri = new URL(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/soopi');
 uri.pathname = `/soopi_f27_kiemtra_${Date.now()}`;
@@ -38,7 +38,9 @@ async function run() {
   const spA = await SanPham.create({ tenSanPham: 'Sản phẩm A', giaGoc: 100000, soLuongTon: 10, cuaHangId: shopA._id, danhMucId: mucA._id });
   const spB = await SanPham.create({ tenSanPham: 'Sản phẩm B', giaGoc: 50000, soLuongTon: 10, cuaHangId: shopA._id, danhMucId: mucB._id, trangThaiKinhDoanh: 'Ngừng kinh doanh' });
   const spC = await SanPham.create({ tenSanPham: 'Sản phẩm C', giaGoc: 50000, soLuongTon: 10, cuaHangId: shopB._id, danhMucId: mucA._id });
-  await YeuCauDangKyNguoiBan.create({ taiKhoanId: mua._id, tenCuaHang: 'Chờ duyệt', diaChiCuaHang: 'Hà Nội' });
+  await CuaHang.create({ taiKhoanId: mua._id, tenCuaHang: 'Chờ duyệt', diaChi: 'Hà Nội',
+    trangThaiDuyet: TRANG_THAI_YEU_CAU_NGUOI_BAN.CHO_PHE_DUYET,
+    trangThaiHoatDong: TRANG_THAI_HOAT_DONG_CUA_HANG.NGUNG_HOAT_DONG, ngayGui: new Date() });
   const taoDon = async ({ ma, shop = shopA, sanPham = spA, tien, soLuong = 1, tao = '2026-09-28T10:00:00Z', xong, thanhToan = 'Đã thanh toán', xuLy = 'Hoàn thành', phuongThuc = 'VNPay' }) => {
     const gd = await GiaoDichThanhToan.create({ maGiaoDich: ma, soTien: tien, phuongThucThanhToan: phuongThuc, trangThaiThanhToan: thanhToan === 'Đã thanh toán' ? 'Thành công' : 'Chờ thanh toán' });
     const don = await DonHang.create({ taiKhoanId: mua._id, cuaHangId: shop._id, giaoDichId: gd._id, diaChiNhanHang: 'Hà Nội', tongTienHang: tien, tongThanhToan: tien, ngayTao: new Date(tao), ...(xong ? { ngayHoanThanh: new Date(xong) } : {}), trangThaiThanhToan: thanhToan, trangThaiXuLy: xuLy, phuongThucThanhToan: phuongThuc });

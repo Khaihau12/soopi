@@ -9,7 +9,8 @@ const CuaHang = require('../src/models/cuaHang.model');
 const DanhMuc = require('../src/models/danhMuc.model');
 const SanPham = require('../src/models/sanPham.model');
 const Voucher = require('../src/models/voucher.model');
-const ApDungVoucher = require('../src/models/apDungVoucher.model');
+const DonHang = require('../src/models/donHang.model');
+const GiaoDichThanhToan = require('../src/models/giaoDichThanhToan.model');
 const { kiemTraDieuKienVoucher, tinhMucGiamVoucher } = require('../src/services/voucher.service');
 
 if (!process.env.JWT_SECRET) throw new Error('Thiếu JWT_SECRET trong môi trường kiểm tra');
@@ -137,7 +138,11 @@ async function run() {
   ]);
   assert.equal((await goi('GET', '/api/voucher', undefined, null))[1].data.danhSach.length, 1);
 
-  await ApDungVoucher.create({ voucherId: idA, donHangId: new mongoose.Types.ObjectId(), giaTriGiamThucTe: 50000 });
+  const giaoDichDaDung = await GiaoDichThanhToan.create({ maGiaoDich: 'F14VOUCHER', soTien: 150000 });
+  await DonHang.create({ taiKhoanId: thuong._id, cuaHangId: shopA._id, giaoDichId: giaoDichDaDung._id,
+    diaChiNhanHang: 'Địa chỉ F14', tongTienHang: 200000, tongGiamVoucher: 50000, tongThanhToan: 150000,
+    voucherDaDung: [{ voucherId: idA, maVoucher: 'AB12CD', tenVoucher: body.tenVoucher,
+      loaiVoucher: 'Cửa hàng', giaTriGiamThucTe: 50000, thoiGianApDung: new Date() }] });
   assert.equal((await goi('GET', seller))[1].data.danhSach.find((v) => v._id === idA).soDonDaApDung, 1);
   r = await goi('DELETE', `${seller}/${idA}`);
   assert.equal(r[0], 200); assert.match(r[1].message, /vô hiệu hóa/);

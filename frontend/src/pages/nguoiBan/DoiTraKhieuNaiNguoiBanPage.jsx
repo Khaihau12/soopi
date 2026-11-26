@@ -14,7 +14,7 @@ import TrangThaiBadge from '../../components/TrangThaiBadge.jsx';
 import useThongBao from '../../hooks/useThongBao.js';
 import { nguoiBanLayChiTietYeuCau, nguoiBanLayDanhSachYeuCau, nguoiBanXuLyYeuCau } from '../../services/doiTraKhieuNai.api.js';
 import { dinhDangNgayGio, dinhDangTien, maDonHangHienThi } from '../../utils/dinhDang.js';
-import { DUONG_DAN, KET_QUA_XU_LY, LOAI_YEU_CAU, TRANG_THAI_XU_LY_YEU_CAU } from '../../utils/hangSo.js';
+import { DUONG_DAN, KET_QUA_XU_LY, TRANG_THAI_XU_LY_YEU_CAU } from '../../utils/hangSo.js';
 import '../DoiTraKhieuNaiPage.css';
 
 const TABS = [
@@ -26,7 +26,6 @@ const TABS = [
 export default function DoiTraKhieuNaiNguoiBanPage() {
   const [params, setParams] = useSearchParams();
   const tab = TABS.find((item) => item.value === params.get('tab')) || TABS[0];
-  const loaiYeuCau = params.get('loaiYeuCau') || '';
   const trang = Math.max(1, Number(params.get('trang')) || 1);
   const [duLieu, setDuLieu] = useState(null);
   const [dangTai, setDangTai] = useState(true);
@@ -50,12 +49,12 @@ export default function DoiTraKhieuNaiNguoiBanPage() {
   useEffect(() => {
     let conHieuLuc = true;
     setDangTai(true); setLoi('');
-    nguoiBanLayDanhSachYeuCau({ ...tab.query, ...(loaiYeuCau ? { loaiYeuCau } : {}), trang })
+    nguoiBanLayDanhSachYeuCau({ ...tab.query, trang })
       .then((data) => { if (conHieuLuc) setDuLieu(data); })
       .catch((loiApi) => { if (conHieuLuc) { setDuLieu(null); setLoi(loiApi.message); } })
       .finally(() => { if (conHieuLuc) setDangTai(false); });
     return () => { conHieuLuc = false; };
-  }, [tab.value, loaiYeuCau, trang, lanTai]);
+  }, [tab.value, trang, lanTai]);
 
   useEffect(() => {
     if (!idChiTiet) return undefined;
@@ -85,7 +84,6 @@ export default function DoiTraKhieuNaiNguoiBanPage() {
   };
   const cot = [
     { khoa: 'chiTietDonHang', tieuDe: 'Sản phẩm', render: (dong) => <strong>{dong.sanPham.tenSanPham}</strong> },
-    { khoa: 'loaiYeuCau', tieuDe: 'Loại', render: (loai) => loai },
     { khoa: 'nguoiGui', tieuDe: 'Người gửi', render: (nguoi) => <span>{nguoi.hoTen}<small className="doiTraBanPhu">{nguoi.soDienThoai || 'Chưa có SĐT'}</small></span> },
     { khoa: 'ngayTao', tieuDe: 'Ngày gửi', render: (ngay) => dinhDangNgayGio(ngay) },
     { khoa: 'trangThaiXuLy', tieuDe: 'Trạng thái / Kết quả', render: (trangThai, item) => <TrangThaiBadge trangThai={item.ketQuaXuLy || trangThai} /> },
@@ -93,11 +91,8 @@ export default function DoiTraKhieuNaiNguoiBanPage() {
   ];
 
   return <div className="doiTraPage">
-    <PageHeader title="Đổi trả và khiếu nại" description="Xem và xử lý yêu cầu của khách thuộc cửa hàng bạn." />
+    <PageHeader title="Yêu cầu đổi trả" description="Xem và xử lý yêu cầu đổi trả của khách thuộc cửa hàng bạn." />
     <Tabs items={TABS} value={tab.value} onChange={(value) => doiLoc('tab', value)} label="Lọc trạng thái yêu cầu" />
-    <div className="doiTraBanBoLoc" role="group" aria-label="Lọc loại yêu cầu"><span>Loại yêu cầu</span>
-      {['', ...Object.values(LOAI_YEU_CAU)].map((loai) => <Button key={loai || 'tat-ca'} size="sm" variant={loaiYeuCau === loai ? 'primary' : 'secondary'}
-        onClick={() => doiLoc('loaiYeuCau', loai)}>{loai || 'Tất cả'}</Button>)}</div>
     {dangTai ? <Skeleton variant="block" count={3} /> : loi ? <ErrorState message={loi} taiLai={taiLai} /> : !duLieu?.danhSach.length ?
       <EmptyState title="Chưa có yêu cầu nào" description="Yêu cầu phù hợp sẽ xuất hiện tại đây khi khách gửi từ đơn đã hoàn thành." /> : <>
         <DataTable cot={cot} hang={duLieu.danhSach} khoaHang="_id" />
@@ -106,7 +101,7 @@ export default function DoiTraKhieuNaiNguoiBanPage() {
     <Modal open={Boolean(idChiTiet)} onClose={() => setIdChiTiet(null)} title="Chi tiết yêu cầu">
       {dangTaiChiTiet ? <Skeleton variant="block" count={2} /> : loiChiTiet ? <ErrorState message={loiChiTiet} taiLai={() => setLanTaiChiTiet((lan) => lan + 1)} /> : chiTiet &&
         <div className="doiTraChiTiet"><strong>{chiTiet.chiTietDonHang.sanPham.tenSanPham}</strong>
-          <p>{chiTiet.loaiYeuCau} · {chiTiet.chiTietDonHang.soLuong} sản phẩm · {dinhDangTien(chiTiet.chiTietDonHang.thanhTien)}</p>
+          <p>Yêu cầu đổi trả · {chiTiet.chiTietDonHang.soLuong} sản phẩm · {dinhDangTien(chiTiet.chiTietDonHang.thanhTien)}</p>
           <p>Người gửi: {chiTiet.nguoiGui.hoTen} · {chiTiet.nguoiGui.soDienThoai || 'Chưa có SĐT'}</p>
           <p>Ngày gửi: {dinhDangNgayGio(chiTiet.ngayTao)}</p>
           <p className="doiTraNoiDung">{chiTiet.noiDung}</p>

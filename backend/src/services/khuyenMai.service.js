@@ -3,7 +3,7 @@ const KhuyenMai = require('../models/khuyenMai.model');
 const ChiTietKhuyenMai = require('../models/chiTietKhuyenMai.model');
 const SanPham = require('../models/sanPham.model');
 const CuaHang = require('../models/cuaHang.model');
-const { LOAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, TRANG_THAI_KHUYEN_MAI, TRANG_THAI_HOAT_DONG_CUA_HANG } = require('../constants/trangThai.constant');
+const { LOAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, TRANG_THAI_KHUYEN_MAI, TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_YEU_CAU_NGUOI_BAN } = require('../constants/trangThai.constant');
 const { PHAN_TRANG } = require('../constants/cauHinh.constant');
 const { taoLoi } = require('../utils/taoLoi');
 const { thoatKyTuRegex } = require('../utils/thoatKyTuRegex');
@@ -71,10 +71,11 @@ const layDanhSachKhuyenMaiDangDienRa = async ({ loaiKhuyenMai } = {}) => {
     ngayBatDau: { $lte: bayGio }, ngayKetThuc: { $gte: bayGio },
     trangThai: { $ne: TRANG_THAI_KHUYEN_MAI.DA_KET_THUC },
     ...(loaiKhuyenMai ? { loaiKhuyenMai } : {}),
-  }).sort({ ngayKetThuc: 1, _id: 1 }).populate({ path: 'cuaHangId', select: '_id tenCuaHang trangThaiHoatDong' }).lean();
+  }).sort({ ngayKetThuc: 1, _id: 1 }).populate({ path: 'cuaHangId', select: '_id tenCuaHang trangThaiHoatDong trangThaiDuyet' }).lean();
   const hienThi = chuongTrinh.filter((item) =>
     item.loaiKhuyenMai === LOAI_KHUYEN_MAI.GIAM_GIA
-    && item.cuaHangId?.trangThaiHoatDong === TRANG_THAI_HOAT_DONG_CUA_HANG.HOAT_DONG);
+    && item.cuaHangId?.trangThaiHoatDong === TRANG_THAI_HOAT_DONG_CUA_HANG.HOAT_DONG
+    && (!item.cuaHangId?.trangThaiDuyet || item.cuaHangId.trangThaiDuyet === TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_PHE_DUYET));
   return { danhSach: await dinhDangDanhSach(hienThi) };
 };
 

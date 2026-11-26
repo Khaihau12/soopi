@@ -77,13 +77,13 @@ export default function DangKyNguoiBanPage() {
       : yeuCau?.trangThai === TRANG_THAI_YEU_CAU_NGUOI_BAN.CHO_PHE_DUYET ?
         <div className="dangKyNguoiBanCard"><TrangThaiBadge trangThai={yeuCau.trangThai} /><h2>{yeuCau.tenCuaHang}</h2><p>Đã gửi lúc {dinhDangNgayGio(yeuCau.ngayGui)}</p><p>Quản trị viên sẽ xem xét yêu cầu của bạn.</p></div>
         : <div className="dangKyNguoiBanCard">
-          {yeuCau?.trangThai === TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_TU_CHOI && <div className="dangKyNguoiBanCanhBao"><strong>Yêu cầu trước của bạn đã bị từ chối.</strong><p>Bạn có thể chỉnh sửa thông tin và gửi lại.</p></div>}
+          {yeuCau?.trangThai === TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_TU_CHOI && <div className="dangKyNguoiBanCanhBao"><strong>Đăng ký cửa hàng chưa được duyệt.</strong><p>Bạn có thể sửa thông tin bên dưới rồi gửi lại để Quản trị viên xem xét.</p></div>}
           <form className="dangKyNguoiBanForm" noValidate onSubmit={gui}>
             <Field label="Tên cửa hàng" required error={loiForm.tenCuaHang}><Input id="tenCuaHang" value={form.tenCuaHang} maxLength={101} onChange={(event) => capNhat('tenCuaHang', event.target.value)} /></Field>
             <Field label="Địa chỉ cửa hàng" required error={loiForm.diaChiCuaHang}><Input id="diaChiCuaHang" value={form.diaChiCuaHang} maxLength={501} onChange={(event) => capNhat('diaChiCuaHang', event.target.value)} /></Field>
             <Field label="Mô tả cửa hàng" error={loiForm.moTaCuaHang}><Textarea id="moTaCuaHang" value={form.moTaCuaHang} maxLength={5001} onChange={(event) => capNhat('moTaCuaHang', event.target.value)} /></Field>
             {loiGui && <p className="dangKyNguoiBanLoi" role="alert">{loiGui}</p>}
-            <Button type="submit" loading={dangGui}>Gửi yêu cầu</Button>
+            <Button type="submit" loading={dangGui}>{yeuCau?.trangThai === TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_TU_CHOI ? 'Gửi lại đăng ký' : 'Gửi đăng ký'}</Button>
           </form>
         </div>}
   </div>;

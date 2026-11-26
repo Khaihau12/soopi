@@ -8,7 +8,7 @@ const DanhGia = require('../models/danhGia.model');
 const ChiTietKhuyenMai = require('../models/chiTietKhuyenMai.model');
 const ChiTietGioHang = require('../models/chiTietGioHang.model');
 const KhuyenMai = require('../models/khuyenMai.model');
-const { TRANG_THAI_KINH_DOANH, TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, LOAI_KHUYEN_MAI } = require('../constants/trangThai.constant');
+const { TRANG_THAI_KINH_DOANH, TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_YEU_CAU_NGUOI_BAN, TRANG_THAI_KHUYEN_MAI, PHAM_VI_KHUYEN_MAI, LOAI_KHUYEN_MAI } = require('../constants/trangThai.constant');
 const { PHAN_TRANG, DO_DAI_TOI_DA, ANH } = require('../constants/cauHinh.constant');
 const { laDuongDanAnhHopLe } = require('../utils/kiemTra');
 const { taoLoi } = require('../utils/taoLoi');
@@ -24,7 +24,8 @@ const thongTinCuaHang = (cuaHang, chiTiet = false) => cuaHang && ({
 });
 
 const layCuaHangHoatDong = async () => {
-  const ids = await CuaHang.find({ trangThaiHoatDong: TRANG_THAI_HOAT_DONG_CUA_HANG.HOAT_DONG }).distinct('_id');
+  const ids = await CuaHang.find({ trangThaiHoatDong: TRANG_THAI_HOAT_DONG_CUA_HANG.HOAT_DONG,
+    trangThaiDuyet: { $in: [TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_PHE_DUYET, null] } }).distinct('_id');
   // Bỏ qua ID chuỗi từ bộ dữ liệu mẫu cũ; schema hiện tại dùng ObjectId.
   return ids.filter((id) => mongoose.isValidObjectId(id));
 };

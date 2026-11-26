@@ -10,7 +10,6 @@ const SanPham = require('../src/models/sanPham.model');
 const DonHang = require('../src/models/donHang.model');
 const ChiTietDonHang = require('../src/models/chiTietDonHang.model');
 const GiaoDichThanhToan = require('../src/models/giaoDichThanhToan.model');
-const YeuCauDoiTraKhieuNai = require('../src/models/yeuCauDoiTraKhieuNai.model');
 
 const uri = new URL(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/soopi');
 uri.pathname = `/soopi_f22_kiemtra_${Date.now()}`;
@@ -23,8 +22,8 @@ const goi = async (duongDan, id, method = 'GET', body) => {
   });
   return [response.status, await response.json()];
 };
-const gui = (id, taiKhoanId, loaiYeuCau = 'Đổi trả', noiDung = 'Sản phẩm không đúng mô tả') =>
-  goi('/doi-tra-khieu-nai', taiKhoanId, 'POST', { chiTietDonHangId: id, loaiYeuCau, noiDung });
+const gui = (id, taiKhoanId, noiDung = 'Sản phẩm không đúng mô tả', loaiYeuCau) =>
+  goi('/doi-tra-khieu-nai', taiKhoanId, 'POST', { chiTietDonHangId: id, noiDung, ...(loaiYeuCau ? { loaiYeuCau } : {}) });
 
 async function run() {
   assert.ok(process.env.JWT_SECRET);
@@ -61,17 +60,20 @@ async function run() {
   const nguoiKhac = await taoDong(muaKhac._id, sanA._id);
   const shopKhac = await taoDong(muaKhac._id, sanB._id);
   const deTuChoi = await taoDong(mua._id, sanA._id);
-  await YeuCauDoiTraKhieuNai.init();
 
   assert.equal((await gui(sauSauNgay.dong._id, null))[0], 401);
   assert.equal((await gui(chuaXong.dong._id, mua._id))[0], 409);
   assert.equal((await gui(nguoiKhac.dong._id, mua._id))[0], 404);
   assert.equal((await gui(sauTamNgay.dong._id, mua._id))[0], 409);
-  assert.equal((await gui(sauSauNgay.dong._id, mua._id, 'Sai loại'))[0], 400);
-  for (const noiDung of ['', '   ', 'x'.repeat(1001)]) assert.equal((await gui(sauSauNgay.dong._id, mua._id, 'Đổi trả', noiDung))[0], 400);
+  for (const noiDung of ['', '   ', 'x'.repeat(1001)]) assert.equal((await gui(sauSauNgay.dong._id, mua._id, noiDung))[0], 400);
   const dongThoi = await Promise.all([gui(sauSauNgay.dong._id, mua._id), gui(sauSauNgay.dong._id, mua._id)]);
   assert.deepEqual(dongThoi.map(([ma]) => ma).sort(), [201, 409]);
   const idYeuCau = dongThoi.find(([ma]) => ma === 201)[1].data.yeuCau._id;
+  const dongDaGui = await ChiTietDonHang.findById(sauSauNgay.dong._id);
+  assert.equal(String(dongDaGui.yeuCauDoiTra._id), idYeuCau);
+  assert.equal(dongDaGui.yeuCauDoiTra.loaiYeuCau, 'Đổi trả');
+  assert.equal(dongDaGui.yeuCauDoiTra.trangThaiXuLy, 'Chờ xử lý');
+  assert.equal((await mongoose.connection.db.listCollections({ name: 'YeuCauDoiTraKhieuNai' }).toArray()).length, 0);
   assert.equal((await gui(sauSauNgay.dong._id, mua._id))[0], 409);
   assert.equal((await gui(duLieuCu.dong._id, mua._id))[0], 201);
   assert.equal((await goi(`/don-hang/${sauSauNgay.don._id}`, mua._id))[1].data.donHang.danhSachChiTiet[0].coTheGuiYeuCau, false);
@@ -87,8 +89,9 @@ async function run() {
   assert.equal((await goi(`/nguoi-ban/doi-tra-khieu-nai/${idYeuCau}/xu-ly`, banA._id, 'PATCH', { ketQuaXuLy: 'Sai' }))[0], 400);
   assert.equal((await goi('/nguoi-ban/doi-tra-khieu-nai', banA._id))[1].data.phanTrang.tongSo, 2);
   assert.equal((await goi('/nguoi-ban/doi-tra-khieu-nai', banB._id))[1].data.phanTrang.tongSo, 0);
-  assert.equal((await gui(shopKhac.dong._id, muaKhac._id, 'Khiếu nại'))[0], 201);
-  assert.equal((await goi('/nguoi-ban/doi-tra-khieu-nai?loaiYeuCau=Khi%E1%BA%BFu%20n%E1%BA%A1i', banB._id))[1].data.phanTrang.tongSo, 1);
+  assert.equal((await gui(shopKhac.dong._id, muaKhac._id, undefined, 'Khiếu nại'))[0], 201);
+  assert.equal((await ChiTietDonHang.findById(shopKhac.dong._id)).yeuCauDoiTra.loaiYeuCau, 'Đổi trả');
+  assert.equal((await goi('/nguoi-ban/doi-tra-khieu-nai', banB._id))[1].data.phanTrang.tongSo, 1);
   const truocDon = (await DonHang.findById(sauSauNgay.don._id)).toObject();
   const truocTon = (await SanPham.findById(sanA._id)).soLuongTon;
   const xuLy = await Promise.all([
@@ -96,9 +99,9 @@ async function run() {
     goi(`/nguoi-ban/doi-tra-khieu-nai/${idYeuCau}/xu-ly`, banA._id, 'PATCH', { ketQuaXuLy: 'Từ chối' }),
   ]);
   assert.deepEqual(xuLy.map(([ma]) => ma).sort(), [200, 409]);
-  const ketQuaDaLuu = (await YeuCauDoiTraKhieuNai.findById(idYeuCau)).ketQuaXuLy;
+  const ketQuaDaLuu = (await ChiTietDonHang.findById(sauSauNgay.dong._id)).yeuCauDoiTra.ketQuaXuLy;
   assert.equal((await goi(`/nguoi-ban/doi-tra-khieu-nai/${idYeuCau}/xu-ly`, banA._id, 'PATCH', { ketQuaXuLy: 'Chấp nhận' }))[0], 409);
-  assert.equal((await YeuCauDoiTraKhieuNai.findById(idYeuCau)).ketQuaXuLy, ketQuaDaLuu);
+  assert.equal((await ChiTietDonHang.findById(sauSauNgay.dong._id)).yeuCauDoiTra.ketQuaXuLy, ketQuaDaLuu);
   assert.equal((await SanPham.findById(sanA._id)).soLuongTon, truocTon);
   assert.deepEqual((await DonHang.findById(sauSauNgay.don._id)).toObject(), truocDon);
   const [maTuChoi, duLieuTuChoi] = await gui(deTuChoi.dong._id, mua._id);

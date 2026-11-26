@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const CuaHang = require('../models/cuaHang.model');
 const SanPham = require('../models/sanPham.model');
 const { DO_DAI_TOI_DA, PHAN_TRANG } = require('../constants/cauHinh.constant');
-const { TRANG_THAI_HOAT_DONG_CUA_HANG } = require('../constants/trangThai.constant');
+const { TRANG_THAI_HOAT_DONG_CUA_HANG, TRANG_THAI_YEU_CAU_NGUOI_BAN } = require('../constants/trangThai.constant');
 const { taoLoi } = require('../utils/taoLoi');
 const { thoatKyTuRegex } = require('../utils/thoatKyTuRegex');
 
@@ -53,7 +53,7 @@ const quanTriLayDanhSachCuaHang = async (query = {}) => {
   if (tuKhoa.length > 100) throw taoLoi(400, 'Từ khóa không được quá 100 ký tự.');
   const trang = docSoTrang(query.trang, 1, Number.MAX_SAFE_INTEGER);
   const gioiHan = docSoTrang(query.gioiHan, PHAN_TRANG.MAC_DINH, PHAN_TRANG.TOI_DA);
-  const dieuKien = {};
+  const dieuKien = { trangThaiDuyet: { $in: [TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_PHE_DUYET, null] } };
   if (query.trangThaiHoatDong) dieuKien.trangThaiHoatDong = query.trangThaiHoatDong;
   if (tuKhoa) dieuKien.tenCuaHang = { $regex: thoatKyTuRegex(tuKhoa), $options: 'i' };
   const [tongSo, cuaHang] = await Promise.all([
@@ -78,10 +78,15 @@ const quanTriCapNhatTrangThaiCuaHang = async (id, body = {}) => {
   if (!mongoose.isValidObjectId(id)) throw taoLoi(400, 'ID cửa hàng không hợp lệ.');
   const trangThai = body?.trangThaiHoatDong;
   if (!Object.values(TRANG_THAI_HOAT_DONG_CUA_HANG).includes(trangThai)) throw taoLoi(400, 'Trạng thái cửa hàng không hợp lệ.');
-  const cuaHang = await CuaHang.findById(id, '_id trangThaiHoatDong').lean();
+  const cuaHang = await CuaHang.findById(id, '_id trangThaiHoatDong trangThaiDuyet').lean();
   if (!cuaHang) throw taoLoi(404, 'Không tìm thấy cửa hàng.');
+  if (cuaHang.trangThaiDuyet && cuaHang.trangThaiDuyet !== TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_PHE_DUYET) {
+    throw taoLoi(409, 'Cửa hàng chưa được phê duyệt.');
+  }
   if (cuaHang.trangThaiHoatDong === trangThai) throw taoLoi(409, 'Cửa hàng đã ở trạng thái này.');
-  const moi = await CuaHang.findOneAndUpdate({ _id: id, trangThaiHoatDong: { $ne: trangThai } },
+  const moi = await CuaHang.findOneAndUpdate({ _id: id,
+    trangThaiDuyet: { $in: [TRANG_THAI_YEU_CAU_NGUOI_BAN.DA_PHE_DUYET, null] },
+    trangThaiHoatDong: { $ne: trangThai } },
     { $set: { trangThaiHoatDong: trangThai } }, { returnDocument: 'after', runValidators: true })
     .select('_id tenCuaHang diaChi trangThaiHoatDong taiKhoanId').lean();
   if (!moi) throw taoLoi(409, 'Cửa hàng đã ở trạng thái này.');
